@@ -24,6 +24,9 @@ Task runner: `turbo`
 | [`docs/README.md`](docs/README.md) | Documentation index |
 | [`docs/SPEC.md`](docs/SPEC.md) | Product and system source of truth |
 | [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) | Monorepo technical blueprint |
+| [`AGENTS.md`](AGENTS.md) | Rules for LLM agents working in this repo |
+| [`docs/agents/README.md`](docs/agents/README.md) | Specialized agent guides |
+| [`docs/adr/README.md`](docs/adr/README.md) | Architecture decision records |
 | [`docs/development/README.md`](docs/development/README.md) | Phase-by-phase implementation prompts |
 | [`docs/ENVIRONMENT.md`](docs/ENVIRONMENT.md) | Environment variable contract |
 | [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) | Deployment and rollback runbook |

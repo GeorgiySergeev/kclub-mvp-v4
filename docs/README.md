@@ -14,6 +14,8 @@ This folder contains the launch documentation for KCLUB MVP v4.
 | Document | Purpose |
 | --- | --- |
 | [`development/README.md`](development/README.md) | Phase-by-phase implementation plan |
+| [`agents/README.md`](agents/README.md) | LLM agent rules and specialized task guides |
+| [`tasks/README.md`](tasks/README.md) | Task handoff format for multi-session work |
 | [`TESTING.md`](TESTING.md) | Test strategy, commands, and gate policy |
 | [`API-REFERENCE.md`](API-REFERENCE.md) | Compact API surface reference |
 | [`DB-OPERATIONS.md`](DB-OPERATIONS.md) | Migrations, seeds, reset, and backup/restore operations |
@@ -42,5 +44,7 @@ This folder contains the launch documentation for KCLUB MVP v4.
 
 - `SPEC.md` wins on product behavior.
 - `BLUEPRINT.md` wins on technical boundaries and repository shape.
+- `adr/` records accepted architecture decisions and supersedes older architecture discussion.
+- Root `../AGENTS.md` defines the required operating rules for LLM agents.
 - Operational docs must align with both and be updated when implementation changes.
 - If docs disagree, resolve the conflict before launch.
