@@ -4,12 +4,12 @@ This runbook describes how to deploy KCLUB MVP v4 to staging and production.
 
 ## Deploy Targets
 
-| App | Platform | Domain |
-| --- | --- | --- |
-| `apps/product-core` | Vercel | `www.kylyvnyk.club` |
-| `apps/admin-app` | Vercel | `admin.kylyvnyk.club` |
-| Database | Supabase Cloud | managed |
-| Billing | Stripe | managed |
+| App                 | Platform       | Domain                |
+| ------------------- | -------------- | --------------------- |
+| `apps/product-core` | Vercel         | `www.kylyvnyk.club`   |
+| `apps/admin-app`    | Vercel         | `admin.kylyvnyk.club` |
+| Database            | Supabase Cloud | managed               |
+| Billing             | Stripe         | managed               |
 
 ## Preconditions
 

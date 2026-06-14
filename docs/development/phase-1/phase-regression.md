@@ -34,6 +34,7 @@ Also verify:
 
 ```markdown
 ## Phase 1 Regression Handoff
+
 - Commands run:
 - Passing gates:
 - Temporary no-op gates:

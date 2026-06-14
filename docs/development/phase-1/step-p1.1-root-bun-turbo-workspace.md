@@ -61,6 +61,7 @@ Root task names are public workflow contracts. Changing them later requires upda
 
 ```markdown
 ## P1.1 Handoff
+
 - Files created/changed:
 - Bun version pinned:
 - Commands run:

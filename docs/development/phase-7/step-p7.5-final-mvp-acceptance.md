@@ -80,6 +80,7 @@ Final acceptance is not a refactor phase. Fix only launch blockers; defer polish
 
 ```markdown
 ## P7.5 Final Acceptance Handoff
+
 - Full commands run:
 - MVP journey matrix:
 - Launch blockers:

@@ -58,6 +58,7 @@ Admin-app is an operations UI, not a second backend. Keep business authority in 
 
 ```markdown
 ## P6.1 Handoff
+
 - Admin shell:
 - Auth shell:
 - Proxy:

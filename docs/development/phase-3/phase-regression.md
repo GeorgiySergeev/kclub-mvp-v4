@@ -36,6 +36,7 @@ Additional checks:
 
 ```markdown
 ## Phase 3 Regression Handoff
+
 - Commands run:
 - API coverage:
 - Contract status:

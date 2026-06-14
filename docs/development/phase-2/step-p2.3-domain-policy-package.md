@@ -67,6 +67,7 @@ If a later implementation bypasses these policies, add tests or refactor so the 
 
 ```markdown
 ## P2.3 Handoff
+
 - Policies added:
 - Exhaustive tests:
 - Spec assumptions used:

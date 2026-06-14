@@ -64,6 +64,7 @@ Security fixes should be narrow and tested. Avoid polishing UI during this step 
 
 ```markdown
 ## P7.2 Handoff
+
 - Audited surfaces:
 - Issues fixed:
 - Tests:

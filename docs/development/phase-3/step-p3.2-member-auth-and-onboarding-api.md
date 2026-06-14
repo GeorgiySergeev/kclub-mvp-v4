@@ -67,6 +67,7 @@ Do not let onboarding happen implicitly during generic session loading. It must 
 
 ```markdown
 ## P3.2 Handoff
+
 - Auth endpoints:
 - Onboarding behavior:
 - Tests:

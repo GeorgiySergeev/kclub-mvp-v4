@@ -58,6 +58,7 @@ Business publication requires admin moderation and Stripe placement. Keep that l
 
 ```markdown
 ## P4.5 Handoff
+
 - Business UI:
 - Introduction UI:
 - Capability gating:

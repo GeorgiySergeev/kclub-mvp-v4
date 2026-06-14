@@ -71,6 +71,7 @@ Deployment docs are part of the product. Keep them synchronized with actual app/
 
 ```markdown
 ## P7.4 Handoff
+
 - Deployment config:
 - Env docs:
 - Release gates:

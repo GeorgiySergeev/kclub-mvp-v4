@@ -69,6 +69,7 @@ Admin-app must later consume these APIs rather than duplicating business logic o
 
 ```markdown
 ## P3.5 Handoff
+
 - Admin APIs:
 - Permissions:
 - Audit behavior:

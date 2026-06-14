@@ -60,6 +60,7 @@ Staff auth is security-critical. UI hiding is not enough; server route guards mu
 
 ```markdown
 ## P6.2 Handoff
+
 - TOTP flow:
 - Session gating:
 - Tests:

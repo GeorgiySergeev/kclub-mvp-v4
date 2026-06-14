@@ -62,6 +62,7 @@ Test utilities are shared infrastructure. Keep them stable and avoid test-only a
 
 ```markdown
 ## P2.5 Handoff
+
 - Factories:
 - Assertions:
 - Tests:

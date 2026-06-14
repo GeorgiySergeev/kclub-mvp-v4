@@ -1,11 +1,11 @@
 # KCLUB MVP v4 Monorepo Blueprint
 
-| Field | Value |
-| --- | --- |
-| Document version | `2.0.0` |
-| Aligned spec | `docs/SPEC.md` v0.3.0 |
-| Status | Ready for scaffolding |
-| Last updated | 2026-06-13 |
+| Field            | Value                 |
+| ---------------- | --------------------- |
+| Document version | `2.0.0`               |
+| Aligned spec     | `docs/SPEC.md` v0.3.0 |
+| Status           | Ready for scaffolding |
+| Last updated     | 2026-06-13            |
 
 ## 1. Summary
 
@@ -150,10 +150,7 @@ Guardrails:
   "name": "kclub-mvp-v4",
   "private": true,
   "packageManager": "bun@1.3.3",
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
+  "workspaces": ["apps/*", "packages/*"],
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
@@ -469,13 +466,13 @@ Do not put DB-writing services in shared packages.
 
 Deployables:
 
-| App | Platform | Domain | Notes |
-| --- | --- | --- | --- |
-| `apps/product-core` | Vercel | `www.kylyvnyk.club` | Public/member app, APIs, webhooks, cron |
-| `apps/admin-app` | Vercel | `admin.kylyvnyk.club` | Staff dashboard |
-| Supabase PostgreSQL | Supabase Cloud | N/A | Primary database |
-| Supabase Auth | Supabase Cloud | N/A | Member phone OTP |
-| Stripe | Stripe Cloud | N/A | Billing |
+| App                 | Platform       | Domain                | Notes                                   |
+| ------------------- | -------------- | --------------------- | --------------------------------------- |
+| `apps/product-core` | Vercel         | `www.kylyvnyk.club`   | Public/member app, APIs, webhooks, cron |
+| `apps/admin-app`    | Vercel         | `admin.kylyvnyk.club` | Staff dashboard                         |
+| Supabase PostgreSQL | Supabase Cloud | N/A                   | Primary database                        |
+| Supabase Auth       | Supabase Cloud | N/A                   | Member phone OTP                        |
+| Stripe              | Stripe Cloud   | N/A                   | Billing                                 |
 
 Deployment rules:
 
@@ -603,15 +600,15 @@ E2E tests cover user-facing critical paths:
 
 Replace the old split-repo assumptions:
 
-| Old assumption | New decision |
-| --- | --- |
-| `kclub-product-core` repo | `apps/product-core` workspace |
-| `kclub-admin-app` repo | `apps/admin-app` workspace |
-| Duplicated types/constants | `packages/contracts` |
-| Duplicated validation | `packages/validation` |
-| Duplicated business policies | `packages/domain` |
-| Shared UI by copy/paste | `packages/ui` |
-| Separate lockfiles | One root `bun.lock` |
+| Old assumption                 | New decision                           |
+| ------------------------------ | -------------------------------------- |
+| `kclub-product-core` repo      | `apps/product-core` workspace          |
+| `kclub-admin-app` repo         | `apps/admin-app` workspace             |
+| Duplicated types/constants     | `packages/contracts`                   |
+| Duplicated validation          | `packages/validation`                  |
+| Duplicated business policies   | `packages/domain`                      |
+| Shared UI by copy/paste        | `packages/ui`                          |
+| Separate lockfiles             | One root `bun.lock`                    |
 | Manual cross-repo coordination | One PR with affected apps and packages |
 
 Do not publish internal shared packages to npm for MVP. Workspace packages are private and consumed through workspace references.
@@ -646,13 +643,13 @@ The blueprint is implemented correctly when:
 
 Defaults to use unless changed before scaffolding:
 
-| Topic | Default |
-| --- | --- |
-| Package manager | Bun |
-| Task runner | Turborepo |
-| Production hosting | Vercel for both apps |
-| Runtime DB | Supabase PostgreSQL |
-| Member auth | Supabase phone OTP |
-| Staff auth | Phone OTP + app-owned TOTP/session |
-| Internal package publishing | Private workspace packages only |
-| Shared server services | No; keep side-effectful services in product-core |
+| Topic                       | Default                                          |
+| --------------------------- | ------------------------------------------------ |
+| Package manager             | Bun                                              |
+| Task runner                 | Turborepo                                        |
+| Production hosting          | Vercel for both apps                             |
+| Runtime DB                  | Supabase PostgreSQL                              |
+| Member auth                 | Supabase phone OTP                               |
+| Staff auth                  | Phone OTP + app-owned TOTP/session               |
+| Internal package publishing | Private workspace packages only                  |
+| Shared server services      | No; keep side-effectful services in product-core |

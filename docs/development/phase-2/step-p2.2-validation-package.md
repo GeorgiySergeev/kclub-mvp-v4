@@ -62,6 +62,7 @@ When API payloads change, update validation and contracts in the same PR.
 
 ```markdown
 ## P2.2 Handoff
+
 - Schemas added:
 - Service-level checks deferred:
 - Tests:

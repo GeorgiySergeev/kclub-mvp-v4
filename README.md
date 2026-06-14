@@ -6,10 +6,10 @@ KCLUB MVP v4 is a monorepo for an international private membership platform focu
 
 Two deployable apps live in one repository:
 
-| Workspace | Purpose |
-| --- | --- |
+| Workspace           | Purpose                                                                           |
+| ------------------- | --------------------------------------------------------------------------------- |
 | `apps/product-core` | Public website, member auth and cabinet, product APIs, Stripe webhooks, cron jobs |
-| `apps/admin-app` | Staff dashboard and staff auth shell |
+| `apps/admin-app`    | Staff dashboard and staff auth shell                                              |
 
 Shared packages live under `packages/*` and own contracts, validation, domain policies, database artifacts, UI primitives, config, and test utilities.
 
@@ -19,21 +19,54 @@ Task runner: `turbo`
 
 ## Core Docs
 
-| Document | Purpose |
-| --- | --- |
-| [`docs/README.md`](docs/README.md) | Documentation index |
-| [`docs/SPEC.md`](docs/SPEC.md) | Product and system source of truth |
-| [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md) | Monorepo technical blueprint |
-| [`AGENTS.md`](AGENTS.md) | Rules for LLM agents working in this repo |
-| [`docs/agents/README.md`](docs/agents/README.md) | Specialized agent guides |
-| [`docs/adr/README.md`](docs/adr/README.md) | Architecture decision records |
-| [`docs/development/README.md`](docs/development/README.md) | Phase-by-phase implementation prompts |
-| [`docs/ENVIRONMENT.md`](docs/ENVIRONMENT.md) | Environment variable contract |
-| [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) | Deployment and rollback runbook |
-| [`docs/TESTING.md`](docs/TESTING.md) | Test strategy and command reference |
-| [`docs/SECURITY.md`](docs/SECURITY.md) | Security and privacy controls |
-| [`docs/RUNBOOKS.md`](docs/RUNBOOKS.md) | Operational incident procedures |
-| [`docs/RELEASE-CHECKLIST.md`](docs/RELEASE-CHECKLIST.md) | Launch gate checklist |
+| Document                                                   | Purpose                                   |
+| ---------------------------------------------------------- | ----------------------------------------- |
+| [`docs/README.md`](docs/README.md)                         | Documentation index                       |
+| [`docs/SPEC.md`](docs/SPEC.md)                             | Product and system source of truth        |
+| [`docs/BLUEPRINT.md`](docs/BLUEPRINT.md)                   | Monorepo technical blueprint              |
+| [`AGENTS.md`](AGENTS.md)                                   | Rules for LLM agents working in this repo |
+| [`docs/agents/README.md`](docs/agents/README.md)           | Specialized agent guides                  |
+| [`docs/adr/README.md`](docs/adr/README.md)                 | Architecture decision records             |
+| [`docs/development/README.md`](docs/development/README.md) | Phase-by-phase implementation prompts     |
+| [`docs/ENVIRONMENT.md`](docs/ENVIRONMENT.md)               | Environment variable contract             |
+| [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md)                 | Deployment and rollback runbook           |
+| [`docs/TESTING.md`](docs/TESTING.md)                       | Test strategy and command reference       |
+| [`docs/SECURITY.md`](docs/SECURITY.md)                     | Security and privacy controls             |
+| [`docs/RUNBOOKS.md`](docs/RUNBOOKS.md)                     | Operational incident procedures           |
+| [`docs/RELEASE-CHECKLIST.md`](docs/RELEASE-CHECKLIST.md)   | Launch gate checklist                     |
+
+## Local Development
+
+Ensure you have [Bun](https://bun.sh) installed.
+
+### Install Dependencies
+```bash
+bun install
+```
+
+### Start Applications
+
+You can start both applications concurrently via Turbo, or run them individually:
+
+- **Start all apps**: `bun run dev` (Runs both apps)
+- **Start Product Core**: `bun --filter @kclub/product-core dev` (Available at http://localhost:3000)
+- **Start Admin App**: `bun --filter @kclub/admin-app dev` (Available at http://localhost:3001)
+
+### Check Workspaces
+
+Run quality checks across all workspaces:
+```bash
+bun run format
+bun run lint
+bun run typecheck
+bun run build
+```
+To run checks on specific affected packages, you can use Turbo filtering (e.g., `bunx turbo run build --filter=@kclub/product-core`).
+
+## Deployment and Previews
+
+- **Vercel Previews**: Pull Requests will automatically generate Preview Environments for both `product-core` and `admin-app`. 
+- **Production**: Merges to `main` will trigger production deployments. Do not configure or expose production secrets in local `.env` files. Use `.env.example` as a template for your local development variables.
 
 ## Working Model
 

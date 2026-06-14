@@ -68,6 +68,7 @@ Do not publish businesses in this step. Publication happens through admin approv
 
 ```markdown
 ## P3.4 Handoff
+
 - Business APIs:
 - Introduction APIs:
 - Tests:

@@ -78,6 +78,7 @@ Migration changes must be included with affected contracts and service tests. Ne
 
 ```markdown
 ## P2.4 Handoff
+
 - Tables/migrations:
 - Constraints/indexes:
 - Seed plan:

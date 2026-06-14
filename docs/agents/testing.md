@@ -13,16 +13,16 @@ Use this guide when adding features, changing contracts, modifying flows, or fix
 
 Use the smallest useful test first, then run broader gates before handoff.
 
-| Change Type | Required Tests |
-| --- | --- |
-| pure domain policy | unit tests for allowed and denied cases |
-| validation schema | valid/invalid input tests |
-| contract or DTO | contract tests and typecheck |
-| API route | integration/API tests, contract tests, typecheck |
-| auth/session | route guard tests, permission tests, smoke |
-| billing/webhook | idempotency, signature, failure-mode tests |
-| UI route | component/smoke tests, build |
-| migration | migration validation, integration tests, typecheck |
+| Change Type        | Required Tests                                     |
+| ------------------ | -------------------------------------------------- |
+| pure domain policy | unit tests for allowed and denied cases            |
+| validation schema  | valid/invalid input tests                          |
+| contract or DTO    | contract tests and typecheck                       |
+| API route          | integration/API tests, contract tests, typecheck   |
+| auth/session       | route guard tests, permission tests, smoke         |
+| billing/webhook    | idempotency, signature, failure-mode tests         |
+| UI route           | component/smoke tests, build                       |
+| migration          | migration validation, integration tests, typecheck |
 
 ## Baseline Commands
 

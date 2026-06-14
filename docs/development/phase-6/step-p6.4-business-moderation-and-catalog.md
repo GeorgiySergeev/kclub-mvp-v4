@@ -57,6 +57,7 @@ This is the most likely place to accidentally skip billing lifecycle. Keep statu
 
 ```markdown
 ## P6.4 Handoff
+
 - Business moderation:
 - Catalog toggles:
 - Tests:

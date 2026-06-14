@@ -1,0 +1,7 @@
+.next
+dist
+coverage
+node_modules
+bun.lock
+.turbo
+*.log

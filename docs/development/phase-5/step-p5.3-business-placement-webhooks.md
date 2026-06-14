@@ -61,6 +61,7 @@ This step connects payments to directory visibility. Be strict with ownership an
 
 ```markdown
 ## P5.3 Handoff
+
 - Placement events:
 - Publication rules:
 - Tests:

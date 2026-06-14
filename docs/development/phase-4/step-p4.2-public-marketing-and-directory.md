@@ -56,6 +56,7 @@ Do not add the removed verify-card lookup form. QR/direct URL verification only.
 
 ```markdown
 ## P4.2 Handoff
+
 - Public routes:
 - Visibility rules:
 - Tests:

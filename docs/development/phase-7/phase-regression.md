@@ -36,6 +36,7 @@ Additional checks:
 
 ```markdown
 ## Phase 7 Regression Handoff
+
 - Full validation result:
 - E2E result:
 - Security result:

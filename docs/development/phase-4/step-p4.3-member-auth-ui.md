@@ -60,6 +60,7 @@ Do not collapse sign-up and sign-in into ambiguous OTP login behavior. Product s
 
 ```markdown
 ## P4.3 Handoff
+
 - Auth routes:
 - Intent behavior:
 - Tests:

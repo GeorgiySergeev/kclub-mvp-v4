@@ -58,6 +58,7 @@ Admin breadth should not become scope creep. Keep screens operational and clear,
 
 ```markdown
 ## P6.5 Handoff
+
 - Admin surfaces:
 - Permissions:
 - Tests:

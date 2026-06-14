@@ -58,6 +58,7 @@ CI is the guardrail for contract drift. Do not defer contract tests without a wr
 
 ```markdown
 ## P1.4 Handoff
+
 - CI files:
 - README updates:
 - Commands run:

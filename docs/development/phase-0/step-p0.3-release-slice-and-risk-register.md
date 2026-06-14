@@ -60,6 +60,7 @@ Later phases must update the risk register when they close or discover risks.
 
 ```markdown
 ## P0.3 Handoff
+
 - MVP journeys:
 - Future scope:
 - Risks by phase:

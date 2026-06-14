@@ -1,0 +1,21 @@
+{
+  "name": "@kclub/config",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    "./eslint/base": "./eslint/base.js",
+    "./eslint/next": "./eslint/next.js",
+    "./eslint/react-internal": "./eslint/react-internal.js",
+    "./typescript/base.json": "./typescript/base.json",
+    "./typescript/nextjs.json": "./typescript/nextjs.json",
+    "./typescript/react-library.json": "./typescript/react-library.json",
+    "./tailwind/theme": "./tailwind/theme.ts",
+    "./env": "./env/index.ts"
+  },
+  "dependencies": {
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.8.3"
+  }
+}

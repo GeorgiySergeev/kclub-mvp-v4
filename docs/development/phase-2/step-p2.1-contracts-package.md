@@ -64,6 +64,7 @@ Any later DTO or permission change must update this package and contract tests f
 
 ```markdown
 ## P2.1 Handoff
+
 - Contracts created:
 - DTO boundaries:
 - Tests:

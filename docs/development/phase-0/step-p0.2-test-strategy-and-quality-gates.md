@@ -59,6 +59,7 @@ Phase regressions must become stricter over time. Never remove a gate just becau
 
 ```markdown
 ## P0.2 Handoff
+
 - Test matrix:
 - Required commands:
 - Missing commands to create:

@@ -57,6 +57,7 @@ Permission hiding in UI is convenience only. Product-core admin API remains enfo
 
 ```markdown
 ## P6.3 Handoff
+
 - Dashboard/users/cards UI:
 - Permission behavior:
 - Tests:

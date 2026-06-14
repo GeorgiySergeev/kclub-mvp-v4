@@ -67,6 +67,7 @@ Webhook idempotency is release-critical. Do not skip duplicate-event coverage.
 
 ```markdown
 ## P5.2 Handoff
+
 - Events handled:
 - Status mapping:
 - Idempotency tests:

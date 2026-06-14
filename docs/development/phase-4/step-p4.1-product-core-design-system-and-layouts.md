@@ -57,6 +57,7 @@ Design system changes affect later screens. Keep components generic and avoid pr
 
 ```markdown
 ## P4.1 Handoff
+
 - Layouts:
 - Shared UI usage:
 - Smoke checks:

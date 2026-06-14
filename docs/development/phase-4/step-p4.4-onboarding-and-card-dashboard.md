@@ -66,6 +66,7 @@ The dashboard is the canonical member area. Alias routes must redirect into dash
 
 ```markdown
 ## P4.4 Handoff
+
 - Onboarding:
 - Dashboard tabs:
 - Guards:

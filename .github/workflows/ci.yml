@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Check Formatting
+        run: bun run format
+
+      - name: Run Linter
+        run: bun run lint
+
+      - name: Run Typecheck
+        run: bun run typecheck
+
+      - name: Run Tests
+        run: bun run test
+
+      - name: Run Contract Tests
+        run: bun run test:contracts
+
+      - name: Build Applications
+        run: bun run build

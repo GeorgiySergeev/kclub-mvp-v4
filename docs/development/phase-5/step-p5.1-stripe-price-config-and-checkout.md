@@ -66,6 +66,7 @@ Checkout creation is not proof of payment. State changes must occur through veri
 
 ```markdown
 ## P5.1 Handoff
+
 - Stripe config:
 - Checkout APIs:
 - Tests:

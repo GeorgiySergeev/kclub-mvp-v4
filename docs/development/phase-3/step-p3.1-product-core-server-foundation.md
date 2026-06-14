@@ -60,6 +60,7 @@ All later API routes must use the shared response/error helpers instead of hand-
 
 ```markdown
 ## P3.1 Handoff
+
 - Server foundation:
 - Response/error helpers:
 - Tests:

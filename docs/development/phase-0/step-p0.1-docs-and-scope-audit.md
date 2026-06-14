@@ -51,6 +51,7 @@ This step defines the baseline for later phases. Any later prompt that conflicts
 
 ```markdown
 ## P0.1 Handoff
+
 - Docs inspected:
 - Source of truth:
 - Drift found:

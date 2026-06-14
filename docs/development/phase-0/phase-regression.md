@@ -23,6 +23,7 @@ Validate that planning is complete enough for scaffold work to begin without re-
 
 ```markdown
 ## Phase 0 Regression Handoff
+
 - Checks completed:
 - Architecture confirmed:
 - Test strategy confirmed:

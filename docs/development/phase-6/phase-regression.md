@@ -36,6 +36,7 @@ Additional checks:
 
 ```markdown
 ## Phase 6 Regression Handoff
+
 - Commands run:
 - Admin smoke:
 - Permission coverage:

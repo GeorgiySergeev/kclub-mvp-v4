@@ -51,6 +51,7 @@ Config must support both shared packages and Next.js apps. Avoid app-specific as
 
 ```markdown
 ## P1.2 Handoff
+
 - Config package exports:
 - Root scripts updated:
 - Commands run:

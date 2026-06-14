@@ -76,6 +76,7 @@ Keep E2E tests high-signal. Do not duplicate every field-level unit test at brow
 
 ```markdown
 ## P7.1 Handoff
+
 - E2E scenarios:
 - Provider mocks:
 - Commands:

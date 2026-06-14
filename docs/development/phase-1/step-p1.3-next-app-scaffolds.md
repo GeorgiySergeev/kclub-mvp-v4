@@ -56,6 +56,7 @@ If scaffold tooling creates lockfiles other than `bun.lock`, remove them and doc
 
 ```markdown
 ## P1.3 Handoff
+
 - Apps created:
 - Routes available:
 - Commands run:

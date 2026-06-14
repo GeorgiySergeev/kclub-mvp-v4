@@ -63,6 +63,7 @@ Card APIs are public-facing security-sensitive surfaces. Keep DTOs minimal and c
 
 ```markdown
 ## P3.3 Handoff
+
 - Card service:
 - Public verification:
 - Tests:

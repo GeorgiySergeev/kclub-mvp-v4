@@ -60,6 +60,7 @@ Billing bugs are high-impact. Prefer explicit tests over relying on manual Strip
 
 ```markdown
 ## P5.5 Handoff
+
 - Failure modes covered:
 - Billing UI state:
 - Tests:

@@ -66,6 +66,7 @@ Observability must help production support without weakening privacy.
 
 ```markdown
 ## P7.3 Handoff
+
 - Logging added:
 - Runbooks:
 - Health checks:
