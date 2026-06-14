@@ -1,0 +1,67 @@
+export const API_BASE_PATH = '/api/v1' as const;
+export const ADMIN_API_BASE_PATH = '/api/admin/v1' as const;
+
+export const MEMBER_API_ROUTES = {
+  AUTH_PHONE_OTP_SEND: `${API_BASE_PATH}/auth/phone-otp/send`,
+  AUTH_PHONE_OTP_VERIFY: `${API_BASE_PATH}/auth/phone-otp/verify`,
+  AUTH_LOGOUT: `${API_BASE_PATH}/auth/logout`,
+  ME: `${API_BASE_PATH}/me`,
+  COMPLETE_ONBOARDING: `${API_BASE_PATH}/me/complete-onboarding`,
+  CARDS: `${API_BASE_PATH}/cards`,
+  CARD_VERIFY: `${API_BASE_PATH}/cards/verify/:cardNumber`,
+  BUSINESSES: `${API_BASE_PATH}/businesses`,
+  BUSINESS_DETAIL: `${API_BASE_PATH}/businesses/:id`,
+  BUSINESS_CHECKOUT_PLACEMENT: `${API_BASE_PATH}/businesses/:id/checkout-placement`,
+  INTRODUCTIONS: `${API_BASE_PATH}/introductions`,
+  INTRODUCTION_CANCEL: `${API_BASE_PATH}/introductions/:id/cancel`,
+  SUBSCRIPTIONS: `${API_BASE_PATH}/subscriptions`,
+  SUBSCRIPTION_DETAIL: `${API_BASE_PATH}/subscriptions/:id`,
+  SUBSCRIPTION_CANCEL: `${API_BASE_PATH}/subscriptions/:id/cancel`,
+} as const;
+
+export const ADMIN_API_ROUTES = {
+  USERS: `${ADMIN_API_BASE_PATH}/users`,
+  USER_DETAIL: `${ADMIN_API_BASE_PATH}/users/:id`,
+  USER_BLOCK: `${ADMIN_API_BASE_PATH}/users/:id/block`,
+  USER_UNBLOCK: `${ADMIN_API_BASE_PATH}/users/:id/unblock`,
+  CARDS: `${ADMIN_API_BASE_PATH}/cards`,
+  CARD_REVOKE: `${ADMIN_API_BASE_PATH}/cards/:id/revoke`,
+  BUSINESSES: `${ADMIN_API_BASE_PATH}/businesses`,
+  BUSINESS_DETAIL: `${ADMIN_API_BASE_PATH}/businesses/:id`,
+  BUSINESS_APPROVE: `${ADMIN_API_BASE_PATH}/businesses/:id/approve`,
+  BUSINESS_REJECT: `${ADMIN_API_BASE_PATH}/businesses/:id/reject`,
+  BUSINESS_HIDE: `${ADMIN_API_BASE_PATH}/businesses/:id/hide`,
+  BUSINESS_FEATURED: `${ADMIN_API_BASE_PATH}/businesses/:id/featured`,
+  INTRODUCTIONS: `${ADMIN_API_BASE_PATH}/introductions`,
+  INTRODUCTION_DETAIL: `${ADMIN_API_BASE_PATH}/introductions/:id`,
+  INTRODUCTION_APPROVE: `${ADMIN_API_BASE_PATH}/introductions/:id/approve`,
+  INTRODUCTION_REJECT: `${ADMIN_API_BASE_PATH}/introductions/:id/reject`,
+  INTRODUCTION_COMPLETE: `${ADMIN_API_BASE_PATH}/introductions/:id/complete`,
+  CATEGORIES: `${ADMIN_API_BASE_PATH}/categories`,
+  COUNTRIES: `${ADMIN_API_BASE_PATH}/countries`,
+  CITIES: `${ADMIN_API_BASE_PATH}/cities`,
+  SUBSCRIPTIONS: `${ADMIN_API_BASE_PATH}/subscriptions`,
+  SUBSCRIPTION_DETAIL: `${ADMIN_API_BASE_PATH}/subscriptions/:id`,
+  SUBSCRIPTION_CANCEL: `${ADMIN_API_BASE_PATH}/subscriptions/:id/cancel`,
+  STRIPE_PRICES: `${ADMIN_API_BASE_PATH}/stripe-prices`,
+  ADMIN_CONFIG: `${ADMIN_API_BASE_PATH}/admin-config/:key`,
+  STAFF: `${ADMIN_API_BASE_PATH}/staff`,
+  AUDIT: `${ADMIN_API_BASE_PATH}/audit`,
+  WEBHOOK_REPLAY: `${ADMIN_API_BASE_PATH}/webhooks/:eventId/replay`,
+} as const;
+
+export type MemberApiRouteKey = keyof typeof MEMBER_API_ROUTES;
+export type AdminApiRouteKey = keyof typeof ADMIN_API_ROUTES;
+export type ApiRoutePattern =
+  | (typeof MEMBER_API_ROUTES)[MemberApiRouteKey]
+  | (typeof ADMIN_API_ROUTES)[AdminApiRouteKey];
+
+export function buildApiRoute(
+  pattern: ApiRoutePattern,
+  params: Record<string, string | number>,
+): string {
+  return Object.entries(params).reduce<string>(
+    (path, [key, value]) => path.replace(`:${key}`, encodeURIComponent(String(value))),
+    pattern,
+  );
+}

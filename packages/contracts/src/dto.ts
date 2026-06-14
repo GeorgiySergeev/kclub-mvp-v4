@@ -1,0 +1,160 @@
+export const LOCALES = ['en', 'ru', 'uk'] as const;
+export type Locale = (typeof LOCALES)[number];
+
+export const MEMBER_TIERS = ['MEMBER', 'VIP'] as const;
+export type MemberTier = (typeof MEMBER_TIERS)[number];
+
+export const USER_STATUSES = ['ACTIVE', 'BLOCKED'] as const;
+export type UserStatus = (typeof USER_STATUSES)[number];
+
+export const CLUB_CARD_STATUSES = ['ACTIVE', 'REVOKED', 'EXPIRED'] as const;
+export type ClubCardStatus = (typeof CLUB_CARD_STATUSES)[number];
+
+export const BUSINESS_STATUSES = [
+  'UNDER_REVIEW',
+  'APPROVED',
+  'PUBLISHED',
+  'REJECTED',
+  'HIDDEN',
+] as const;
+export type BusinessStatus = (typeof BUSINESS_STATUSES)[number];
+
+export const SUBSCRIPTION_STATUSES = ['NONE', 'ACTIVE', 'PAST_DUE', 'CANCELED', 'EXPIRED'] as const;
+export type SubscriptionStatus = (typeof SUBSCRIPTION_STATUSES)[number];
+
+export const INTRODUCTION_STATUSES = [
+  'SUBMITTED',
+  'IN_REVIEW',
+  'APPROVED',
+  'COMPLETED',
+  'REJECTED',
+  'CANCELED',
+] as const;
+export type IntroductionStatus = (typeof INTRODUCTION_STATUSES)[number];
+
+export const AUDIT_ACTIONS = [
+  'USER_BLOCKED',
+  'USER_UNBLOCKED',
+  'CARD_REVOKED',
+  'CARD_ISSUED',
+  'BUSINESS_APPROVED',
+  'BUSINESS_REJECTED',
+  'BUSINESS_HIDDEN',
+  'BUSINESS_FEATURED_UPDATED',
+  'INTRODUCTION_APPROVED',
+  'INTRODUCTION_REJECTED',
+  'INTRODUCTION_COMPLETED',
+  'SUBSCRIPTION_CANCELED',
+  'STAFF_ROLE_UPDATED',
+  'STRIPE_WEBHOOK_REPLAYED',
+] as const;
+export type AuditAction = (typeof AUDIT_ACTIONS)[number];
+
+export type IsoDateTime = string;
+export type EntityId = string;
+
+export type CurrentMemberProfileDto = {
+  id: EntityId;
+  phone: string;
+  displayName: string | null;
+  localePreference: Locale | null;
+  membershipTier: MemberTier;
+  status: UserStatus;
+  onboardingComplete: boolean;
+  termsAcceptedAt: IsoDateTime | null;
+  createdAt: IsoDateTime;
+  updatedAt: IsoDateTime;
+};
+
+export type PublicCardVerificationDto = {
+  cardNumber: string;
+  status: ClubCardStatus;
+  membershipTier: MemberTier;
+  displayName: string | null;
+  issuedAt: IsoDateTime;
+  expiresAt: IsoDateTime | null;
+};
+
+export type MemberCardDto = {
+  id: EntityId;
+  userId: EntityId;
+  cardNumber: string;
+  status: ClubCardStatus;
+  membershipTier: MemberTier;
+  qrPayloadUrl: string;
+  issuedAt: IsoDateTime;
+  expiresAt: IsoDateTime | null;
+};
+
+export type PublicBusinessListItemDto = {
+  id: EntityId;
+  slug: string;
+  name: string;
+  categoryName: string;
+  countryName: string;
+  cityName: string;
+  briefDescription: string | null;
+  websiteUrl: string | null;
+  socialUrl: string | null;
+  featuredTop: boolean;
+  featuredRecommended: boolean;
+};
+
+export type PublicBusinessDetailDto = PublicBusinessListItemDto & {
+  description: string | null;
+  representativeName: string | null;
+  publishedAt: IsoDateTime | null;
+};
+
+export type AdminBusinessDetailDto = PublicBusinessDetailDto & {
+  ownerUserId: EntityId;
+  status: BusinessStatus;
+  representativeEmail: string;
+  representativePhone: string;
+  rejectionReason: string | null;
+  internalNotes: string | null;
+  approvedAt: IsoDateTime | null;
+  hiddenAt: IsoDateTime | null;
+  createdAt: IsoDateTime;
+  updatedAt: IsoDateTime;
+};
+
+export type SubscriptionDto = {
+  id: EntityId;
+  userId: EntityId;
+  status: SubscriptionStatus;
+  stripeCustomerId: string | null;
+  stripeSubscriptionId: string | null;
+  currentPeriodStart: IsoDateTime | null;
+  currentPeriodEnd: IsoDateTime | null;
+  cancelAtPeriodEnd: boolean;
+  createdAt: IsoDateTime;
+  updatedAt: IsoDateTime;
+};
+
+export type IntroductionDto = {
+  id: EntityId;
+  requesterUserId: EntityId;
+  requesterBusinessId: EntityId;
+  targetBusinessId: EntityId;
+  status: IntroductionStatus;
+  message: string | null;
+  rejectionReason: string | null;
+  createdAt: IsoDateTime;
+  updatedAt: IsoDateTime;
+};
+
+export type AuditLogDto = {
+  id: EntityId;
+  actorStaffId: EntityId | null;
+  actorRole: StaffRole | null;
+  action: AuditAction;
+  entityType: string;
+  entityId: EntityId;
+  before: Record<string, unknown> | null;
+  after: Record<string, unknown> | null;
+  ipAddress: string | null;
+  createdAt: IsoDateTime;
+};
+
+import type { StaffRole } from './permissions';
