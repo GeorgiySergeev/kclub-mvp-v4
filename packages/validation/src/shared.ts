@@ -11,26 +11,23 @@ export const otpCodeSchema = z
   .trim()
   .regex(/^\d{4,8}$/, 'OTP code must contain 4 to 8 digits');
 
-export const totpCodeSchema = z.string().trim().regex(/^\d{6}$/, 'TOTP code must contain 6 digits');
+export const totpCodeSchema = z
+  .string()
+  .trim()
+  .regex(/^\d{6}$/, 'TOTP code must contain 6 digits');
 
 export const localeSchema = z.enum(LOCALES, {
   errorMap: () => ({ message: 'Locale must be en, ru, or uk' }),
 });
 
-export const safeTextSchema = z
-  .string()
-  .trim()
-  .min(1)
-  .refine((value) => !/[<>]/.test(value), 'Text must not contain HTML');
+export const safeTextSchema = z.string().trim().min(1);
+
+export function withoutHtml<T extends z.ZodString>(schema: T): z.ZodEffects<T, string, string> {
+  return schema.refine((value) => !/[<>]/.test(value), 'Text must not contain HTML');
+}
 
 export const optionalSafeTextSchema = (max: number) =>
-  z
-    .string()
-    .trim()
-    .max(max)
-    .refine((value) => !/[<>]/.test(value), 'Text must not contain HTML')
-    .optional()
-    .nullable();
+  withoutHtml(z.string().trim().max(max)).optional().nullable();
 
 export const urlSchema = z.string().trim().url('Must be a valid URL');
 
@@ -89,7 +86,10 @@ export function getValidationErrorCode(issue: ZodIssue): ErrorCode {
     }
   }
 
-  if (issue.code === 'invalid_enum_value' && issue.path.join('.').toLowerCase().includes('locale')) {
+  if (
+    issue.code === 'invalid_enum_value' &&
+    issue.path.join('.').toLowerCase().includes('locale')
+  ) {
     return ERROR_CODES.VALIDATION_INVALID_LOCALE;
   }
 

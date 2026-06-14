@@ -10,10 +10,11 @@ import {
   safeTextSchema,
   searchSchema,
   urlSchema,
+  withoutHtml,
 } from './shared';
 
-export const businessNameSchema = safeTextSchema.min(2).max(100);
-export const representativeNameSchema = safeTextSchema.min(2).max(100);
+export const businessNameSchema = withoutHtml(safeTextSchema.min(2).max(100));
+export const representativeNameSchema = withoutHtml(safeTextSchema.min(2).max(100));
 export const businessBriefDescriptionSchema = optionalSafeTextSchema(500);
 
 export const businessProfileSubmitSchema = z
@@ -76,5 +77,7 @@ export const businessListFilterSchema = paginationSchema.extend({
 });
 
 export type BusinessProfileSubmitInput = z.infer<typeof businessProfileSubmitSchema>;
-export type BusinessProfileEditableFieldsInput = z.infer<typeof businessProfileEditableFieldsSchema>;
+export type BusinessProfileEditableFieldsInput = z.infer<
+  typeof businessProfileEditableFieldsSchema
+>;
 export type BusinessListFilterInput = z.infer<typeof businessListFilterSchema>;

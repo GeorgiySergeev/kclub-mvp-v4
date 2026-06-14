@@ -22,7 +22,11 @@ import {
 const uuid = '11111111-1111-4111-8111-111111111111';
 const secondUuid = '22222222-2222-4222-8222-222222222222';
 
-function expectInvalidField(schema: { safeParse: (value: unknown) => { success: boolean; error?: unknown } }, value: unknown, path: string) {
+function expectInvalidField(
+  schema: { safeParse: (value: unknown) => { success: boolean; error?: unknown } },
+  value: unknown,
+  path: string,
+) {
   const result = schema.safeParse(value);
   expect(result.success).toBe(false);
   if (!result.success) {
@@ -129,15 +133,21 @@ describe('business schemas', () => {
       representativeEmail: 'new@example.com',
       socialUrl: 'https://instagram.com/example',
     });
-    expect(businessListFilterSchema.parse({ page: '2', limit: '50', status: 'PUBLISHED' })).toEqual({
-      page: 2,
-      limit: 50,
-      status: 'PUBLISHED',
-    });
+    expect(businessListFilterSchema.parse({ page: '2', limit: '50', status: 'PUBLISHED' })).toEqual(
+      {
+        page: 2,
+        limit: 50,
+        status: 'PUBLISHED',
+      },
+    );
   });
 
   test('rejects invalid business fields with one clear field error', () => {
-    expectInvalidField(businessProfileSubmitSchema, { ...validBusiness, name: '<b>Bad</b>' }, 'name');
+    expectInvalidField(
+      businessProfileSubmitSchema,
+      { ...validBusiness, name: '<b>Bad</b>' },
+      'name',
+    );
     expectInvalidField(
       businessProfileSubmitSchema,
       { ...validBusiness, representativeEmail: 'not-email' },
