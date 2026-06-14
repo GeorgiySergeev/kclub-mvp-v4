@@ -10,6 +10,9 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@kclub/contracts": "workspace:*",
+    "@kclub/domain": "workspace:*",
+    "@kclub/validation": "workspace:*",
     "next": "15.2.0",
     "react": "19.0.0",
     "react-dom": "19.0.0"
