@@ -33,7 +33,7 @@ This document defines the environment contract for KCLUB MVP v4. Never commit re
 ## Admin-App
 
 | Variable                        | Required | Environment | Purpose                                                            |
-| ------------------------------- | -------- | ----------- | ------------------------------------------------------------------ |
+| ---------------------------------| ----------| -------------| --------------------------------------------------------------------|
 | `NEXT_PUBLIC_ADMIN_APP_URL`     | Yes      | all         | Admin app base URL                                                 |
 | `PRODUCT_CORE_API_BASE_URL`     | Yes      | server only | Product-core base URL for staff auth validation and admin proxy    |
 | `ADMIN_JWT_SECRET`              | Yes      | server only | Staff session signing secret shared with product-core token issuer |
