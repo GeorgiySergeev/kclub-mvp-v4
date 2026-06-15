@@ -1,0 +1,46 @@
+import { describe, expect, test } from 'bun:test';
+
+import { toMemberCardDto } from '../../src/server/services';
+
+describe('toMemberCardDto', () => {
+  const baseCard = {
+    id: '550e8400-e29b-41d4-a716-446655440001',
+    user_id: '550e8400-e29b-41d4-a716-446655440000',
+    card_number: 'MEM-000001',
+    membership_tier: 'MEMBER',
+    status: 'ACTIVE',
+    qr_payload_url: '/verify-card/MEM-000001',
+    issued_at: new Date('2026-06-15T10:00:00.000Z'),
+    expires_at: null,
+  };
+
+  test('maps card record to MemberCardDto correctly', () => {
+    const dto = toMemberCardDto(baseCard);
+
+    expect(dto).toEqual({
+      id: '550e8400-e29b-41d4-a716-446655440001',
+      userId: '550e8400-e29b-41d4-a716-446655440000',
+      cardNumber: 'MEM-000001',
+      status: 'ACTIVE',
+      membershipTier: 'MEMBER',
+      qrPayloadUrl: '/verify-card/MEM-000001',
+      issuedAt: '2026-06-15T10:00:00.000Z',
+      expiresAt: null,
+    });
+  });
+
+  test('maps revoked status correctly', () => {
+    const dto = toMemberCardDto({ ...baseCard, status: 'REVOKED' });
+
+    expect(dto.status).toBe('REVOKED');
+  });
+
+  test('includes expiresAt when present', () => {
+    const dto = toMemberCardDto({
+      ...baseCard,
+      expires_at: new Date('2027-06-15T10:00:00.000Z'),
+    });
+
+    expect(dto.expiresAt).toBe('2027-06-15T10:00:00.000Z');
+  });
+});
