@@ -101,7 +101,7 @@ Operational hierarchy: `OWNER >= ADMIN >= MODERATOR`.
 | `OWNER`     | Platform ownership, billing configuration, staff role assignment |
 | `ADMIN`     | User operations, cards, subscriptions, audit visibility          |
 | `MODERATOR` | Business, catalog, taxonomy, and introduction moderation         |
-| `SUPPORT`   | Read-only investigation and internal notes                       |
+| `SUPPORT`   | Strictly read-only investigation                                  |
 
 | Action                                    | OWNER | ADMIN | MODERATOR | SUPPORT |
 | ----------------------------------------- | :---: | :---: | :-------: | :-----: |
@@ -118,7 +118,7 @@ Operational hierarchy: `OWNER >= ADMIN >= MODERATOR`.
 | Manage Stripe Price IDs                   |  Yes  |  No   |    No     |   No    |
 | Manage staff roles                        |  Yes  |  No   |    No     |   No    |
 | View audit log                            |  Yes  |  Yes  |    No     |   Yes   |
-| Add internal notes                        |  Yes  |  Yes  |    Yes    |   Yes   |
+| Add internal notes                        |  Yes  |  Yes  |    Yes    |   No    |
 
 ## 6. Authentication and Sessions
 

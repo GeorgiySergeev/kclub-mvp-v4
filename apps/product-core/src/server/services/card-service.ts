@@ -1,8 +1,15 @@
-import { ERROR_CODES, type MemberCardDto, type ClubCardStatus, type MemberTier } from '@kclub/contracts';
-import { canIssueNewActiveCard } from '@kclub/domain';
+import {
+  ERROR_CODES,
+  type ClubCardStatus,
+  type MemberCardDto,
+  type MemberTier,
+  type PublicCardVerificationDto,
+} from '@kclub/contracts';
+import { canIssueNewActiveCard, canTransitionCardStatus } from '@kclub/domain';
 
 import { AppError } from '@/server/errors';
 import { getPrismaClient } from '@/server/db';
+import { formatCardNumber, cardNumberToTierPrefix, parseCardNumber } from './card-helpers';
 
 export type CardRecord = {
   id: string;
@@ -13,6 +20,12 @@ export type CardRecord = {
   qr_payload_url: string | null;
   issued_at: Date;
   expires_at: Date | null;
+  revoked_at: Date | null;
+  revoked_reason: string | null;
+};
+
+export type CardWithUserDisplayName = CardRecord & {
+  user: { display_name: string | null };
 };
 
 export function toMemberCardDto(card: CardRecord): MemberCardDto {
@@ -28,24 +41,47 @@ export function toMemberCardDto(card: CardRecord): MemberCardDto {
   };
 }
 
+export function toPublicCardVerificationDto(card: CardWithUserDisplayName): PublicCardVerificationDto {
+  return {
+    cardNumber: card.card_number,
+    status: card.status as ClubCardStatus,
+    membershipTier: card.membership_tier as MemberTier,
+    displayName: card.user.display_name,
+    issuedAt: card.issued_at.toISOString(),
+    expiresAt: card.expires_at?.toISOString() ?? null,
+  };
+}
+
 async function generateNextCardNumber(): Promise<string> {
   const prisma = getPrismaClient();
 
   const lastCard = await prisma.memberCard.findFirst({
-    where: { card_number: { startsWith: 'MEM-' } },
     orderBy: { card_number: 'desc' },
     select: { card_number: true },
   });
 
   let nextSeq = 1;
   if (lastCard) {
-    const parts = lastCard.card_number.split('-');
-    if (parts.length === 2) {
-      nextSeq = parseInt(parts[1], 10) + 1;
+    try {
+      const { sequence } = parseCardNumber(lastCard.card_number);
+      nextSeq = sequence + 1;
+    } catch {
+      nextSeq = 1;
     }
   }
 
-  return `MEM-${String(nextSeq).padStart(6, '0')}`;
+  return formatCardNumber('MEM', nextSeq);
+}
+
+export async function getActiveCardForUser(userId: string): Promise<CardRecord | null> {
+  const prisma = getPrismaClient();
+
+  const card = await prisma.memberCard.findFirst({
+    where: { user_id: userId, status: 'ACTIVE' },
+    orderBy: { issued_at: 'desc' },
+  });
+
+  return card;
 }
 
 export async function issueCardForUser(
@@ -66,6 +102,7 @@ export async function issueCardForUser(
     });
   }
 
+  const tierPrefix = cardNumberToTierPrefix(membershipTier as 'MEMBER' | 'VIP');
   const cardNumber = await generateNextCardNumber();
 
   const card = await prisma.memberCard.create({
@@ -84,15 +121,123 @@ export async function issueCardForUserIfNoneActive(
   userId: string,
   membershipTier: string,
 ): Promise<CardRecord | null> {
-  const prisma = getPrismaClient();
-
-  const activeCardCount = await prisma.memberCard.count({
-    where: { user_id: userId, status: 'ACTIVE' },
-  });
-
-  if (!canIssueNewActiveCard(activeCardCount)) {
-    return null;
-  }
+  const activeCard = await getActiveCardForUser(userId);
+  if (activeCard) return null;
 
   return issueCardForUser(userId, membershipTier);
+}
+
+export async function revokeCard(
+  cardId: string,
+  reason?: string,
+): Promise<CardRecord> {
+  const prisma = getPrismaClient();
+
+  const card = await prisma.memberCard.findUnique({
+    where: { id: cardId },
+  });
+
+  if (!card) {
+    throw new AppError({
+      code: ERROR_CODES.CARD_NOT_FOUND,
+      message: 'Card not found',
+      status: 404,
+    });
+  }
+
+  if (!canTransitionCardStatus(card.status as ClubCardStatus, 'REVOKED')) {
+    throw new AppError({
+      code: ERROR_CODES.CARD_INVALID_STATUS_TRANSITION,
+      message: `Cannot revoke a card with status ${card.status}`,
+      status: 409,
+    });
+  }
+
+  const updated = await prisma.memberCard.update({
+    where: { id: cardId },
+    data: {
+      status: 'REVOKED',
+      revoked_at: new Date(),
+      revoked_reason: reason ?? null,
+    },
+  });
+
+  return updated;
+}
+
+export async function reissueCard(
+  userId: string,
+  membershipTier: string,
+  currentCardId: string,
+  revokeReason?: string,
+): Promise<CardRecord> {
+  const prisma = getPrismaClient();
+
+  const [newCard] = await prisma.$transaction(async (tx) => {
+    const card = await tx.memberCard.findUnique({
+      where: { id: currentCardId },
+    });
+
+    if (!card) {
+      throw new AppError({
+        code: ERROR_CODES.CARD_NOT_FOUND,
+        message: 'Card not found',
+        status: 404,
+      });
+    }
+
+    if (!canTransitionCardStatus(card.status as ClubCardStatus, 'REVOKED')) {
+      throw new AppError({
+        code: ERROR_CODES.CARD_INVALID_STATUS_TRANSITION,
+        message: `Cannot reissue: current card status is ${card.status}`,
+        status: 409,
+      });
+    }
+
+    await tx.memberCard.update({
+      where: { id: currentCardId },
+      data: {
+        status: 'REVOKED',
+        revoked_at: new Date(),
+        revoked_reason: revokeReason ?? null,
+      },
+    });
+
+    const tierPrefix = cardNumberToTierPrefix(membershipTier as 'MEMBER' | 'VIP');
+    const cardNumber = await generateNextCardNumber();
+
+    const newCardRecord = await tx.memberCard.create({
+      data: {
+        user_id: userId,
+        card_number: cardNumber,
+        membership_tier: membershipTier as MemberTier,
+        qr_payload_url: `/verify-card/${cardNumber}`,
+      },
+    });
+
+    return [newCardRecord];
+  });
+
+  return newCard;
+}
+
+export async function publicVerifyCard(
+  cardNumber: string,
+): Promise<PublicCardVerificationDto> {
+  const prisma = getPrismaClient();
+
+  const card = await prisma.memberCard.findUnique({
+    where: { card_number: cardNumber },
+    include: { user: { select: { display_name: true } } },
+  });
+
+  if (!card) {
+    throw new AppError({
+      code: ERROR_CODES.CARD_NOT_FOUND,
+      message: 'Card not found',
+      status: 404,
+    });
+  }
+
+  return toPublicCardVerificationDto(card);
 }

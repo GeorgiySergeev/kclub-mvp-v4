@@ -199,8 +199,28 @@
       "signIn": "Sign In",
       "verifyCard": "Verify Card",
       "terms": "Terms",
-      "privacy": "Privacy",
-      "copyright": "All rights reserved."
+      "privacy": "Конфиденциальность",
+      "copyright": "© Все права защищены."
+    }
+  },
+  "auth": {
+    "signIn": {
+      "title": "Войти",
+      "description": "С возвращением. Введите номер телефона для входа.",
+      "phoneLabel": "Номер телефона",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "submit": "Отправить код",
+      "switchPrompt": "Нет аккаунта?",
+      "switchAction": "Присоединиться к KCLUB"
+    },
+    "signUp": {
+      "title": "Присоединиться",
+      "description": "Создайте аккаунт и получите цифровую клубную карту.",
+      "phoneLabel": "Номер телефона",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "submit": "Отправить код",
+      "switchPrompt": "Уже есть аккаунт?",
+      "switchAction": "Войти"
     }
   }
 }

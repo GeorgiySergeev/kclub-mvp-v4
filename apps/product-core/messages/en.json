@@ -200,7 +200,27 @@
       "verifyCard": "Verify Card",
       "terms": "Terms",
       "privacy": "Privacy",
-      "copyright": "All rights reserved."
+      "copyright": "© All rights reserved."
+    }
+  },
+  "auth": {
+    "signIn": {
+      "title": "Sign In",
+      "description": "Welcome back. Enter your phone number to sign in.",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "submit": "Send OTP",
+      "switchPrompt": "Don't have an account?",
+      "switchAction": "Join KCLUB"
+    },
+    "signUp": {
+      "title": "Join KCLUB",
+      "description": "Create your member account and get your digital club card.",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "submit": "Send OTP",
+      "switchPrompt": "Already have an account?",
+      "switchAction": "Sign In"
     }
   }
 }

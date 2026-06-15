@@ -20,6 +20,7 @@ export const MEMBER_API_ROUTES = {
 } as const;
 
 export const ADMIN_API_ROUTES = {
+  DASHBOARD_METRICS: `${ADMIN_API_BASE_PATH}/dashboard-metrics`,
   STAFF_AUTH_PHONE_OTP_SEND: `${ADMIN_API_BASE_PATH}/staff-auth/phone-otp/send`,
   STAFF_AUTH_PHONE_OTP_VERIFY: `${ADMIN_API_BASE_PATH}/staff-auth/phone-otp/verify`,
   STAFF_AUTH_TOTP_VERIFY: `${ADMIN_API_BASE_PATH}/staff-auth/totp/verify`,
@@ -29,7 +30,9 @@ export const ADMIN_API_ROUTES = {
   USER_BLOCK: `${ADMIN_API_BASE_PATH}/users/:id/block`,
   USER_UNBLOCK: `${ADMIN_API_BASE_PATH}/users/:id/unblock`,
   CARDS: `${ADMIN_API_BASE_PATH}/cards`,
+  CARD_DETAIL: `${ADMIN_API_BASE_PATH}/cards/:id`,
   CARD_REVOKE: `${ADMIN_API_BASE_PATH}/cards/:id/revoke`,
+  CARD_REISSUE: `${ADMIN_API_BASE_PATH}/cards/:id/reissue`,
   BUSINESSES: `${ADMIN_API_BASE_PATH}/businesses`,
   BUSINESS_DETAIL: `${ADMIN_API_BASE_PATH}/businesses/:id`,
   BUSINESS_APPROVE: `${ADMIN_API_BASE_PATH}/businesses/:id/approve`,
@@ -42,8 +45,11 @@ export const ADMIN_API_ROUTES = {
   INTRODUCTION_REJECT: `${ADMIN_API_BASE_PATH}/introductions/:id/reject`,
   INTRODUCTION_COMPLETE: `${ADMIN_API_BASE_PATH}/introductions/:id/complete`,
   CATEGORIES: `${ADMIN_API_BASE_PATH}/categories`,
+  CATEGORY_DETAIL: `${ADMIN_API_BASE_PATH}/categories/:id`,
   COUNTRIES: `${ADMIN_API_BASE_PATH}/countries`,
+  COUNTRY_DETAIL: `${ADMIN_API_BASE_PATH}/countries/:id`,
   CITIES: `${ADMIN_API_BASE_PATH}/cities`,
+  CITY_DETAIL: `${ADMIN_API_BASE_PATH}/cities/:id`,
   SUBSCRIPTIONS: `${ADMIN_API_BASE_PATH}/subscriptions`,
   SUBSCRIPTION_DETAIL: `${ADMIN_API_BASE_PATH}/subscriptions/:id`,
   SUBSCRIPTION_CANCEL: `${ADMIN_API_BASE_PATH}/subscriptions/:id/cancel`,

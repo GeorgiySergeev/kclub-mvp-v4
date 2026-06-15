@@ -21,7 +21,7 @@ export default async function LocaleLayout(props: {
 
   return (
     <html lang={params.locale} suppressHydrationWarning>
-      <body className="min-h-screen bg-white font-sans text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-50">
+      <body className="min-h-screen bg-white font-sans text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-50" suppressHydrationWarning>
         <NextIntlClientProvider messages={messages}>
           <ThemeProvider>{props.children}</ThemeProvider>
         </NextIntlClientProvider>

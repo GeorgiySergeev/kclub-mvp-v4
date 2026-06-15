@@ -2,21 +2,39 @@ import { ERROR_CODES } from '@kclub/contracts';
 import { describe, expect, test } from 'bun:test';
 
 import {
+  blockUserSchema,
+  businessApproveSchema,
+  businessFeaturedSchema,
+  businessHideSchema,
   businessListFilterSchema,
   businessProfileEditableFieldsSchema,
   businessProfileSubmitSchema,
+  businessRejectSchema,
+  categoryCreateSchema,
+  categoryUpdateSchema,
+  cityCreateSchema,
+  cityUpdateSchema,
+  countryCreateSchema,
+  countryUpdateSchema,
   entityIdParamSchema,
   formatZodError,
+  introductionApproveSchema,
   introductionCancelSchema,
   introductionListFilterSchema,
+  introductionRejectSchema,
   introductionSubmitSchema,
   memberOnboardingSchema,
   memberProfileUpdateSchema,
   parseWithValidation,
   phoneOtpSendSchema,
   phoneOtpVerifySchema,
+  revokeCardSchema,
+  reissueCardSchema,
+  staffRoleUpdateSchema,
   staffTotpSetupSchema,
   staffTotpVerifySchema,
+  unblockUserSchema,
+  adminConfigUpdateSchema,
 } from '../src';
 
 const uuid = '11111111-1111-4111-8111-111111111111';
@@ -227,6 +245,94 @@ describe('staff auth schemas', () => {
       'secret',
     );
     expectInvalidField(staffTotpVerifySchema, { phone: '+15551234567', code: '12345a' }, 'code');
+  });
+});
+
+describe('admin mutation schemas', () => {
+  test('validates block and unblock user schemas', () => {
+    expect(blockUserSchema.parse({ reason: 'Violated terms' })).toEqual({
+      reason: 'Violated terms',
+    });
+    expect(blockUserSchema.parse({})).toEqual({});
+    expect(unblockUserSchema.parse({ reason: 'Appeal granted' })).toEqual({
+      reason: 'Appeal granted',
+    });
+    expect(unblockUserSchema.parse({})).toEqual({});
+  });
+
+  test('validates card revoke and reissue schemas', () => {
+    expect(revokeCardSchema.parse({ reason: 'Lost card' })).toEqual({ reason: 'Lost card' });
+    expect(revokeCardSchema.parse({})).toEqual({});
+    expect(reissueCardSchema.parse({ reason: 'Damaged' })).toEqual({ reason: 'Damaged' });
+    expect(reissueCardSchema.parse({})).toEqual({});
+  });
+
+  test('validates business moderation schemas', () => {
+    expect(businessApproveSchema.parse({})).toEqual({});
+    expect(businessApproveSchema.parse({ notes: 'Looks good' })).toEqual({ notes: 'Looks good' });
+
+    expect(() => businessRejectSchema.parse({})).toThrow();
+    expect(businessRejectSchema.parse({ reason: 'Invalid documents' })).toEqual({
+      reason: 'Invalid documents',
+    });
+
+    expect(businessHideSchema.parse({})).toEqual({});
+    expect(businessHideSchema.parse({ reason: 'Spam' })).toEqual({ reason: 'Spam' });
+
+    expect(businessFeaturedSchema.parse({ featuredTop: true })).toEqual({ featuredTop: true });
+    expect(businessFeaturedSchema.parse({ featuredRecommended: true })).toEqual({
+      featuredRecommended: true,
+    });
+    expect(businessFeaturedSchema.parse({})).toEqual({});
+  });
+
+  test('validates introduction moderation schemas', () => {
+    expect(introductionApproveSchema.parse({})).toEqual({});
+    expect(introductionApproveSchema.parse({ notes: 'Proceed' })).toEqual({ notes: 'Proceed' });
+
+    expect(() => introductionRejectSchema.parse({})).toThrow();
+    expect(introductionRejectSchema.parse({ reason: 'Not eligible' })).toEqual({
+      reason: 'Not eligible',
+    });
+  });
+
+  test('validates taxonomy CRUD schemas', () => {
+    expect(categoryCreateSchema.parse({ name: 'Tech', slug: 'tech' })).toEqual({
+      name: 'Tech',
+      slug: 'tech',
+      isHighRisk: false,
+      isActive: true,
+    });
+    expect(categoryUpdateSchema.parse({ name: 'Tech Updated' })).toEqual({ name: 'Tech Updated' });
+
+    expect(countryCreateSchema.parse({ code2: 'DE', name: 'Germany', slug: 'germany' })).toEqual({
+      code2: 'DE',
+      name: 'Germany',
+      slug: 'germany',
+      isActive: true,
+    });
+    expect(countryUpdateSchema.parse({ isActive: false })).toEqual({ isActive: false });
+
+    expect(cityCreateSchema.parse({ countryId: uuid, name: 'Berlin', slug: 'berlin' })).toEqual({
+      countryId: uuid,
+      name: 'Berlin',
+      slug: 'berlin',
+      isActive: true,
+    });
+    expect(cityUpdateSchema.parse({ name: 'Berlin Mitte' })).toEqual({ name: 'Berlin Mitte' });
+  });
+
+  test('validates staff role update and admin config schemas', () => {
+    expect(staffRoleUpdateSchema.parse({ role: 'ADMIN' })).toEqual({ role: 'ADMIN' });
+    expect(() => staffRoleUpdateSchema.parse({ role: 'INVALID' })).toThrow();
+
+    expect(
+      adminConfigUpdateSchema.parse({ value: { key: 'val' }, description: 'Test config' }),
+    ).toEqual({
+      value: { key: 'val' },
+      description: 'Test config',
+    });
+    expect(adminConfigUpdateSchema.parse({ value: 'simple' })).toEqual({ value: 'simple' });
   });
 });
 

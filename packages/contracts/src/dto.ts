@@ -41,9 +41,13 @@ export const AUDIT_ACTIONS = [
   'BUSINESS_REJECTED',
   'BUSINESS_HIDDEN',
   'BUSINESS_FEATURED_UPDATED',
+  'BUSINESS_SUBMITTED',
+  'BUSINESS_UPDATED',
   'INTRODUCTION_APPROVED',
   'INTRODUCTION_REJECTED',
   'INTRODUCTION_COMPLETED',
+  'INTRODUCTION_SUBMITTED',
+  'INTRODUCTION_CANCELED',
   'SUBSCRIPTION_CANCELED',
   'STAFF_ROLE_UPDATED',
   'STRIPE_WEBHOOK_REPLAYED',
@@ -171,6 +175,15 @@ export type AdminBusinessDetailDto = PublicBusinessDetailDto & {
   internalNotes: string | null;
   approvedAt: IsoDateTime | null;
   hiddenAt: IsoDateTime | null;
+  createdAt: IsoDateTime;
+  updatedAt: IsoDateTime;
+};
+
+export type MemberBusinessProfileDto = PublicBusinessDetailDto & {
+  status: BusinessStatus;
+  representativeEmail: string;
+  representativePhone: string;
+  rejectionReason: string | null;
   createdAt: IsoDateTime;
   updatedAt: IsoDateTime;
 };

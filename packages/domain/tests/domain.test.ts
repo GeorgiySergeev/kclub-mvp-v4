@@ -110,7 +110,7 @@ describe('staff permission matrix', () => {
       STRIPE_PRICES_MANAGE: false,
       STAFF_MANAGE: false,
       AUDIT_READ: true,
-      INTERNAL_NOTES_CREATE: true,
+      INTERNAL_NOTES_CREATE: false,
     },
   };
 

@@ -1,4 +1,8 @@
-import type { AdminBusinessDetailDto, PublicBusinessDetailDto } from '../src';
+import type {
+  AdminBusinessDetailDto,
+  PublicBusinessDetailDto,
+  PublicCardVerificationDto,
+} from '../src';
 
 type Assert<T extends true> = T;
 type HasKey<T, K extends PropertyKey> = K extends keyof T ? true : false;
@@ -16,9 +20,18 @@ type AdminBusinessExposesModerationFields = Assert<
   HasKey<AdminBusinessDetailDto, 'representativeEmail'> extends true ? true : false
 >;
 
+type PublicCardVerifyDoesNotExposeUserId = Assert<
+  HasKey<PublicCardVerificationDto, 'userId'> extends false ? true : false
+>;
+type PublicCardVerifyDoesNotExposeCardId = Assert<
+  HasKey<PublicCardVerificationDto, 'id'> extends false ? true : false
+>;
+
 export type {
   AdminBusinessExposesModerationFields,
   PublicBusinessDoesNotExposeAdminEmail,
   PublicBusinessDoesNotExposeAdminPhone,
   PublicBusinessDoesNotExposeOwner,
+  PublicCardVerifyDoesNotExposeUserId,
+  PublicCardVerifyDoesNotExposeCardId,
 };

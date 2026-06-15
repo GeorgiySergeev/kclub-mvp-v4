@@ -1,8 +1,6 @@
-import type { AuditAction, EntityId, StaffRole } from '@kclub/contracts';
+import type { AuditAction, AuditLogDto, EntityId, StaffRole } from '@kclub/contracts';
 
 import type { RequestContext } from '@/server/context';
-
-
 
 export type AuditLogCommand = {
   action: AuditAction;
@@ -12,7 +10,12 @@ export type AuditLogCommand = {
   after?: Record<string, unknown> | null;
 };
 
-export type AuditLogRecord = AuditLogCommand & {
+export type AuditLogRecord = {
+  action: AuditAction;
+  entityType: string;
+  entityId: EntityId;
+  before: Record<string, unknown> | null;
+  after: Record<string, unknown> | null;
   actorStaffId: EntityId | null;
   actorRole: StaffRole | null;
   ipAddress: string | null;
@@ -25,7 +28,7 @@ export type AuditSink = {
 };
 
 export type AuditService = {
-  log(command: AuditLogCommand, context: RequestContext): Promise<AuditLogRecord>;
+  log(command: AuditLogCommand, context: RequestContext): Promise<AuditLogDto>;
 };
 
 export function createAuditService(sink?: AuditSink): AuditService {
@@ -33,7 +36,7 @@ export function createAuditService(sink?: AuditSink): AuditService {
     async log(command, context) {
       const record = createAuditRecord(command, context);
       await sink?.write(record);
-      return record;
+      return toAuditLogDto(record);
     },
   };
 }
@@ -50,5 +53,20 @@ function createAuditRecord(command: AuditLogCommand, context: RequestContext): A
     ipAddress: context.ipAddress,
     requestId: context.requestId,
     createdAt: new Date().toISOString(),
+  };
+}
+
+function toAuditLogDto(record: AuditLogRecord): AuditLogDto {
+  return {
+    id: record.requestId,
+    actorStaffId: record.actorStaffId,
+    actorRole: record.actorRole,
+    action: record.action,
+    entityType: record.entityType,
+    entityId: record.entityId,
+    before: record.before ?? null,
+    after: record.after ?? null,
+    ipAddress: record.ipAddress,
+    createdAt: record.createdAt,
   };
 }

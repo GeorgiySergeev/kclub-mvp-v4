@@ -199,8 +199,28 @@
       "signIn": "Sign In",
       "verifyCard": "Verify Card",
       "terms": "Terms",
-      "privacy": "Privacy",
-      "copyright": "All rights reserved."
+      "privacy": "Конфіденційність",
+      "copyright": "© Всі права захищені."
+    }
+  },
+  "auth": {
+    "signIn": {
+      "title": "Увійти",
+      "description": "З поверненням. Введіть номер телефону для входу.",
+      "phoneLabel": "Номер телефону",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "submit": "Відправити код",
+      "switchPrompt": "Немає акаунту?",
+      "switchAction": "Приєднатися до KCLUB"
+    },
+    "signUp": {
+      "title": "Приєднатися",
+      "description": "Створіть акаунт та отримайте цифрову клубну карту.",
+      "phoneLabel": "Номер телефону",
+      "phonePlaceholder": "+1 (555) 000-0000",
+      "submit": "Відправити код",
+      "switchPrompt": "Вже є акаунт?",
+      "switchAction": "Увійти"
     }
   }
 }
