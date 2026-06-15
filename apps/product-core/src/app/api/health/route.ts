@@ -1,5 +1,5 @@
-import { NextResponse } from 'next/server';
+import { jsonSuccess } from '@/server/api';
 
 export function GET() {
-  return NextResponse.json({ status: 'ok', app: 'product-core' });
+  return jsonSuccess({ status: 'ok', app: 'product-core' });
 }
