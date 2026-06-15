@@ -1,0 +1,206 @@
+{
+  "home": {
+    "brand": "KCLUB",
+    "locale": {
+      "en": "English",
+      "ru": "Russian",
+      "uk": "Ukrainian"
+    },
+    "common": {
+      "menu": "Open navigation",
+      "close": "Close navigation",
+      "toggleTheme": "Toggle theme",
+      "scroll": "Scroll to content",
+      "viewProfile": "View Profile"
+    },
+    "nav": {
+      "directory": "Directory",
+      "signIn": "Sign In",
+      "join": "Join"
+    },
+    "hero": {
+      "eyebrow": "Private Membership Club",
+      "titleLine1": "Private access for",
+      "titleLine2": "global professionals",
+      "subline": "A curated membership network for verified people, trusted partners, and warm business introductions.",
+      "primaryCta": "Join Now",
+      "secondaryCta": "Explore Directory"
+    },
+    "stats": {
+      "members": "Members",
+      "countries": "Countries",
+      "partners": "Partner Businesses",
+      "years": "Years Active"
+    },
+    "features": {
+      "eyebrow": "Member Platform",
+      "title": "Why KCLUB",
+      "items": [
+        {
+          "title": "Digital Club Card",
+          "description": "QR-verified, always in your pocket."
+        },
+        {
+          "title": "VIP Membership",
+          "description": "Exclusive network and business introductions."
+        },
+        {
+          "title": "Partner Directory",
+          "description": "Verified businesses across 12+ countries."
+        },
+        {
+          "title": "Business Introductions",
+          "description": "Warm B2B connections inside the club."
+        },
+        {
+          "title": "Multilingual Platform",
+          "description": "English, Russian, and Ukrainian."
+        },
+        {
+          "title": "Privacy First",
+          "description": "No public member lookup, phone-only auth."
+        }
+      ]
+    },
+    "services": {
+      "eyebrow": "Access",
+      "title": "Membership Plans",
+      "member": {
+        "name": "MEMBER",
+        "price": "Free",
+        "cta": "Create Member Account",
+        "items": [
+          "Digital club card",
+          "Public partner directory access",
+          "Member profile and onboarding"
+        ]
+      },
+      "vip": {
+        "name": "VIP",
+        "price": "from $X/mo",
+        "cta": "Upgrade to VIP",
+        "items": [
+          "Everything in MEMBER",
+          "VIP subscription management",
+          "Submit and manage a business profile",
+          "Business introductions after publication"
+        ]
+      }
+    },
+    "about": {
+      "eyebrow": "About",
+      "title": "A curated private network for professionals and entrepreneurs.",
+      "paragraph1": "KCLUB connects members with trusted businesses, practical membership tools, and a private path into cross-border relationships.",
+      "paragraph2": "The platform keeps access focused: verified members, moderated partners, digital cards, and clear VIP pathways.",
+      "factsTitle": "Key Facts",
+      "facts": [
+        {
+          "label": "Founded",
+          "value": "2019"
+        },
+        {
+          "label": "HQ",
+          "value": "USA"
+        },
+        {
+          "label": "Members",
+          "value": "1 200+"
+        }
+      ]
+    },
+    "featured": {
+      "eyebrow": "Directory",
+      "title": "Featured Partners",
+      "items": [
+        {
+          "name": "Northline Advisory",
+          "category": "Consulting",
+          "country": "United States"
+        },
+        {
+          "name": "Kyiv Legal Group",
+          "category": "Legal",
+          "country": "Ukraine"
+        },
+        {
+          "name": "Atlas Trade House",
+          "category": "Import",
+          "country": "Poland"
+        }
+      ]
+    },
+    "testimonials": {
+      "eyebrow": "Members",
+      "title": "What Members Say",
+      "items": [
+        {
+          "quote": "KCLUB gives our team a quieter way to meet vetted partners without opening the door to random outreach.",
+          "author": "Anna V.",
+          "initials": "AV",
+          "tier": "VIP"
+        },
+        {
+          "quote": "The directory is practical. I can verify a partner and move the conversation forward with confidence.",
+          "author": "Michael R.",
+          "initials": "MR",
+          "tier": "MEMBER"
+        },
+        {
+          "quote": "The introductions feel human, focused, and respectful of privacy.",
+          "author": "Olena K.",
+          "initials": "OK",
+          "tier": "VIP"
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "Answers",
+      "title": "Frequently Asked Questions",
+      "items": [
+        {
+          "question": "How do I join KCLUB?",
+          "answer": "Start with sign-up, verify your phone by OTP, complete onboarding, and receive your digital member card."
+        },
+        {
+          "question": "What is VIP membership?",
+          "answer": "VIP unlocks paid membership capabilities, business profile submission, and future introduction workflows for published businesses."
+        },
+        {
+          "question": "How does the QR card work?",
+          "answer": "Each active card links directly to a public verification page that confirms card status without exposing private member data."
+        },
+        {
+          "question": "Which countries are supported?",
+          "answer": "The DEV home uses placeholder coverage across 12 countries while the directory data layer is completed."
+        },
+        {
+          "question": "Is member lookup public?",
+          "answer": "No. KCLUB does not provide arbitrary public member lookup. Verification happens through direct card URLs."
+        },
+        {
+          "question": "How does Stripe billing work?",
+          "answer": "VIP and business placement billing will use Stripe Checkout, subscriptions, and customer portal flows."
+        }
+      ]
+    },
+    "cta": {
+      "title": "Ready to Join?",
+      "subline": "Create your member account and start with a verified digital club card.",
+      "button": "Join KCLUB"
+    },
+    "footer": {
+      "about": "About",
+      "aboutText": "KCLUB is a private membership platform for verified members, VIP access, and partner discovery.",
+      "links": "Links",
+      "legal": "Legal",
+      "locales": "Locales",
+      "directory": "Directory",
+      "signUp": "Sign Up",
+      "signIn": "Sign In",
+      "verifyCard": "Verify Card",
+      "terms": "Terms",
+      "privacy": "Privacy",
+      "copyright": "All rights reserved."
+    }
+  }
+}
