@@ -1,24 +1,18 @@
-import 'server-only';
+import { PrismaClient } from '@kclub/database/client';
 
-import { readDatabaseEnv } from './env';
+let cachedPrisma: PrismaClient | null = null;
 
-export type ProductCoreDatabaseClient = {
-  connectionString: string;
-};
-
-let cachedClient: ProductCoreDatabaseClient | null = null;
-
-export function getDatabaseClient(): ProductCoreDatabaseClient {
-  if (!cachedClient) {
-    const env = readDatabaseEnv();
-    cachedClient = {
-      connectionString: env.DATABASE_URL,
-    };
+export function getPrismaClient(): PrismaClient {
+  if (!cachedPrisma) {
+    cachedPrisma = new PrismaClient();
   }
 
-  return cachedClient;
+  return cachedPrisma;
 }
 
-export function resetDatabaseClientForTests(): void {
-  cachedClient = null;
+export function resetPrismaClientForTests(): void {
+  if (cachedPrisma) {
+    cachedPrisma.$disconnect();
+    cachedPrisma = null;
+  }
 }

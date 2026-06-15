@@ -2,6 +2,8 @@ import type { AuditAction, EntityId, StaffRole } from '@kclub/contracts';
 
 import type { RequestContext } from '@/server/context';
 
+
+
 export type AuditLogCommand = {
   action: AuditAction;
   entityType: string;

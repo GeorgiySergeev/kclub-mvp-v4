@@ -1,5 +1,3 @@
-import 'server-only';
-
 import { baseEnvSchema } from '@kclub/config/env';
 import { z } from 'zod';
 

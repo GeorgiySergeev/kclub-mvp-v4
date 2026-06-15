@@ -1,0 +1,67 @@
+import { type NextRequest } from 'next/server';
+
+import { memberProfileUpdateSchema, parseWithValidation } from '@kclub/validation';
+import { ERROR_CODES } from '@kclub/contracts';
+
+import { createSupabaseServerClient } from '@/server/auth';
+import { jsonSuccess, jsonError, jsonErrorFromUnknown } from '@/server/api';
+import { getMemberBySupabaseUserId, toCurrentMemberProfileDto, updateMemberProfile } from '@/server/services';
+
+export async function GET(request: NextRequest) {
+  try {
+    const { supabase } = createSupabaseServerClient(request);
+    const { data: { user: supabaseUser }, error } = await supabase.auth.getUser();
+
+    if (error || !supabaseUser) {
+      return jsonError(
+        { code: ERROR_CODES.AUTH_SESSION_REQUIRED, message: 'Authentication required' },
+        undefined,
+        { status: 401 },
+      );
+    }
+
+    const user = await getMemberBySupabaseUserId(supabaseUser.id);
+    const profile = toCurrentMemberProfileDto(user);
+
+    return jsonSuccess(profile);
+  } catch (error) {
+    return jsonErrorFromUnknown(error);
+  }
+}
+
+export async function PATCH(request: NextRequest) {
+  try {
+    const { supabase } = createSupabaseServerClient(request);
+    const { data: { user: supabaseUser }, error } = await supabase.auth.getUser();
+
+    if (error || !supabaseUser) {
+      return jsonError(
+        { code: ERROR_CODES.AUTH_SESSION_REQUIRED, message: 'Authentication required' },
+        undefined,
+        { status: 401 },
+      );
+    }
+
+    const body = await request.json();
+    const parsed = parseWithValidation(memberProfileUpdateSchema, body);
+
+    if (!parsed.success) {
+      return jsonError(
+        {
+          code: parsed.error.code,
+          message: parsed.error.message,
+          details: { issues: parsed.error.issues },
+        },
+        undefined,
+        { status: 400 },
+      );
+    }
+
+    const updated = await updateMemberProfile(supabaseUser.id, parsed.data);
+    const profile = toCurrentMemberProfileDto(updated);
+
+    return jsonSuccess(profile);
+  } catch (error) {
+    return jsonErrorFromUnknown(error);
+  }
+}
