@@ -39,6 +39,7 @@ describe('database package contracts', () => {
       ]),
     );
     expect(ADMIN_BOOTSTRAP_PLAN.ownerAccountRequired).toBe(true);
+    expect(ADMIN_BOOTSTRAP_PLAN.ownerPhoneEnv).toBe('ADMIN_BOOTSTRAP_OWNER_PHONE');
     expect(CONFIG_SEED_PLAN.stripePriceKeys).toContain('vip_membership_monthly');
   });
 

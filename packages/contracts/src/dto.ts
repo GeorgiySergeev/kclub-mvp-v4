@@ -53,6 +53,62 @@ export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 export type IsoDateTime = string;
 export type EntityId = string;
 
+export type DashboardMetricsDto = {
+  totalUsers: number;
+  activeUsers: number;
+  blockedUsers: number;
+  activeSubscriptions: number;
+  pastDueSubscriptions: number;
+  expiredSubscriptions: number;
+  businessesUnderReview: number;
+  introductionsSubmitted: number;
+  introductionsInReview: number;
+};
+
+export const STAFF_AUTH_STATES = [
+  'OTP_REQUIRED',
+  'TOTP_REQUIRED',
+  'TOTP_SETUP_REQUIRED',
+  'AUTHENTICATED',
+] as const;
+export type StaffAuthState = (typeof STAFF_AUTH_STATES)[number];
+
+export type StaffProfileDto = {
+  id: EntityId;
+  phone: string;
+  displayName: string | null;
+  role: StaffRole;
+  totpVerified: boolean;
+};
+
+export type StaffAuthChallengeDto = {
+  state: StaffAuthState;
+  phone: string;
+};
+
+export type StaffAuthSessionDto = {
+  state: StaffAuthState;
+  profile: StaffProfileDto;
+  token: string;
+  expiresAt: IsoDateTime;
+};
+
+export type AdminUserListItemDto = {
+  id: EntityId;
+  phone: string;
+  displayName: string | null;
+  status: UserStatus;
+  membershipTier: MemberTier;
+  createdAt: IsoDateTime;
+};
+
+export type AdminUserDetailDto = AdminUserListItemDto & {
+  localePreference: Locale | null;
+  onboardingComplete: boolean;
+  termsAcceptedAt: IsoDateTime | null;
+  updatedAt: IsoDateTime;
+};
+
 export type CurrentMemberProfileDto = {
   id: EntityId;
   phone: string;

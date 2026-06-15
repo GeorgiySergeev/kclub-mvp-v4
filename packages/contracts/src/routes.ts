@@ -20,6 +20,10 @@ export const MEMBER_API_ROUTES = {
 } as const;
 
 export const ADMIN_API_ROUTES = {
+  STAFF_AUTH_PHONE_OTP_SEND: `${ADMIN_API_BASE_PATH}/staff-auth/phone-otp/send`,
+  STAFF_AUTH_PHONE_OTP_VERIFY: `${ADMIN_API_BASE_PATH}/staff-auth/phone-otp/verify`,
+  STAFF_AUTH_TOTP_VERIFY: `${ADMIN_API_BASE_PATH}/staff-auth/totp/verify`,
+  STAFF_AUTH_SESSION: `${ADMIN_API_BASE_PATH}/staff-auth/session`,
   USERS: `${ADMIN_API_BASE_PATH}/users`,
   USER_DETAIL: `${ADMIN_API_BASE_PATH}/users/:id`,
   USER_BLOCK: `${ADMIN_API_BASE_PATH}/users/:id/block`,
