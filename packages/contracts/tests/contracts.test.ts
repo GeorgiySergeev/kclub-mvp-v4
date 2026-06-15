@@ -11,6 +11,7 @@ import {
   MEMBER_API_ROUTES,
   PUBLIC_BUSINESS_DTO_KEYS,
   STAFF_PERMISSIONS,
+  STAFF_AUTH_STATES,
   STAFF_ROLE_PERMISSIONS,
   STAFF_ROLES,
   buildApiRoute,
@@ -44,6 +45,8 @@ describe('api envelope', () => {
 describe('centralized constants', () => {
   test('exports expected error-code groups', () => {
     expect(ERROR_CODES.AUTH_SESSION_REQUIRED).toBe('AUTH_SESSION_REQUIRED');
+    expect(ERROR_CODES.AUTH_SESSION_INVALID).toBe('AUTH_SESSION_INVALID');
+    expect(ERROR_CODES.AUTH_STAFF_NOT_ALLOWED).toBe('AUTH_STAFF_NOT_ALLOWED');
     expect(ERROR_CODES.PERMISSION_DENIED).toBe('PERMISSION_DENIED');
     expect(ERROR_CODES.BUSINESS_INVALID_STATUS_TRANSITION).toBe(
       'BUSINESS_INVALID_STATUS_TRANSITION',
@@ -90,7 +93,17 @@ describe('route contracts', () => {
   test('keeps member and admin route bases stable', () => {
     expect(MEMBER_API_ROUTES.ME).toBe('/api/v1/me');
     expect(ADMIN_API_BASE_PATH).toBe('/api/admin/v1');
+    expect(ADMIN_API_ROUTES.STAFF_AUTH_SESSION).toBe('/api/admin/v1/staff-auth/session');
     expect(ADMIN_API_ROUTES.BUSINESS_APPROVE).toBe('/api/admin/v1/businesses/:id/approve');
+  });
+
+  test('defines staff auth states for the admin-app handshake', () => {
+    expect(STAFF_AUTH_STATES).toEqual([
+      'OTP_REQUIRED',
+      'TOTP_REQUIRED',
+      'TOTP_SETUP_REQUIRED',
+      'AUTHENTICATED',
+    ]);
   });
 
   test('builds parameterized route patterns', () => {
