@@ -15,7 +15,11 @@ export default async function UsersPage({ searchParams }: UsersPageProps) {
   const result = await fetchUsers({ page, limit, search });
 
   return (
-    <PageShell title="Users" description="Admin list of members, statuses, and support actions." roleScope="ADMIN">
+    <PageShell
+      title="Users"
+      description="Admin list of members, statuses, and support actions."
+      roleScope="ADMIN"
+    >
       <UsersTable
         users={result?.users ?? []}
         total={result?.total ?? 0}

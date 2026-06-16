@@ -21,7 +21,9 @@ export async function fetchUsers(params: UsersSearchParams = {}): Promise<UsersL
   if (params.search) searchParams.set('search', params.search);
 
   const qs = searchParams.toString();
-  const result = await adminApiFetch<ApiListResponse<AdminUserListItemDto>>(`/users${qs ? `?${qs}` : ''}`);
+  const result = await adminApiFetch<ApiListResponse<AdminUserListItemDto>>(
+    `/users${qs ? `?${qs}` : ''}`,
+  );
   if (!result.ok || !result.data?.data) return null;
 
   return {

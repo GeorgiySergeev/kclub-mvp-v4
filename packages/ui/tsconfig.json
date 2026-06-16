@@ -1,0 +1,9 @@
+{
+  "extends": "@kclub/config/typescript/react-library.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "types": []
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules"]
+}

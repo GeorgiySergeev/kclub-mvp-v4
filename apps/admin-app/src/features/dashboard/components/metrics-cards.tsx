@@ -35,14 +35,22 @@ export function VipSubscriptionsCard({ data }: { data: DashboardMetricsDto }) {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">VIP Subscriptions</CardTitle>
+        <CardTitle className="text-sm font-medium text-muted-foreground">
+          VIP Subscriptions
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-1">
         <p className="text-2xl font-semibold">{data.activeSubscriptions}</p>
         <div className="flex gap-3 text-xs text-muted-foreground">
-          <span className="text-green-600 dark:text-green-400">{data.activeSubscriptions} active</span>
-          <span className="text-amber-600 dark:text-amber-400">{data.pastDueSubscriptions} past due</span>
-          <span className="text-red-600 dark:text-red-400">{data.expiredSubscriptions} expired</span>
+          <span className="text-green-600 dark:text-green-400">
+            {data.activeSubscriptions} active
+          </span>
+          <span className="text-amber-600 dark:text-amber-400">
+            {data.pastDueSubscriptions} past due
+          </span>
+          <span className="text-red-600 dark:text-red-400">
+            {data.expiredSubscriptions} expired
+          </span>
         </div>
       </CardContent>
     </Card>
@@ -53,7 +61,9 @@ export function BusinessesUnderReviewCard({ count }: { count: number }) {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">Businesses Under Review</CardTitle>
+        <CardTitle className="text-sm font-medium text-muted-foreground">
+          Businesses Under Review
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-2xl font-semibold">{count}</p>
@@ -62,11 +72,19 @@ export function BusinessesUnderReviewCard({ count }: { count: number }) {
   );
 }
 
-export function IntroductionsUnderReviewCard({ submitted, inReview }: { submitted: number; inReview: number }) {
+export function IntroductionsUnderReviewCard({
+  submitted,
+  inReview,
+}: {
+  submitted: number;
+  inReview: number;
+}) {
   return (
     <Card>
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-muted-foreground">Introductions Pending</CardTitle>
+        <CardTitle className="text-sm font-medium text-muted-foreground">
+          Introductions Pending
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-1">
         <p className="text-2xl font-semibold">{submitted + inReview}</p>

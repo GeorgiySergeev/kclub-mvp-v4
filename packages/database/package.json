@@ -25,6 +25,7 @@
     "db:generate": "prisma generate --schema prisma/schema.prisma",
     "db:migrate:dev": "prisma migrate dev --schema prisma/schema.prisma",
     "db:migrate:deploy": "prisma migrate deploy --schema prisma/schema.prisma",
+    "db:seed": "bun run src/seeds/run-seed.ts",
     "db:seed:plan": "bun run src/seeds/seed-plan.ts"
   },
   "dependencies": {

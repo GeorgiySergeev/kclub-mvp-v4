@@ -1,8 +1,4 @@
-import {
-  ERROR_CODES,
-  type IntroductionStatus,
-  type IntroductionDto,
-} from '@kclub/contracts';
+import { ERROR_CODES, type IntroductionStatus, type IntroductionDto } from '@kclub/contracts';
 import {
   canCreateIntroductionForDay,
   canCreateIntroductionForTarget,
@@ -98,7 +94,7 @@ export async function submitIntroduction(
 
   // 3. Limits check
   const now = new Date();
-  
+
   const todayStart = new Date(now);
   todayStart.setUTCHours(0, 0, 0, 0);
 

@@ -6,9 +6,11 @@ import { signOutLocal } from '@/server/services';
 
 export async function POST(request: NextRequest) {
   try {
-    const { supabase } = createSupabaseServerClient(request);
+    const supabase = await createSupabaseServerClient();
 
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (user) {
       await signOutLocal(supabase);
     }

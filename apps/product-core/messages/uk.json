@@ -11,7 +11,8 @@
       "close": "Close navigation",
       "toggleTheme": "Toggle theme",
       "scroll": "Scroll to content",
-      "viewProfile": "View Profile"
+      "viewProfile": "View Profile",
+      "website": "Website"
     },
     "nav": {
       "directory": "Directory",
@@ -111,23 +112,10 @@
     "featured": {
       "eyebrow": "Directory",
       "title": "Featured Partners",
-      "items": [
-        {
-          "name": "Northline Advisory",
-          "category": "Consulting",
-          "country": "United States"
-        },
-        {
-          "name": "Kyiv Legal Group",
-          "category": "Legal",
-          "country": "Ukraine"
-        },
-        {
-          "name": "Atlas Trade House",
-          "category": "Import",
-          "country": "Poland"
-        }
-      ]
+      "topLabel": "Top",
+      "recommendedLabel": "Recommended",
+      "emptyTitle": "No featured partners yet",
+      "emptyDescription": "Published partners will appear here after moderation and placement approval."
     },
     "testimonials": {
       "eyebrow": "Members",
@@ -204,6 +192,22 @@
     }
   },
   "auth": {
+    "common": {
+      "otpLabel": "Код підтвердження",
+      "otpPlaceholder": "123456",
+      "submitOtp": "Підтвердити і продовжити",
+      "backToPhone": "Змінити номер телефону",
+      "loading": "Завантаження...",
+      "signingOut": "Вихід...",
+      "errors": {
+        "invalidPhone": "Будь ласка, введіть дійсний номер телефону.",
+        "invalidOtp": "Невірний код підтвердження.",
+        "blocked": "Ваш акаунт заблоковано.",
+        "useSignIn": "Цей номер телефону вже зареєстровано. Будь ласка, увійдіть.",
+        "useSignUp": "Ми не знайшли акаунт з цим номером телефону. Будь ласка, зареєструйтесь.",
+        "generic": "Щось пішло не так. Будь ласка, спробуйте ще раз."
+      }
+    },
     "signIn": {
       "title": "Увійти",
       "description": "З поверненням. Введіть номер телефону для входу.",
@@ -222,5 +226,142 @@
       "switchPrompt": "Вже є акаунт?",
       "switchAction": "Увійти"
     }
+  },
+  "member": {
+    "common": {
+      "loading": "Завантаження...",
+      "saving": "Збереження...",
+      "genericError": "Щось пішло не так. Спробуйте ще раз.",
+      "locales": {
+        "en": "English",
+        "ru": "Russian",
+        "uk": "Ukrainian"
+      }
+    },
+    "onboarding": {
+      "metaTitle": "Complete Onboarding | KCLUB",
+      "metaDescription": "Complete your KCLUB member onboarding to unlock your card and dashboard.",
+      "eyebrow": "Member setup",
+      "title": "Complete your profile",
+      "description": "Confirm the details that appear in your member cabinet and digital card.",
+      "phoneLabel": "Verified phone",
+      "displayNameLabel": "Display name",
+      "displayNamePlaceholder": "Your name",
+      "localeLabel": "Preferred language",
+      "termsLabel": "I accept the KCLUB membership terms and privacy policy.",
+      "submit": "Complete onboarding",
+      "errors": {
+        "phoneMismatch": "This phone does not match the authenticated member.",
+        "invalidLocale": "Choose a supported language.",
+        "session": "Your session expired. Please sign in again.",
+        "invalidInput": "Check the highlighted fields and try again."
+      }
+    },
+    "dashboard": {
+      "metaTitle": "Member Dashboard | KCLUB",
+      "metaDescription": "Manage your KCLUB card, directory access, subscription, and profile.",
+      "eyebrow": "Member cabinet",
+      "title": "Welcome, {name}",
+      "tabsLabel": "Member dashboard tabs",
+      "tabs": {
+        "card": "Card",
+        "catalog": "Catalog",
+        "subscription": "Subscription",
+        "profile": "Profile"
+      },
+      "card": {
+        "eyebrow": "Digital club card",
+        "cardNumber": "Card number",
+        "tier": "Tier",
+        "status": "Status",
+        "issuedAt": "Issued",
+        "expiresAt": "Expires",
+        "noExpiration": "No expiration",
+        "verifyLink": "Open public verification",
+        "emptyTitle": "No active card yet",
+        "emptyDescription": "Complete onboarding to issue your active club card.",
+        "errorTitle": "Card unavailable",
+        "error": "We could not load your card right now."
+      },
+      "catalog": {
+        "title": "Partner catalog",
+        "description": "Browse published KCLUB partners from the public directory.",
+        "action": "Open directory"
+      },
+      "subscription": {
+        "title": "Subscription",
+        "memberDescription": "Your MEMBER access is active. VIP checkout will be added in the billing phase.",
+        "vipDescription": "Your VIP access is active. Billing management will be added in the billing phase."
+      },
+      "profile": {
+        "title": "Profile",
+        "phone": "Phone",
+        "displayName": "Display name",
+        "locale": "Language",
+        "joined": "Joined",
+        "notSet": "Not set"
+      }
+    }
+  },
+  "publicSeo": {
+    "home": {
+      "title": "KCLUB | Private Membership Club",
+      "description": "KCLUB connects verified members with VIP access, trusted partners, and private business introductions."
+    },
+    "directory": {
+      "title": "Partner Directory | KCLUB",
+      "description": "Explore published KCLUB partner businesses available to public visitors and members."
+    },
+    "businessDetail": {
+      "title": "{name} | KCLUB Partner",
+      "description": "View the public KCLUB partner profile for {name}.",
+      "notFoundTitle": "Partner Not Found | KCLUB",
+      "notFoundDescription": "This partner profile is not published or does not exist."
+    },
+    "verifyCard": {
+      "title": "Verify {cardNumber} | KCLUB",
+      "description": "Verify a KCLUB digital club card using its direct QR URL."
+    }
+  },
+  "directory": {
+    "eyebrow": "Partner Directory",
+    "title": "Published partners, ready to verify",
+    "description": "Browse moderated businesses that are published inside the KCLUB partner directory. Unpublished, hidden, rejected, and under-review profiles are never shown here.",
+    "publishedOnly": "Published partners only",
+    "emptyTitle": "No published partners yet",
+    "emptyDescription": "The directory will populate after moderator approval and placement publication.",
+    "emptyAction": "Create member account",
+    "featuredTopTitle": "Featured top partners",
+    "recommendedTitle": "Recommended partners",
+    "allTitle": "All published partners",
+    "viewDetails": "View profile",
+    "website": "Website",
+    "featuredTopLabel": "Top",
+    "recommendedLabel": "Recommended",
+    "detail": {
+      "profileTitle": "Partner profile",
+      "location": "Location",
+      "representative": "Representative",
+      "published": "Published",
+      "website": "Open website",
+      "featuredTop": "Top partner",
+      "recommended": "Recommended"
+    }
+  },
+  "verifyCard": {
+    "eyebrow": "Card verification",
+    "activeTitle": "Card is active",
+    "inactiveTitle": "Card is not active",
+    "invalidTitle": "Card could not be verified",
+    "invalidDescription": "This direct card URL is invalid, expired, or not registered. KCLUB does not provide public card lookup by form.",
+    "piiNotice": "This public verification view only shows card status and safe display details.",
+    "cardNumber": "Card number",
+    "tier": "Membership tier",
+    "status": "Status",
+    "memberName": "Display name",
+    "privateMemberName": "Private member",
+    "issuedAt": "Issued",
+    "expiresAt": "Expires",
+    "noExpiration": "No expiration"
   }
 }

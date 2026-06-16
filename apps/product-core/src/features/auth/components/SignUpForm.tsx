@@ -1,59 +1,203 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 
+import { Button, Field, Input, Label, linkClasses, textMuted } from '@kclub/ui';
 import { Locale } from '@/i18n/routing';
+import { parseAuthResponse } from '../utils/api';
 
 export function SignUpForm({ locale }: { locale: Locale }) {
   const t = useTranslations('auth.signUp');
+  const tCommon = useTranslations('auth.common');
+  const router = useRouter();
+
+  const [step, setStep] = useState<'phone' | 'otp'>('phone');
+  const [phone, setPhone] = useState('');
+  const [otp, setOtp] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handlePhoneSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      const res = await fetch('/api/v1/auth/phone-otp/send', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, purpose: 'sign-up', locale }),
+      });
+      const parsed = await parseAuthResponse(res);
+
+      if (!parsed.success) {
+        const code = parsed.errorCode || 'generic';
+        if (code === 'VALIDATION_INVALID_PHONE' || code === 'VALIDATION_INVALID_INPUT') {
+          setError(tCommon('errors.invalidPhone'));
+        } else if (code === 'AUTH_SIGN_UP_USE_SIGN_IN') {
+          setError(tCommon('errors.useSignIn'));
+        } else if (code === 'PERMISSION_DENIED') {
+          setError(tCommon('errors.blocked'));
+        } else {
+          setError(tCommon('errors.generic'));
+        }
+        setIsLoading(false);
+        return;
+      }
+
+      setStep('otp');
+    } catch (err) {
+      setError(tCommon('errors.generic'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleOtpSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setIsLoading(true);
+
+    try {
+      const res = await fetch('/api/v1/auth/phone-otp/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone, code: otp, purpose: 'sign-up' }),
+      });
+      const parsed = await parseAuthResponse(res);
+
+      if (!parsed.success) {
+        const code = parsed.errorCode || 'generic';
+        if (code === 'AUTH_OTP_INVALID') {
+          setError(tCommon('errors.invalidOtp'));
+        } else if (code === 'PERMISSION_DENIED') {
+          setError(tCommon('errors.blocked'));
+        } else {
+          setError(tCommon('errors.generic'));
+        }
+        setIsLoading(false);
+        return;
+      }
+
+      if (parsed.data?.onboardingComplete) {
+        router.replace(`/${locale}/m/dashboard`);
+      } else {
+        router.replace(`/${locale}/m/onboarding`);
+      }
+    } catch (err) {
+      setError(tCommon('errors.generic'));
+      setIsLoading(false);
+    }
+  };
 
   return (
-    <div className="w-full max-w-md bg-white px-8 py-10 shadow-sm ring-1 ring-zinc-200 dark:bg-zinc-950 dark:ring-zinc-800 sm:rounded-2xl">
-      <div className="mb-8 text-center">
-        <h2 className="text-2xl font-light tracking-tight text-zinc-900 dark:text-zinc-50">
+    <div className="relative mx-auto w-full max-w-[400px] overflow-hidden border border-black/5 bg-white/70 px-6 py-10 shadow-[0_8px_40px_-12px_rgba(0,0,0,0.1)] backdrop-blur-2xl dark:border-white/10 dark:bg-zinc-900/70 dark:shadow-[0_8px_40px_-12px_rgba(0,0,0,0.5)] sm:rounded-3xl sm:px-8 sm:py-12">
+      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-zinc-300 via-zinc-600 to-zinc-300 opacity-75 dark:from-zinc-700 dark:via-zinc-300 dark:to-zinc-700" />
+
+      <div className="mb-10 text-center">
+        <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-b from-zinc-100 to-zinc-200 shadow-inner ring-1 ring-zinc-200 dark:from-zinc-800 dark:to-zinc-900 dark:ring-zinc-700">
+          <svg
+            className="h-6 w-6 text-zinc-700 dark:text-zinc-300"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={1.5}
+              d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+            />
+          </svg>
+        </div>
+        <h2 className="text-3xl font-light tracking-tight text-zinc-900 dark:text-zinc-50">
           {t('title')}
         </h2>
-        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
-          {t('description')}
-        </p>
+        <p className={`mt-3 ${textMuted}`}>{t('description')}</p>
       </div>
 
-      <form className="space-y-6" onSubmit={(e) => e.preventDefault()}>
-        <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-zinc-900 dark:text-zinc-50">
-            {t('phoneLabel')}
-          </label>
-          <div className="mt-2">
-            <input
+      {step === 'phone' ? (
+        <form className="space-y-6" onSubmit={handlePhoneSubmit}>
+          <Field>
+            <Label htmlFor="phone">{t('phoneLabel')}</Label>
+            <Input
               id="phone"
               name="phone"
               type="tel"
               autoComplete="tel"
               required
+              aria-invalid={!!error ? 'true' : 'false'}
+              aria-describedby={error ? 'phone-error' : undefined}
               placeholder={t('phonePlaceholder')}
-              className="block w-full rounded-md border-0 py-2.5 px-3 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 placeholder:text-zinc-400 focus:ring-2 focus:ring-inset focus:ring-zinc-900 dark:bg-zinc-900 dark:text-zinc-50 dark:ring-zinc-700 dark:placeholder:text-zinc-500 dark:focus:ring-zinc-50 sm:text-sm sm:leading-6"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              disabled={isLoading}
             />
+          </Field>
+          {error && (
+            <p id="phone-error" role="alert" className="text-sm text-red-600 dark:text-red-400">
+              {error}
+            </p>
+          )}
+          <Button type="submit" fullWidth disabled={isLoading}>
+            {isLoading ? tCommon('loading') : t('submit')}
+          </Button>
+        </form>
+      ) : (
+        <form className="space-y-6" onSubmit={handleOtpSubmit}>
+          <Field>
+            <Label htmlFor="otp">{tCommon('otpLabel')}</Label>
+            <Input
+              id="otp"
+              name="otp"
+              type="text"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              required
+              aria-invalid={!!error ? 'true' : 'false'}
+              aria-describedby={error ? 'otp-error' : undefined}
+              placeholder={tCommon('otpPlaceholder')}
+              value={otp}
+              onChange={(e) => setOtp(e.target.value)}
+              disabled={isLoading}
+            />
+          </Field>
+          {error && (
+            <p id="otp-error" role="alert" className="text-sm text-red-600 dark:text-red-400">
+              {error}
+            </p>
+          )}
+          <Button type="submit" fullWidth disabled={isLoading}>
+            {isLoading ? tCommon('loading') : tCommon('submitOtp')}
+          </Button>
+          <div className="mt-4 text-center">
+            <button
+              type="button"
+              onClick={() => {
+                setStep('phone');
+                setError(null);
+                setOtp('');
+              }}
+              className={linkClasses}
+              disabled={isLoading}
+            >
+              {tCommon('backToPhone')}
+            </button>
           </div>
-        </div>
+        </form>
+      )}
 
-        <button
-          type="submit"
-          className="flex w-full items-center justify-center rounded-md border border-transparent bg-zinc-900 px-6 py-2.5 text-sm font-normal text-white shadow-sm transition hover:bg-zinc-700 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 focus:ring-offset-white dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200 dark:focus:ring-zinc-50 dark:focus:ring-offset-zinc-950"
-        >
-          {t('submit')}
-        </button>
-      </form>
-
-      <p className="mt-8 text-center text-sm text-zinc-600 dark:text-zinc-400">
-        {t('switchPrompt')}{' '}
-        <Link
-          href={`/${locale}/sign-in`}
-          className="font-medium text-zinc-900 hover:text-zinc-700 hover:underline dark:text-zinc-50 dark:hover:text-zinc-300"
-        >
-          {t('switchAction')}
-        </Link>
-      </p>
+      {step === 'phone' && (
+        <p className={`mt-6 text-center ${textMuted}`}>
+          {t('switchPrompt')}{' '}
+          <Link href={`/${locale}/sign-in`} className={linkClasses}>
+            {t('switchAction')}
+          </Link>
+        </p>
+      )}
     </div>
   );
 }

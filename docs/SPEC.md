@@ -101,7 +101,7 @@ Operational hierarchy: `OWNER >= ADMIN >= MODERATOR`.
 | `OWNER`     | Platform ownership, billing configuration, staff role assignment |
 | `ADMIN`     | User operations, cards, subscriptions, audit visibility          |
 | `MODERATOR` | Business, catalog, taxonomy, and introduction moderation         |
-| `SUPPORT`   | Strictly read-only investigation                                  |
+| `SUPPORT`   | Strictly read-only investigation                                 |
 
 | Action                                    | OWNER | ADMIN | MODERATOR | SUPPORT |
 | ----------------------------------------- | :---: | :---: | :-------: | :-----: |

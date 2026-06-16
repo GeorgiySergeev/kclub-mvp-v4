@@ -14,10 +14,7 @@ export async function GET(
   try {
     const { cardNumber } = await params;
 
-    const parsed = parseWithValidation(
-      cardNumberSchema,
-      cardNumber,
-    );
+    const parsed = parseWithValidation(cardNumberSchema, cardNumber);
 
     if (!parsed.success) {
       return jsonError(

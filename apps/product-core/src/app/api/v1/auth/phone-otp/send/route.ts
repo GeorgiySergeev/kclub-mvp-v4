@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { supabase } = createSupabaseServerClient(request);
+    const supabase = await createSupabaseServerClient();
     const result = await sendPhoneOtp(supabase, parsed.data);
 
     return jsonSuccess(result, undefined, { status: 200 });

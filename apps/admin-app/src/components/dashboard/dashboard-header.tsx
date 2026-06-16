@@ -27,12 +27,17 @@ type DashboardHeaderProps = {
 
 export function DashboardHeader({ staffName, staffRole, staffInitials }: DashboardHeaderProps) {
   return (
-    <header className="sticky top-0 z-20 border-b bg-background/95 backdrop-blur">
+    <header className="bg-background/95 sticky top-0 z-20 border-b backdrop-blur">
       <div className="flex h-14 items-center gap-3 px-4 md:px-6">
         <Sheet>
           <SheetTrigger
             render={
-              <Button variant="outline" size="icon" className="lg:hidden" aria-label="Open navigation" />
+              <Button
+                variant="outline"
+                size="icon"
+                className="lg:hidden"
+                aria-label="Open navigation"
+              />
             }
           >
             <Menu className="h-4 w-4" />
@@ -50,14 +55,19 @@ export function DashboardHeader({ staffName, staffRole, staffInitials }: Dashboa
 
         <div className="flex items-center gap-1">
           <ThemeToggle />
-          <Badge variant="secondary" className="hidden sm:inline-flex ml-2">
+          <Badge variant="secondary" className="ml-2 hidden sm:inline-flex">
             {staffRole}
           </Badge>
 
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
-                <Button variant="ghost" size="icon" className="rounded-full" aria-label="Staff menu" />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full"
+                  aria-label="Staff menu"
+                />
               }
             >
               <Avatar size="sm">

@@ -18,6 +18,8 @@ import type { RequestContext } from '@/server/context';
 
 const auditService = createDbAuditService();
 
+export const PUBLIC_BUSINESS_VISIBILITY_FILTER = { status: 'PUBLISHED' as const };
+
 function generateSlug(name: string): string {
   const base = name
     .toLowerCase()
@@ -47,7 +49,7 @@ export async function submitBusiness(
     where: { user_id: userId },
   });
   const isVip = vipSubs.some((sub) => hasActiveVipAccess(sub.status));
-  
+
   if (!isVip) {
     throw new AppError({
       code: ERROR_CODES.VIP_REQUIRED,
@@ -192,10 +194,18 @@ export async function updateBusiness(
   if (input.categoryId && input.categoryId !== business.category_id) {
     const category = await prisma.category.findUnique({ where: { id: input.categoryId } });
     if (!category || !category.is_active) {
-      throw new AppError({ code: ERROR_CODES.RESOURCE_NOT_FOUND, message: 'Category not found', status: 404 });
+      throw new AppError({
+        code: ERROR_CODES.RESOURCE_NOT_FOUND,
+        message: 'Category not found',
+        status: 404,
+      });
     }
     if (category.is_high_risk) {
-      throw new AppError({ code: ERROR_CODES.BUSINESS_CATEGORY_HIGH_RISK, message: 'Category is high risk', status: 403 });
+      throw new AppError({
+        code: ERROR_CODES.BUSINESS_CATEGORY_HIGH_RISK,
+        message: 'Category is high risk',
+        status: 403,
+      });
     }
   }
 
@@ -218,7 +228,7 @@ export async function updateBusiness(
     website_url: input.websiteUrl,
     social_url: input.socialUrl,
   };
-  
+
   delete dataToUpdate.briefDescription;
   delete dataToUpdate.websiteUrl;
   delete dataToUpdate.socialUrl;
@@ -232,9 +242,12 @@ export async function updateBusiness(
   if (input.categoryId !== undefined) dataToUpdate.category_id = input.categoryId;
   if (input.cityId !== undefined) dataToUpdate.city_id = input.cityId;
   if (input.countryId !== undefined) dataToUpdate.country_id = input.countryId;
-  if (input.representativeName !== undefined) dataToUpdate.representative_name = input.representativeName;
-  if (input.representativeEmail !== undefined) dataToUpdate.representative_email = input.representativeEmail;
-  if (input.representativePhone !== undefined) dataToUpdate.representative_phone = input.representativePhone;
+  if (input.representativeName !== undefined)
+    dataToUpdate.representative_name = input.representativeName;
+  if (input.representativeEmail !== undefined)
+    dataToUpdate.representative_email = input.representativeEmail;
+  if (input.representativePhone !== undefined)
+    dataToUpdate.representative_phone = input.representativePhone;
 
   // Re-submit if rejected
   if (business.status === 'REJECTED') {
@@ -310,16 +323,30 @@ export async function getBusinessDetail(
 export async function getPublicBusinesses(): Promise<PublicBusinessListItemDto[]> {
   const prisma = getPrismaClient();
   const businesses = await prisma.businessProfile.findMany({
-    where: { status: 'PUBLISHED' },
+    where: PUBLIC_BUSINESS_VISIBILITY_FILTER,
     include: { category: true, country: true, city: true },
-    orderBy: [
-      { featured_top: 'desc' },
-      { featured_recommended: 'desc' },
-      { published_at: 'desc' },
-    ],
+    orderBy: [{ featured_top: 'desc' }, { featured_recommended: 'desc' }, { published_at: 'desc' }],
   });
 
   return businesses.map(toPublicBusinessListItemDto);
+}
+
+export async function getPublicBusinessBySlug(slug: string): Promise<PublicBusinessDetailDto> {
+  const prisma = getPrismaClient();
+  const business = await prisma.businessProfile.findFirst({
+    where: { ...PUBLIC_BUSINESS_VISIBILITY_FILTER, slug },
+    include: { category: true, country: true, city: true },
+  });
+
+  if (!business) {
+    throw new AppError({
+      code: ERROR_CODES.RESOURCE_NOT_FOUND,
+      message: 'Business not found or not published',
+      status: 404,
+    });
+  }
+
+  return toPublicBusinessDetailDto(business);
 }
 
 export function toPublicBusinessListItemDto(business: any): PublicBusinessListItemDto {

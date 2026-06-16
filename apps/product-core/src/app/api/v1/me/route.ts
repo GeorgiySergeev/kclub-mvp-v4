@@ -5,12 +5,19 @@ import { ERROR_CODES } from '@kclub/contracts';
 
 import { createSupabaseServerClient } from '@/server/auth';
 import { jsonSuccess, jsonError, jsonErrorFromUnknown } from '@/server/api';
-import { getMemberBySupabaseUserId, toCurrentMemberProfileDto, updateMemberProfile } from '@/server/services';
+import {
+  getMemberBySupabaseUserId,
+  toCurrentMemberProfileDto,
+  updateMemberProfile,
+} from '@/server/services';
 
 export async function GET(request: NextRequest) {
   try {
-    const { supabase } = createSupabaseServerClient(request);
-    const { data: { user: supabaseUser }, error } = await supabase.auth.getUser();
+    const supabase = await createSupabaseServerClient();
+    const {
+      data: { user: supabaseUser },
+      error,
+    } = await supabase.auth.getUser();
 
     if (error || !supabaseUser) {
       return jsonError(
@@ -31,8 +38,11 @@ export async function GET(request: NextRequest) {
 
 export async function PATCH(request: NextRequest) {
   try {
-    const { supabase } = createSupabaseServerClient(request);
-    const { data: { user: supabaseUser }, error } = await supabase.auth.getUser();
+    const supabase = await createSupabaseServerClient();
+    const {
+      data: { user: supabaseUser },
+      error,
+    } = await supabase.auth.getUser();
 
     if (error || !supabaseUser) {
       return jsonError(

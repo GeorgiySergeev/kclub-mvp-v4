@@ -32,6 +32,7 @@ body {
 button,
 a {
   -webkit-tap-highlight-color: transparent;
+  outline: none;
 }
 
 ::selection {
@@ -42,4 +43,11 @@ a {
 .dark ::selection {
   background: #fafafa;
   color: #09090b;
+}
+
+@layer base {
+  *:focus:not(:focus-visible) {
+    outline: none;
+    box-shadow: none;
+  }
 }

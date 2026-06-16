@@ -5,7 +5,11 @@ import { ERROR_CODES } from '@kclub/contracts';
 
 import { createSupabaseServerClient } from '@/server/auth';
 import { jsonSuccess, jsonError, jsonErrorFromUnknown } from '@/server/api';
-import { verifyPhoneOtp, getMemberBySupabaseUserId, toCurrentMemberProfileDto } from '@/server/services';
+import {
+  verifyPhoneOtp,
+  getMemberBySupabaseUserId,
+  toCurrentMemberProfileDto,
+} from '@/server/services';
 
 export async function POST(request: NextRequest) {
   try {
@@ -24,16 +28,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { supabase, supabaseResponse } = createSupabaseServerClient(request);
+    const supabase = await createSupabaseServerClient();
     const { supabaseUserId } = await verifyPhoneOtp(supabase, parsed.data);
 
     const user = await getMemberBySupabaseUserId(supabaseUserId);
     const profile = toCurrentMemberProfileDto(user);
 
-    return jsonSuccess(profile, undefined, {
-      status: 200,
-      headers: Object.fromEntries(supabaseResponse.headers.entries()),
-    });
+    return jsonSuccess(profile, undefined, { status: 200 });
   } catch (error) {
     return jsonErrorFromUnknown(error);
   }

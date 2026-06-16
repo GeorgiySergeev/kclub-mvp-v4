@@ -17,4 +17,5 @@ Shared PostgreSQL schema, migrations, seed planning, and generated type entrypoi
 - `bun --filter @kclub/database db:generate`
 - `bun --filter @kclub/database db:migrate:dev`
 - `bun --filter @kclub/database db:migrate:deploy`
+- `bun --filter @kclub/database db:seed`
 - `bun --filter @kclub/database db:seed:plan`
