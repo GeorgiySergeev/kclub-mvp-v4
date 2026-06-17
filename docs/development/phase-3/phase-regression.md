@@ -32,6 +32,10 @@ Additional checks:
 - Contract tests pass.
 - Phase 4 can build UI against stable APIs.
 
+## End Of Phase
+
+After completing this regression handoff, update `docs/development/phase-3/phase-summary.md` with the current backend status, risks carried forward, and readiness assessment for Phase 4. A phase is not complete until its `phase-summary.md` is populated.
+
 ## Handoff Summary Format
 
 ```markdown

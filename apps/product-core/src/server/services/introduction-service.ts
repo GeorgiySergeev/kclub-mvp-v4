@@ -1,4 +1,4 @@
-import { ERROR_CODES, type IntroductionStatus, type IntroductionDto } from '@kclub/contracts';
+import { ERROR_CODES, type MemberIntroductionDto } from '@kclub/contracts';
 import {
   canCreateIntroductionForDay,
   canCreateIntroductionForTarget,
@@ -17,7 +17,7 @@ const auditService = createDbAuditService();
 export async function submitIntroduction(
   input: IntroductionSubmitInput,
   context: RequestContext,
-): Promise<IntroductionDto> {
+): Promise<MemberIntroductionDto> {
   const prisma = getPrismaClient();
   const userId = context.actor?.kind === 'member' ? context.actor.userId : null;
 
@@ -156,6 +156,10 @@ export async function submitIntroduction(
       status: 'SUBMITTED',
       message: input.message ?? null,
     },
+    include: {
+      requester_business: { select: { name: true, slug: true } },
+      target_business: { select: { name: true, slug: true } },
+    },
   });
 
   await auditService.log(
@@ -168,24 +172,28 @@ export async function submitIntroduction(
     context,
   );
 
-  return toIntroductionDto(introduction);
+  return toMemberIntroductionDto(introduction);
 }
 
-export async function getOwnIntroductions(userId: string): Promise<IntroductionDto[]> {
+export async function getOwnIntroductions(userId: string): Promise<MemberIntroductionDto[]> {
   const prisma = getPrismaClient();
 
   const introductions = await prisma.businessIntroduction.findMany({
     where: { requester_user_id: userId },
+    include: {
+      requester_business: { select: { name: true, slug: true } },
+      target_business: { select: { name: true, slug: true } },
+    },
     orderBy: { created_at: 'desc' },
   });
 
-  return introductions.map(toIntroductionDto);
+  return introductions.map(toMemberIntroductionDto);
 }
 
 export async function cancelIntroduction(
   introductionId: string,
   context: RequestContext,
-): Promise<IntroductionDto> {
+): Promise<MemberIntroductionDto> {
   const prisma = getPrismaClient();
   const userId = context.actor?.kind === 'member' ? context.actor.userId : null;
 
@@ -234,6 +242,10 @@ export async function cancelIntroduction(
   const updated = await prisma.businessIntroduction.update({
     where: { id: introductionId },
     data: { status: 'CANCELED' },
+    include: {
+      requester_business: { select: { name: true, slug: true } },
+      target_business: { select: { name: true, slug: true } },
+    },
   });
 
   await auditService.log(
@@ -247,19 +259,23 @@ export async function cancelIntroduction(
     context,
   );
 
-  return toIntroductionDto(updated);
+  return toMemberIntroductionDto(updated);
 }
 
-export function toIntroductionDto(intro: any): IntroductionDto {
+export function toMemberIntroductionDto(intro: any): MemberIntroductionDto {
   return {
     id: intro.id,
     requesterUserId: intro.requester_user_id,
     requesterBusinessId: intro.requester_business_id,
     targetBusinessId: intro.target_business_id,
-    status: intro.status as IntroductionStatus,
+    status: intro.status,
     message: intro.message,
     rejectionReason: intro.rejection_reason,
     createdAt: intro.created_at.toISOString(),
     updatedAt: intro.updated_at.toISOString(),
+    requesterBusinessName: intro.requester_business?.name ?? '',
+    requesterBusinessSlug: intro.requester_business?.slug ?? '',
+    targetBusinessName: intro.target_business?.name ?? '',
+    targetBusinessSlug: intro.target_business?.slug ?? '',
   };
 }

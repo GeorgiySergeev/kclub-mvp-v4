@@ -1,12 +1,15 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
-import type { CurrentMemberProfileDto } from '@kclub/contracts';
+import type { CurrentMemberProfileDto, PublicBusinessListItemDto } from '@kclub/contracts';
 import { Badge, EmptyState, Surface, cn, linkClasses } from '@kclub/ui';
 
 import type { Locale } from '@/i18n/routing';
 import type { ImplementedMemberDashboardTab } from '@/features/member/dashboard-tabs';
+import { getPublicBusinesses } from '@/server/services/business-service';
 import { CardPanel } from './CardPanel';
+import { BusinessPanel } from './BusinessPanel';
+import { IntroductionsPanel } from './IntroductionsPanel';
 
 type DashboardTabsProps = {
   locale: Locale;
@@ -22,6 +25,7 @@ export async function DashboardTabs({
   visibleTabs,
 }: DashboardTabsProps) {
   const t = await getTranslations({ locale, namespace: 'member.dashboard' });
+  const publicBusinesses = activeTab === 'introductions' ? await getPublicBusinesses() : [];
 
   return (
     <div className="space-y-8">
@@ -62,6 +66,14 @@ export async function DashboardTabs({
       {activeTab === 'card' && <CardPanel locale={locale} />}
       {activeTab === 'catalog' && <CatalogPanel locale={locale} />}
       {activeTab === 'subscription' && <SubscriptionPanel locale={locale} profile={profile} />}
+      {activeTab === 'business' && <BusinessPanel locale={locale} profile={profile} />}
+      {activeTab === 'introductions' && (
+        <IntroductionsPanel
+          locale={locale}
+          profile={profile}
+          serverPublicBusinesses={publicBusinesses}
+        />
+      )}
       {activeTab === 'profile' && <ProfilePanel locale={locale} profile={profile} />}
     </div>
   );

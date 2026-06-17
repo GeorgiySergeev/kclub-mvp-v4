@@ -32,6 +32,10 @@ Additional checks:
 - Every blocker has an owner and next action.
 - Production release does not depend on undocumented manual knowledge.
 
+## End Of Phase
+
+After completing this regression handoff, update `docs/development/phase-7/phase-summary.md` with the final release readiness assessment, risks, follow-ups, and launch decision. A phase is not complete until its `phase-summary.md` is populated.
+
 ## Handoff Summary Format
 
 ```markdown

@@ -51,10 +51,14 @@ describe('member route exports', () => {
     const card = await import('@/app/[locale]/(member)/m/card/page');
     const profile = await import('@/app/[locale]/(member)/m/profile/page');
     const subscription = await import('@/app/[locale]/(member)/m/subscription/page');
+    const myBusiness = await import('@/app/[locale]/(member)/m/my-business/page');
+    const introduce = await import('@/app/[locale]/(member)/m/introduce/page');
 
     expect(typeof card.default).toBe('function');
     expect(typeof profile.default).toBe('function');
     expect(typeof subscription.default).toBe('function');
+    expect(typeof myBusiness.default).toBe('function');
+    expect(typeof introduce.default).toBe('function');
   });
 });
 

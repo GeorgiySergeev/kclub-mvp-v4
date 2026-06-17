@@ -31,6 +31,10 @@ Additional checks:
 - Capability-gated tabs are hidden and server-enforced.
 - Phase 5 can add billing without redesigning dashboard architecture.
 
+## End Of Phase
+
+After completing this regression handoff, update `docs/development/phase-4/phase-summary.md` with the current UX status, risks carried forward, and readiness assessment for Phase 5. A phase is not complete until its `phase-summary.md` is populated.
+
 ## Handoff Summary Format
 
 ```markdown

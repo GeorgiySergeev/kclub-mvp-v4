@@ -19,6 +19,10 @@ Validate that planning is complete enough for scaffold work to begin without re-
 - Phase 1 can create the workspace without inventing new architecture.
 - The handoff lists any known doc drift and planned cleanup step.
 
+## End Of Phase
+
+After completing this regression handoff, confirm `docs/development/phase-0/phase-summary.md` is up to date with planning decisions and readiness assessment for Phase 1. A phase is not complete until its `phase-summary.md` is populated.
+
 ## Handoff Summary Format
 
 ```markdown

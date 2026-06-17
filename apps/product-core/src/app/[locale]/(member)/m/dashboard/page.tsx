@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server';
 
 import type { Locale } from '@/i18n/routing';
 import { requireCurrentMember } from '@/server/member-page';
+import { getOwnBusinesses } from '@/server/services/business-service';
 import { DashboardTabs } from '@/features/member/components/DashboardTabs';
 import {
   getImplementedDashboardTabs,
@@ -28,7 +29,9 @@ export default async function DashboardPage({
   const { locale } = await params;
   const query = await searchParams;
   const profile = await requireCurrentMember(locale);
-  const visibleTabs = getImplementedDashboardTabs(profile);
+  const ownBusinesses = await getOwnBusinesses(profile.id);
+  const hasPublishedBusiness = ownBusinesses.some((b) => b.status === 'PUBLISHED');
+  const visibleTabs = getImplementedDashboardTabs({ ...profile, hasPublishedBusiness });
   const activeTab = normalizeDashboardTab(query.tab, visibleTabs);
 
   return (
