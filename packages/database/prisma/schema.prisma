@@ -11,17 +11,23 @@ datasource db {
 enum MemberTier {
   MEMBER
   VIP
+
+  @@map("member_tier")
 }
 
 enum UserStatus {
   ACTIVE
   BLOCKED
+
+  @@map("user_status")
 }
 
 enum ClubCardStatus {
   ACTIVE
   REVOKED
   EXPIRED
+
+  @@map("club_card_status")
 }
 
 enum SubscriptionStatus {
@@ -30,11 +36,15 @@ enum SubscriptionStatus {
   PAST_DUE
   CANCELED
   EXPIRED
+
+  @@map("subscription_status")
 }
 
 enum SubscriptionKind {
   VIP_MEMBERSHIP
   BUSINESS_PLACEMENT
+
+  @@map("subscription_kind")
 }
 
 enum BusinessStatus {
@@ -43,6 +53,8 @@ enum BusinessStatus {
   PUBLISHED
   REJECTED
   HIDDEN
+
+  @@map("business_status")
 }
 
 enum IntroductionStatus {
@@ -52,6 +64,8 @@ enum IntroductionStatus {
   COMPLETED
   REJECTED
   CANCELED
+
+  @@map("introduction_status")
 }
 
 enum StaffRole {
@@ -59,6 +73,8 @@ enum StaffRole {
   ADMIN
   MODERATOR
   SUPPORT
+
+  @@map("staff_role")
 }
 
 model User {

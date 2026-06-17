@@ -1,27 +1,34 @@
 'use client';
 
-import { Menu, X } from 'lucide-react';
+import { Globe, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
 
-import { Locale } from '@/i18n/routing';
+import { IconButton, cn } from '@kclub/ui';
+import { Locale, locales } from '@/i18n/routing';
 
 import { ThemeToggle } from './ThemeToggle';
 
 type NavItem = {
-  key: 'directory' | 'signIn' | 'join';
+  key: 'directory' | 'signIn' | 'join' | 'cabinet';
   href: string;
 };
 
-export function TopBar({ locale }: { locale: Locale }) {
+export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; isAuthenticated?: boolean }) {
   const t = useTranslations('home');
   const [open, setOpen] = useState(false);
-  const navItems: NavItem[] = [
-    { key: 'directory', href: `/${locale}/directory` },
-    { key: 'signIn', href: `/${locale}/sign-in` },
-    { key: 'join', href: `/${locale}/sign-up` },
-  ];
+  const [localeOpen, setLocaleOpen] = useState(false);
+  const navItems: NavItem[] = isAuthenticated
+    ? [
+        { key: 'directory', href: `/${locale}/directory` },
+        { key: 'cabinet', href: `/${locale}/m/dashboard` },
+      ]
+    : [
+        { key: 'directory', href: `/${locale}/directory` },
+        { key: 'signIn', href: `/${locale}/sign-in` },
+        { key: 'join', href: `/${locale}/sign-up` },
+      ];
 
   return (
     <header className="sticky top-0 z-50 h-12 border-b border-zinc-200 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95">
@@ -43,6 +50,42 @@ export function TopBar({ locale }: { locale: Locale }) {
               {t(`nav.${item.key}`)}
             </Link>
           ))}
+
+          <div className="relative">
+            <IconButton
+              aria-label={t('footer.locales')}
+              aria-expanded={localeOpen}
+              aria-controls="locale-switcher"
+              onClick={() => setLocaleOpen((v) => !v)}
+            >
+              <Globe aria-hidden="true" size={16} strokeWidth={1.5} />
+            </IconButton>
+
+            {localeOpen && (
+              <div
+                id="locale-switcher"
+                className="absolute right-0 top-full z-50 mt-1 w-32 rounded-md border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-950"
+                onMouseLeave={() => setLocaleOpen(false)}
+              >
+                {locales.map((item) => (
+                  <Link
+                    key={item}
+                    href={`/${item}`}
+                    onClick={() => setLocaleOpen(false)}
+                    className={cn(
+                      'block px-4 py-2 text-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-900 dark:hover:bg-zinc-900 dark:focus:ring-zinc-50',
+                      item === locale
+                        ? 'font-medium text-zinc-900 dark:text-zinc-50'
+                        : 'text-zinc-600 dark:text-zinc-400',
+                    )}
+                  >
+                    {t(`locale.${item}`)}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
           <ThemeToggle className="h-10 w-10" />
         </nav>
 
@@ -81,6 +124,26 @@ export function TopBar({ locale }: { locale: Locale }) {
                 {t(`nav.${item.key}`)}
               </Link>
             ))}
+            <p className="mt-2 px-4 pt-2 text-xs font-normal uppercase tracking-widest text-zinc-500">
+              {t('footer.locales')}
+            </p>
+            <div className="grid gap-1">
+              {locales.map((item) => (
+                <Link
+                  key={item}
+                  href={`/${item}`}
+                  onClick={() => setOpen(false)}
+                  className={cn(
+                    'border px-4 py-3 text-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-800 dark:hover:bg-zinc-900 dark:focus:ring-zinc-50',
+                    item === locale
+                      ? 'border-zinc-900 text-zinc-900 dark:border-zinc-50 dark:text-zinc-50'
+                      : 'border-zinc-200 text-zinc-600 dark:border-zinc-800 dark:text-zinc-400',
+                  )}
+                >
+                  {t(`locale.${item}`)}
+                </Link>
+              ))}
+            </div>
           </nav>
         </div>
       ) : null}

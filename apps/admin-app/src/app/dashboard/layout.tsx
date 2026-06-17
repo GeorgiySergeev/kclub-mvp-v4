@@ -13,7 +13,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
   }
 
   return (
-    <div className="flex min-h-screen bg-muted/20">
+    <div className="bg-muted/20 flex min-h-screen">
       <AppSidebar className="hidden lg:flex" staffRole={profile.role} />
       <div className="flex min-w-0 flex-1 flex-col">
         <DashboardHeader

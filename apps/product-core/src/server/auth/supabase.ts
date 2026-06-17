@@ -1,33 +1,30 @@
 import { createClient } from '@supabase/supabase-js';
 import { createServerClient } from '@supabase/ssr';
-import { type NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 
-export function createSupabaseServerClient(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request });
+export async function createSupabaseServerClient() {
+  const cookieStore = await cookies();
 
-  const supabase = createServerClient(
+  return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
         getAll() {
-          return request.cookies.getAll();
+          return cookieStore.getAll();
         },
         setAll(cookiesToSet: { name: string; value: string; options?: Record<string, unknown> }[]) {
-          cookiesToSet.forEach(({ name, value }: { name: string; value: string }) =>
-            request.cookies.set(name, value),
-          );
-          supabaseResponse = NextResponse.next({ request });
-          cookiesToSet.forEach(
-            ({ name, value, options }: { name: string; value: string; options?: Record<string, unknown> }) =>
-              supabaseResponse.cookies.set(name, value, options),
-          );
+          try {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookieStore.set(name, value, options);
+            });
+          } catch {
+            // setAll can fail outside Route Handlers; middleware should refresh sessions.
+          }
         },
       },
     },
   );
-
-  return { supabase, supabaseResponse };
 }
 
 export function createSupabaseServiceClient() {

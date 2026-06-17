@@ -12,35 +12,35 @@ Use this guide for role definitions, permission checks, capability enforcement, 
 
 ## Member Tiers
 
-| Capability | MEMBER | VIP | VIP + published business |
-|---|:---:|:---:|:---:|
-| Digital club card | Yes | Yes | Yes |
-| Public partner directory | Yes | Yes | Yes |
-| VIP subscription management | Upgrade only | Manage | Manage |
-| Submit business profile | No | Yes | Yes |
-| Manage own business profile | No | Yes | Yes |
-| Business Introductions | No | No | Yes |
+| Capability                  |    MEMBER    |  VIP   | VIP + published business |
+| --------------------------- | :----------: | :----: | :----------------------: |
+| Digital club card           |     Yes      |  Yes   |           Yes            |
+| Public partner directory    |     Yes      |  Yes   |           Yes            |
+| VIP subscription management | Upgrade only | Manage |          Manage          |
+| Submit business profile     |      No      |  Yes   |           Yes            |
+| Manage own business profile |      No      |  Yes   |           Yes            |
+| Business Introductions      |      No      |   No   |           Yes            |
 
 ## Staff Roles
 
 Operational hierarchy: `OWNER >= ADMIN >= MODERATOR`. `SUPPORT` is a parallel read-only role.
 
-| Action | OWNER | ADMIN | MODERATOR | SUPPORT |
-|---|:---:|:---:|:---:|:---:|
-| Dashboard metrics | Yes | Yes | Yes | Yes |
-| Search users | Yes | Yes | No | No |
-| Block / unblock users | Yes | Yes | No | No |
-| Revoke or re-issue cards | Yes | Yes | No | No |
-| View subscriptions | Yes | Yes | Yes | Yes |
-| Cancel subscription (admin override) | Yes | Yes | No | No |
-| Review, approve, publish, hide businesses | Yes | Yes | Yes | No |
-| Manage Business Introductions | Yes | Yes | Yes | No |
-| CRUD categories, countries, cities | Yes | Yes | Yes | No |
-| Toggle homepage featured flags | Yes | Yes | Yes | No |
-| Manage Stripe Price IDs | Yes | No | No | No |
-| Manage staff roles | Yes | No | No | No |
-| View audit log | Yes | Yes | No | Yes |
-| Add internal notes | Yes | Yes | Yes | Yes |
+| Action                                    | OWNER | ADMIN | MODERATOR | SUPPORT |
+| ----------------------------------------- | :---: | :---: | :-------: | :-----: |
+| Dashboard metrics                         |  Yes  |  Yes  |    Yes    |   Yes   |
+| Search users                              |  Yes  |  Yes  |    No     |   No    |
+| Block / unblock users                     |  Yes  |  Yes  |    No     |   No    |
+| Revoke or re-issue cards                  |  Yes  |  Yes  |    No     |   No    |
+| View subscriptions                        |  Yes  |  Yes  |    Yes    |   Yes   |
+| Cancel subscription (admin override)      |  Yes  |  Yes  |    No     |   No    |
+| Review, approve, publish, hide businesses |  Yes  |  Yes  |    Yes    |   No    |
+| Manage Business Introductions             |  Yes  |  Yes  |    Yes    |   No    |
+| CRUD categories, countries, cities        |  Yes  |  Yes  |    Yes    |   No    |
+| Toggle homepage featured flags            |  Yes  |  Yes  |    Yes    |   No    |
+| Manage Stripe Price IDs                   |  Yes  |  No   |    No     |   No    |
+| Manage staff roles                        |  Yes  |  No   |    No     |   No    |
+| View audit log                            |  Yes  |  Yes  |    No     |   Yes   |
+| Add internal notes                        |  Yes  |  Yes  |    Yes    |   Yes   |
 
 ## Enforcement Rules
 

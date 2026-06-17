@@ -40,6 +40,7 @@ Task runner: `turbo`
 Ensure you have [Bun](https://bun.sh) installed.
 
 ### Install Dependencies
+
 ```bash
 bun install
 ```
@@ -55,17 +56,19 @@ You can start both applications concurrently via Turbo, or run them individually
 ### Check Workspaces
 
 Run quality checks across all workspaces:
+
 ```bash
 bun run format
 bun run lint
 bun run typecheck
 bun run build
 ```
+
 To run checks on specific affected packages, you can use Turbo filtering (e.g., `bunx turbo run build --filter=@kclub/product-core`).
 
 ## Deployment and Previews
 
-- **Vercel Previews**: Pull Requests will automatically generate Preview Environments for both `product-core` and `admin-app`. 
+- **Vercel Previews**: Pull Requests will automatically generate Preview Environments for both `product-core` and `admin-app`.
 - **Production**: Merges to `main` will trigger production deployments. Do not configure or expose production secrets in local `.env` files. Use `.env.example` as a template for your local development variables.
 
 ## Working Model

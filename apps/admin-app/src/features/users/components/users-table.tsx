@@ -45,7 +45,15 @@ async function unblockUser(userId: EntityId) {
   return res.ok;
 }
 
-function BlockConfirmDialog({ userId, userName, onAction }: { userId: EntityId; userName: string; onAction: () => void }) {
+function BlockConfirmDialog({
+  userId,
+  userName,
+  onAction,
+}: {
+  userId: EntityId;
+  userName: string;
+  onAction: () => void;
+}) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -59,7 +67,8 @@ function BlockConfirmDialog({ userId, userName, onAction }: { userId: EntityId; 
         <DialogHeader>
           <DialogTitle>Block user</DialogTitle>
           <DialogDescription>
-            Are you sure you want to block {userName || 'this user'}? They will lose access to their account.
+            Are you sure you want to block {userName || 'this user'}? They will lose access to their
+            account.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -84,7 +93,15 @@ function BlockConfirmDialog({ userId, userName, onAction }: { userId: EntityId; 
   );
 }
 
-function UnblockConfirmDialog({ userId, userName, onAction }: { userId: EntityId; userName: string; onAction: () => void }) {
+function UnblockConfirmDialog({
+  userId,
+  userName,
+  onAction,
+}: {
+  userId: EntityId;
+  userName: string;
+  onAction: () => void;
+}) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -97,9 +114,7 @@ function UnblockConfirmDialog({ userId, userName, onAction }: { userId: EntityId
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Unblock user</DialogTitle>
-          <DialogDescription>
-            Restore access for {userName || 'this user'}?
-          </DialogDescription>
+          <DialogDescription>Restore access for {userName || 'this user'}?</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <Button variant="outline" onClick={() => setOpen(false)}>
@@ -145,7 +160,7 @@ export function UsersTable({ users, total, page, limit, search: initialSearch }:
   return (
     <div className="space-y-4">
       <form onSubmit={handleSearch} className="flex gap-2">
-        <div className="relative flex-1 max-w-sm">
+        <div className="relative max-w-sm flex-1">
           <Search className="pointer-events-none absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             className="pl-8"
@@ -173,7 +188,7 @@ export function UsersTable({ users, total, page, limit, search: initialSearch }:
           <TableBody>
             {users.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={5} className="text-center text-muted-foreground py-8">
+                <TableCell colSpan={5} className="py-8 text-center text-muted-foreground">
                   No users found
                 </TableCell>
               </TableRow>
@@ -223,10 +238,20 @@ export function UsersTable({ users, total, page, limit, search: initialSearch }:
             Page {page} of {totalPages} ({total} total)
           </span>
           <div className="flex gap-1">
-            <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => navigate(page - 1)}>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={page <= 1}
+              onClick={() => navigate(page - 1)}
+            >
               Previous
             </Button>
-            <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => navigate(page + 1)}>
+            <Button
+              variant="outline"
+              size="sm"
+              disabled={page >= totalPages}
+              onClick={() => navigate(page + 1)}
+            >
               Next
             </Button>
           </div>

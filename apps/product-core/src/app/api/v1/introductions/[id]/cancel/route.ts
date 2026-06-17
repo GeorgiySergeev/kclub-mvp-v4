@@ -15,7 +15,7 @@ type Params = {
 export async function POST(request: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
-    const { supabase } = createSupabaseServerClient(request);
+    const supabase = await createSupabaseServerClient();
     const {
       data: { user: supabaseUser },
       error,

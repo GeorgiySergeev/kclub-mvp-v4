@@ -25,14 +25,23 @@ function getLocale(request: NextRequest): Locale {
   return DEFAULT_LOCALE;
 }
 
+function nextWithPathname(request: NextRequest) {
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-kclub-pathname', request.nextUrl.pathname);
+
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
+}
+
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const pathnameHasLocale = LOCALES.some(
     (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
   );
-
-  if (pathnameHasLocale) return;
 
   const isNonPageRoute =
     pathname.startsWith('/api/') ||
@@ -42,11 +51,16 @@ export function middleware(request: NextRequest) {
 
   if (isNonPageRoute) return;
 
+  if (pathnameHasLocale) return nextWithPathname(request);
+
   const locale = getLocale(request);
   const newUrl = new URL(`/${locale}${pathname}`, request.url);
   newUrl.search = request.nextUrl.search;
 
-  return NextResponse.redirect(newUrl);
+  const response = NextResponse.redirect(newUrl);
+  response.headers.set('x-locale', locale);
+
+  return response;
 }
 
 export const config = {

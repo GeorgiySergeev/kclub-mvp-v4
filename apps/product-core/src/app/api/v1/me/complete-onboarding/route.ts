@@ -13,8 +13,11 @@ import {
 
 export async function POST(request: NextRequest) {
   try {
-    const { supabase } = createSupabaseServerClient(request);
-    const { data: { user: supabaseUser }, error } = await supabase.auth.getUser();
+    const supabase = await createSupabaseServerClient();
+    const {
+      data: { user: supabaseUser },
+      error,
+    } = await supabase.auth.getUser();
 
     if (error || !supabaseUser) {
       return jsonError(

@@ -15,7 +15,7 @@ import { createRequestContext } from '@/server/context';
 
 export async function GET(request: NextRequest) {
   try {
-    const { supabase } = createSupabaseServerClient(request);
+    const supabase = await createSupabaseServerClient();
     const {
       data: { user: supabaseUser },
     } = await supabase.auth.getUser();
@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { supabase } = createSupabaseServerClient(request);
+    const supabase = await createSupabaseServerClient();
     const {
       data: { user: supabaseUser },
       error,

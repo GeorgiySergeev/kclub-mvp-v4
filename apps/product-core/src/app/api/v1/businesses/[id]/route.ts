@@ -6,10 +6,7 @@ import { businessProfileEditableFieldsSchema } from '@kclub/validation';
 import { createSupabaseServerClient } from '@/server/auth';
 import { jsonSuccess, jsonError, jsonErrorFromUnknown } from '@/server/api';
 import { getMemberBySupabaseUserId } from '@/server/services';
-import {
-  getBusinessDetail,
-  updateBusiness,
-} from '@/server/services/business-service';
+import { getBusinessDetail, updateBusiness } from '@/server/services/business-service';
 import { createRequestContext } from '@/server/context';
 
 type Params = {
@@ -19,7 +16,7 @@ type Params = {
 export async function GET(request: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
-    const { supabase } = createSupabaseServerClient(request);
+    const supabase = await createSupabaseServerClient();
     const {
       data: { user: supabaseUser },
     } = await supabase.auth.getUser();
@@ -40,7 +37,7 @@ export async function GET(request: NextRequest, { params }: Params) {
 export async function PATCH(request: NextRequest, { params }: Params) {
   try {
     const { id } = await params;
-    const { supabase } = createSupabaseServerClient(request);
+    const supabase = await createSupabaseServerClient();
     const {
       data: { user: supabaseUser },
       error,

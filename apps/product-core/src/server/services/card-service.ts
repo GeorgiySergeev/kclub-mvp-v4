@@ -41,7 +41,9 @@ export function toMemberCardDto(card: CardRecord): MemberCardDto {
   };
 }
 
-export function toPublicCardVerificationDto(card: CardWithUserDisplayName): PublicCardVerificationDto {
+export function toPublicCardVerificationDto(
+  card: CardWithUserDisplayName,
+): PublicCardVerificationDto {
   return {
     cardNumber: card.card_number,
     status: card.status as ClubCardStatus,
@@ -52,7 +54,7 @@ export function toPublicCardVerificationDto(card: CardWithUserDisplayName): Publ
   };
 }
 
-async function generateNextCardNumber(): Promise<string> {
+async function generateNextCardNumber(tierPrefix: 'VIP' | 'MEM' = 'MEM'): Promise<string> {
   const prisma = getPrismaClient();
 
   const lastCard = await prisma.memberCard.findFirst({
@@ -70,7 +72,7 @@ async function generateNextCardNumber(): Promise<string> {
     }
   }
 
-  return formatCardNumber('MEM', nextSeq);
+  return formatCardNumber(tierPrefix, nextSeq);
 }
 
 export async function getActiveCardForUser(userId: string): Promise<CardRecord | null> {
@@ -103,18 +105,41 @@ export async function issueCardForUser(
   }
 
   const tierPrefix = cardNumberToTierPrefix(membershipTier as 'MEMBER' | 'VIP');
-  const cardNumber = await generateNextCardNumber();
 
-  const card = await prisma.memberCard.create({
-    data: {
-      user_id: userId,
-      card_number: cardNumber,
-      membership_tier: membershipTier as MemberTier,
-      qr_payload_url: `/verify-card/${cardNumber}`,
-    },
-  });
+  const MAX_RETRIES = 3;
+  let attempt = 0;
 
-  return card;
+  while (attempt < MAX_RETRIES) {
+    try {
+      const cardNumber = await generateNextCardNumber(tierPrefix);
+
+      const card = await prisma.memberCard.create({
+        data: {
+          user_id: userId,
+          card_number: cardNumber,
+          membership_tier: membershipTier as MemberTier,
+          qr_payload_url: `/verify-card/${cardNumber}`,
+        },
+      });
+
+      return card;
+    } catch (error: any) {
+      if (error?.code === 'P2002') {
+        attempt++;
+        if (attempt >= MAX_RETRIES) {
+          throw new AppError({
+            code: ERROR_CODES.SERVER_ERROR,
+            message: 'Failed to generate a unique card number after multiple attempts.',
+            status: 500,
+          });
+        }
+        continue;
+      }
+      throw error;
+    }
+  }
+
+  throw new Error('Unreachable code');
 }
 
 export async function issueCardForUserIfNoneActive(
@@ -127,10 +152,7 @@ export async function issueCardForUserIfNoneActive(
   return issueCardForUser(userId, membershipTier);
 }
 
-export async function revokeCard(
-  cardId: string,
-  reason?: string,
-): Promise<CardRecord> {
+export async function revokeCard(cardId: string, reason?: string): Promise<CardRecord> {
   const prisma = getPrismaClient();
 
   const card = await prisma.memberCard.findUnique({
@@ -173,57 +195,77 @@ export async function reissueCard(
 ): Promise<CardRecord> {
   const prisma = getPrismaClient();
 
-  const [newCard] = await prisma.$transaction(async (tx) => {
-    const card = await tx.memberCard.findUnique({
-      where: { id: currentCardId },
-    });
+  const MAX_RETRIES = 3;
+  let attempt = 0;
 
-    if (!card) {
-      throw new AppError({
-        code: ERROR_CODES.CARD_NOT_FOUND,
-        message: 'Card not found',
-        status: 404,
+  while (attempt < MAX_RETRIES) {
+    try {
+      const [newCard] = await prisma.$transaction(async (tx) => {
+        const card = await tx.memberCard.findUnique({
+          where: { id: currentCardId },
+        });
+
+        if (!card) {
+          throw new AppError({
+            code: ERROR_CODES.CARD_NOT_FOUND,
+            message: 'Card not found',
+            status: 404,
+          });
+        }
+
+        if (!canTransitionCardStatus(card.status as ClubCardStatus, 'REVOKED')) {
+          throw new AppError({
+            code: ERROR_CODES.CARD_INVALID_STATUS_TRANSITION,
+            message: `Cannot reissue: current card status is ${card.status}`,
+            status: 409,
+          });
+        }
+
+        await tx.memberCard.update({
+          where: { id: currentCardId },
+          data: {
+            status: 'REVOKED',
+            revoked_at: new Date(),
+            revoked_reason: revokeReason ?? null,
+          },
+        });
+
+        const tierPrefix = cardNumberToTierPrefix(membershipTier as 'MEMBER' | 'VIP');
+        const cardNumber = await generateNextCardNumber(tierPrefix);
+
+        const newCardRecord = await tx.memberCard.create({
+          data: {
+            user_id: userId,
+            card_number: cardNumber,
+            membership_tier: membershipTier as MemberTier,
+            qr_payload_url: `/verify-card/${cardNumber}`,
+          },
+        });
+
+        return [newCardRecord];
       });
+
+      return newCard;
+    } catch (error: any) {
+      if (error?.code === 'P2002') {
+        attempt++;
+        if (attempt >= MAX_RETRIES) {
+          throw new AppError({
+            code: ERROR_CODES.SERVER_ERROR,
+            message: 'Failed to generate a unique card number after multiple attempts.',
+            status: 500,
+          });
+        }
+        continue;
+      }
+      throw error;
     }
+  }
 
-    if (!canTransitionCardStatus(card.status as ClubCardStatus, 'REVOKED')) {
-      throw new AppError({
-        code: ERROR_CODES.CARD_INVALID_STATUS_TRANSITION,
-        message: `Cannot reissue: current card status is ${card.status}`,
-        status: 409,
-      });
-    }
-
-    await tx.memberCard.update({
-      where: { id: currentCardId },
-      data: {
-        status: 'REVOKED',
-        revoked_at: new Date(),
-        revoked_reason: revokeReason ?? null,
-      },
-    });
-
-    const tierPrefix = cardNumberToTierPrefix(membershipTier as 'MEMBER' | 'VIP');
-    const cardNumber = await generateNextCardNumber();
-
-    const newCardRecord = await tx.memberCard.create({
-      data: {
-        user_id: userId,
-        card_number: cardNumber,
-        membership_tier: membershipTier as MemberTier,
-        qr_payload_url: `/verify-card/${cardNumber}`,
-      },
-    });
-
-    return [newCardRecord];
-  });
-
-  return newCard;
+  throw new Error('Unreachable code');
 }
 
-export async function publicVerifyCard(
-  cardNumber: string,
-): Promise<PublicCardVerificationDto> {
+export async function publicVerifyCard(cardNumber: string): Promise<PublicCardVerificationDto> {
   const prisma = getPrismaClient();
 
   const card = await prisma.memberCard.findUnique({

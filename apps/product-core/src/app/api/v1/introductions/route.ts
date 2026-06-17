@@ -6,15 +6,12 @@ import { introductionSubmitSchema } from '@kclub/validation';
 import { createSupabaseServerClient } from '@/server/auth';
 import { jsonSuccess, jsonError, jsonErrorFromUnknown } from '@/server/api';
 import { getMemberBySupabaseUserId } from '@/server/services';
-import {
-  submitIntroduction,
-  getOwnIntroductions,
-} from '@/server/services/introduction-service';
+import { submitIntroduction, getOwnIntroductions } from '@/server/services/introduction-service';
 import { createRequestContext } from '@/server/context';
 
 export async function GET(request: NextRequest) {
   try {
-    const { supabase } = createSupabaseServerClient(request);
+    const supabase = await createSupabaseServerClient();
     const {
       data: { user: supabaseUser },
       error,
@@ -38,7 +35,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { supabase } = createSupabaseServerClient(request);
+    const supabase = await createSupabaseServerClient();
     const {
       data: { user: supabaseUser },
       error,

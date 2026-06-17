@@ -25,14 +25,13 @@ export function PageShell({ title, description, roleScope, children }: PageShell
           <CardHeader>
             <CardTitle>Scaffold Ready</CardTitle>
             <CardDescription>
-              This route is connected to the admin dashboard layout and ready for feature implementation.
+              This route is connected to the admin dashboard layout and ready for feature
+              implementation.
             </CardDescription>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">
-            Wire this page to BFF server actions and product-core admin endpoints under
-            {' '}
-            <code>/api/admin/v1</code>
-            .
+            Wire this page to BFF server actions and product-core admin endpoints under{' '}
+            <code>/api/admin/v1</code>.
           </CardContent>
         </Card>
       )}

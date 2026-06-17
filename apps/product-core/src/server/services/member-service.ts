@@ -46,9 +46,7 @@ export function toCurrentMemberProfileDto(user: UserRecord): CurrentMemberProfil
   };
 }
 
-export async function getMemberBySupabaseUserId(
-  supabaseUserId: string,
-): Promise<UserRecord> {
+export async function getMemberBySupabaseUserId(supabaseUserId: string): Promise<UserRecord> {
   const prisma = getPrismaClient();
 
   const user = await prisma.user.findUnique({
