@@ -30,6 +30,10 @@ Additional checks:
 - Database schema supports MVP flows.
 - Contract tests prevent admin-app/product-core drift.
 
+## End Of Phase
+
+After completing this regression handoff, update `docs/development/phase-2/phase-summary.md` with the current shared-package state, risks carried forward, and readiness assessment for Phase 3. A phase is not complete until its `phase-summary.md` is populated.
+
 ## Handoff Summary Format
 
 ```markdown

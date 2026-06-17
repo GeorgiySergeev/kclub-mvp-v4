@@ -213,6 +213,13 @@ export type IntroductionDto = {
   updatedAt: IsoDateTime;
 };
 
+export type MemberIntroductionDto = IntroductionDto & {
+  requesterBusinessName: string;
+  requesterBusinessSlug: string;
+  targetBusinessName: string;
+  targetBusinessSlug: string;
+};
+
 export type AuditLogDto = {
   id: EntityId;
   actorStaffId: EntityId | null;

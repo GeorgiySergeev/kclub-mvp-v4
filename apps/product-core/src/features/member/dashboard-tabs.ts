@@ -1,6 +1,7 @@
 import {
   MEMBER_DASHBOARD_TAB_VISIBILITY,
   type CurrentMemberProfileDto,
+  type MemberCapabilityGroup,
   type MemberDashboardTab,
 } from '@kclub/contracts';
 
@@ -9,16 +10,31 @@ export const IMPLEMENTED_MEMBER_DASHBOARD_TABS = [
   'catalog',
   'subscription',
   'profile',
+  'business',
+  'introductions',
 ] as const satisfies readonly MemberDashboardTab[];
 
 export type ImplementedMemberDashboardTab = (typeof IMPLEMENTED_MEMBER_DASHBOARD_TABS)[number];
 
 const DEFAULT_TAB: ImplementedMemberDashboardTab = 'card';
 
+function getMemberCapabilityGroupForDashboard(
+  profile: Pick<CurrentMemberProfileDto, 'membershipTier'> & { hasPublishedBusiness?: boolean },
+): MemberCapabilityGroup {
+  if (profile.membershipTier === 'VIP' && profile.hasPublishedBusiness) {
+    return 'VIP_WITH_PUBLISHED_BUSINESS';
+  }
+  if (profile.membershipTier === 'VIP') {
+    return 'VIP';
+  }
+  return 'MEMBER';
+}
+
 export function getImplementedDashboardTabs(
-  _profile: Pick<CurrentMemberProfileDto, 'membershipTier'>,
+  profile: Pick<CurrentMemberProfileDto, 'membershipTier'> & { hasPublishedBusiness?: boolean },
 ): readonly ImplementedMemberDashboardTab[] {
-  return MEMBER_DASHBOARD_TAB_VISIBILITY.MEMBER.filter((tab) =>
+  const group = getMemberCapabilityGroupForDashboard(profile);
+  return MEMBER_DASHBOARD_TAB_VISIBILITY[group].filter((tab) =>
     IMPLEMENTED_MEMBER_DASHBOARD_TABS.includes(tab as ImplementedMemberDashboardTab),
   ) as readonly ImplementedMemberDashboardTab[];
 }

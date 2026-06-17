@@ -32,6 +32,10 @@ Additional checks:
 - Admin-app consumes shared contracts and product-core admin APIs.
 - Phase 7 can focus on hardening, not missing MVP surfaces.
 
+## End Of Phase
+
+After completing this regression handoff, update `docs/development/phase-6/phase-summary.md` with the current admin status, risks carried forward, and readiness assessment for Phase 7. A phase is not complete until its `phase-summary.md` is populated.
+
 ## Handoff Summary Format
 
 ```markdown

@@ -20,8 +20,19 @@ const memberProfile: CurrentMemberProfileDto = {
   updatedAt: '2026-06-16T00:00:00.000Z',
 };
 
+const vipProfile: CurrentMemberProfileDto = {
+  ...memberProfile,
+  id: 'vip-1',
+  membershipTier: 'VIP',
+};
+
+const vipWithPublishedProfile: CurrentMemberProfileDto = {
+  ...vipProfile,
+  id: 'vip-published-1',
+};
+
 describe('member dashboard tabs', () => {
-  test('returns implemented P4.4 tabs only', () => {
+  test('MEMBER sees card, catalog, subscription, profile', () => {
     const tabs = getImplementedDashboardTabs(memberProfile);
 
     expect(tabs).toEqual(['card', 'catalog', 'subscription', 'profile']);
@@ -29,11 +40,39 @@ describe('member dashboard tabs', () => {
     expect(tabs).not.toContain('introductions');
   });
 
-  test('normalizes invalid tab to card', () => {
+  test('VIP sees business tab but not introductions', () => {
+    const tabs = getImplementedDashboardTabs(vipProfile);
+
+    expect(tabs).toContain('business');
+    expect(tabs).not.toContain('introductions');
+    expect(tabs).toContain('card');
+    expect(tabs).toContain('catalog');
+    expect(tabs).toContain('subscription');
+    expect(tabs).toContain('profile');
+  });
+
+  test('VIP with published business sees both business and introductions', () => {
+    const tabs = getImplementedDashboardTabs({
+      ...vipWithPublishedProfile,
+      hasPublishedBusiness: true,
+    });
+
+    expect(tabs).toContain('business');
+    expect(tabs).toContain('introductions');
+    expect(tabs).toHaveLength(6);
+  });
+
+  test('normalizes invalid tab to first visible tab', () => {
     const tabs = getImplementedDashboardTabs(memberProfile);
 
     expect(normalizeDashboardTab('introductions', tabs)).toBe('card');
     expect(normalizeDashboardTab(undefined, tabs)).toBe('card');
+  });
+
+  test('normalizes unauthorized business tab to card for MEMBER', () => {
+    const tabs = getImplementedDashboardTabs(memberProfile);
+
+    expect(normalizeDashboardTab('business', tabs)).toBe('card');
   });
 
   test('keeps visible tab selection', () => {

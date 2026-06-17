@@ -4,7 +4,7 @@ This folder contains the implementation prompts for a production-ready KCLUB MVP
 
 ## How To Use This Plan
 
-Work in phase order. Do not skip a phase regression file. A step is complete only when code, docs, tests, and handoff notes are finished.
+Work in phase order. Do not skip a phase regression file. A step is complete only when code, docs, tests, and handoff notes are finished. A phase is complete only when its `phase-summary.md` has been updated with current state, risks, and readiness assessment for the next phase.
 
 Before starting any step, the implementer must read:
 

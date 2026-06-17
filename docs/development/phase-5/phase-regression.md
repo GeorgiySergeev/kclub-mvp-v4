@@ -31,6 +31,10 @@ Additional checks:
 - Subscription expiration hides paid business placement.
 - Phase 6 can build admin UI against billing/admin APIs.
 
+## End Of Phase
+
+After completing this regression handoff, update `docs/development/phase-5/phase-summary.md` with the current billing status, risks carried forward, and readiness assessment for Phase 6. A phase is not complete until its `phase-summary.md` is populated.
+
 ## Handoff Summary Format
 
 ```markdown

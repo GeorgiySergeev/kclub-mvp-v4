@@ -30,6 +30,10 @@ Also verify:
 - Both apps are discoverable by Turbo.
 - Phase 2 can add shared packages without changing root setup.
 
+## End Of Phase
+
+After completing this regression handoff, update `docs/development/phase-1/phase-summary.md` with the current workspace state, risks carried forward, and readiness assessment for Phase 2. A phase is not complete until its `phase-summary.md` is populated.
+
 ## Handoff Summary Format
 
 ```markdown
