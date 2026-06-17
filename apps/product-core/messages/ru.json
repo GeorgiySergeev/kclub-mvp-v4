@@ -17,7 +17,8 @@
     "nav": {
       "directory": "Directory",
       "signIn": "Sign In",
-      "join": "Join"
+      "join": "Join",
+      "cabinet": "Кабинет"
     },
     "hero": {
       "eyebrow": "Private Membership Club",

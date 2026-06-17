@@ -11,19 +11,24 @@ import { Locale, locales } from '@/i18n/routing';
 import { ThemeToggle } from './ThemeToggle';
 
 type NavItem = {
-  key: 'directory' | 'signIn' | 'join';
+  key: 'directory' | 'signIn' | 'join' | 'cabinet';
   href: string;
 };
 
-export function TopBar({ locale }: { locale: Locale }) {
+export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; isAuthenticated?: boolean }) {
   const t = useTranslations('home');
   const [open, setOpen] = useState(false);
   const [localeOpen, setLocaleOpen] = useState(false);
-  const navItems: NavItem[] = [
-    { key: 'directory', href: `/${locale}/directory` },
-    { key: 'signIn', href: `/${locale}/sign-in` },
-    { key: 'join', href: `/${locale}/sign-up` },
-  ];
+  const navItems: NavItem[] = isAuthenticated
+    ? [
+        { key: 'directory', href: `/${locale}/directory` },
+        { key: 'cabinet', href: `/${locale}/m/dashboard` },
+      ]
+    : [
+        { key: 'directory', href: `/${locale}/directory` },
+        { key: 'signIn', href: `/${locale}/sign-in` },
+        { key: 'join', href: `/${locale}/sign-up` },
+      ];
 
   return (
     <header className="sticky top-0 z-50 h-12 border-b border-zinc-200 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95">
