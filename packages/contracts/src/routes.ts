@@ -15,6 +15,7 @@ export const MEMBER_API_ROUTES = {
   INTRODUCTIONS: `${API_BASE_PATH}/introductions`,
   INTRODUCTION_CANCEL: `${API_BASE_PATH}/introductions/:id/cancel`,
   SUBSCRIPTIONS: `${API_BASE_PATH}/subscriptions`,
+  SUBSCRIPTION_CHECKOUT: `${API_BASE_PATH}/subscriptions/checkout`,
   SUBSCRIPTION_DETAIL: `${API_BASE_PATH}/subscriptions/:id`,
   SUBSCRIPTION_CANCEL: `${API_BASE_PATH}/subscriptions/:id/cancel`,
 } as const;
@@ -23,6 +24,7 @@ export const ADMIN_API_ROUTES = {
   DASHBOARD_METRICS: `${ADMIN_API_BASE_PATH}/dashboard-metrics`,
   STAFF_AUTH_PHONE_OTP_SEND: `${ADMIN_API_BASE_PATH}/staff-auth/phone-otp/send`,
   STAFF_AUTH_PHONE_OTP_VERIFY: `${ADMIN_API_BASE_PATH}/staff-auth/phone-otp/verify`,
+  STAFF_AUTH_TOTP_SETUP: `${ADMIN_API_BASE_PATH}/staff-auth/totp/setup`,
   STAFF_AUTH_TOTP_VERIFY: `${ADMIN_API_BASE_PATH}/staff-auth/totp/verify`,
   STAFF_AUTH_SESSION: `${ADMIN_API_BASE_PATH}/staff-auth/session`,
   USERS: `${ADMIN_API_BASE_PATH}/users`,

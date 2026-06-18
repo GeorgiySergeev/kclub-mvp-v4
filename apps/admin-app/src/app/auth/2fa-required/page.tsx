@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -58,6 +60,12 @@ export default async function TwoFactorRequiredPage({ searchParams }: TwoFactorR
             </Button>
           </CardFooter>
         </form>
+        <div className="border-t px-6 py-4 text-center text-sm">
+          <span className="text-muted-foreground">Need to set up 2FA? </span>
+          <Link href="/auth/totp-setup" className="text-primary hover:underline font-medium">
+            Go to setup
+          </Link>
+        </div>
       </Card>
     </main>
   );

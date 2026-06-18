@@ -7,6 +7,7 @@ import '../globals.css';
 
 import { SkipLink } from '@kclub/ui';
 import { ThemeProvider } from '@/features/marketing/components/ThemeProvider';
+import { fontVariables } from '@/lib/fonts';
 import { isLocale } from '@/i18n/routing';
 
 export default async function LocaleLayout(props: {
@@ -23,7 +24,7 @@ export default async function LocaleLayout(props: {
   return (
     <html lang={params.locale} suppressHydrationWarning>
       <body
-        className="min-h-screen bg-white font-sans text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-50"
+        className={`${fontVariables} min-h-screen bg-background font-sans text-foreground antialiased`}
         suppressHydrationWarning
       >
         <SkipLink />

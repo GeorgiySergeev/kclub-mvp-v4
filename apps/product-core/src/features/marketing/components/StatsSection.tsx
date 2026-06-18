@@ -1,27 +1,46 @@
+'use client';
+
 import { useTranslations } from 'next-intl';
 
-const stats = [
-  { value: '1 200+', key: 'members' },
-  { value: '12', key: 'countries' },
-  { value: '340+', key: 'partners' },
-  { value: '5', key: 'years' },
-] as const;
+import { cn } from '@kclub/ui';
+
+import { StatCounter, type StatCounterConfig } from './StatCounter';
+
+const stats: ReadonlyArray<StatCounterConfig & { key: 'members' | 'countries' | 'partners' | 'years' }> =
+  [
+    { target: 1200, suffix: '+', spaced: true, key: 'members' },
+    { target: 12, key: 'countries' },
+    { target: 340, suffix: '+', key: 'partners' },
+    { target: 5, key: 'years' },
+  ];
 
 export function StatsSection() {
   const t = useTranslations('home');
 
   return (
-    <section id="stats" className="border-y border-zinc-200 dark:border-zinc-800">
-      <div className="mx-auto grid max-w-6xl grid-cols-2 px-4 sm:px-6 lg:grid-cols-4 lg:px-8">
+    <section
+      id="stats"
+      className="border-y border-border bg-card dark:border-kclub-navy-700 dark:bg-kclub-navy-900/50"
+    >
+      <div className="mx-auto grid max-w-6xl grid-cols-2 lg:grid-cols-4">
         {stats.map((stat, index) => (
           <div
             key={stat.key}
-            className={`border-zinc-200 py-8 dark:border-zinc-800 sm:py-10 ${index % 2 === 0 ? 'border-r lg:border-r' : 'lg:border-r'} ${index === stats.length - 1 ? 'lg:border-r-0' : ''}`}
+            className={cn(
+              'flex min-h-[9.5rem] flex-col items-center justify-center border-border px-4 py-8 text-center sm:min-h-[10.5rem] sm:py-10',
+              index % 2 === 0 && 'border-r',
+              index < 2 && 'border-b lg:border-b-0',
+              'lg:border-r lg:last:border-r-0',
+            )}
           >
-            <p className="text-4xl font-light tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-5xl">
-              {stat.value}
+            <p className="font-display text-4xl font-medium tabular-nums tracking-tight text-foreground sm:text-5xl">
+              <StatCounter
+                target={stat.target}
+                suffix={stat.suffix}
+                spaced={stat.spaced}
+              />
             </p>
-            <p className="mt-3 text-xs font-normal uppercase tracking-widest text-zinc-500">
+            <p className="kclub-overline mt-3 max-w-[12rem] text-muted-foreground">
               {t(`stats.${stat.key}`)}
             </p>
           </div>

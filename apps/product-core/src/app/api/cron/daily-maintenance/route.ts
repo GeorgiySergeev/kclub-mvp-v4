@@ -1,0 +1,39 @@
+import { type NextRequest } from 'next/server';
+
+import { ERROR_CODES } from '@kclub/contracts';
+
+import { jsonSuccess, jsonError } from '@/server/api';
+import { runDailyMaintenance } from '@/server/services/maintenance-service';
+
+const CRON_SECRET = process.env.CRON_SECRET;
+
+export async function POST(request: NextRequest) {
+  const authHeader = request.headers.get('authorization');
+
+  if (!CRON_SECRET) {
+    return jsonError(
+      { code: ERROR_CODES.SERVER_DEPENDENCY_UNAVAILABLE, message: 'CRON_SECRET is not configured' },
+      undefined,
+      { status: 500 },
+    );
+  }
+
+  if (!authHeader || authHeader !== `Bearer ${CRON_SECRET}`) {
+    return jsonError(
+      { code: ERROR_CODES.PERMISSION_DENIED, message: 'Invalid or missing cron authorization' },
+      undefined,
+      { status: 401 },
+    );
+  }
+
+  try {
+    const result = await runDailyMaintenance();
+    return jsonSuccess(result);
+  } catch {
+    return jsonError(
+      { code: ERROR_CODES.SERVER_ERROR, message: 'Daily maintenance failed' },
+      undefined,
+      { status: 500 },
+    );
+  }
+}

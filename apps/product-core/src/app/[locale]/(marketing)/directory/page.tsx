@@ -26,24 +26,22 @@ export default async function DirectoryPage({ params }: { params: Promise<{ loca
   const { top, recommended } = getFeaturedBusinessGroups(businesses);
 
   return (
-    <div className="border-b border-zinc-200 dark:border-zinc-800">
-      <section className="border-b border-zinc-200 py-16 dark:border-zinc-800 sm:py-24">
+    <div className="border-b border-border dark:border-kclub-navy-700">
+      <section className="border-b border-border py-16 dark:border-kclub-navy-700 sm:py-24">
         <Container>
-          <p className="text-xs font-normal uppercase tracking-widest text-zinc-500">
-            {t('eyebrow')}
-          </p>
+          <p className="kclub-overline text-muted-foreground">{t('eyebrow')}</p>
           <div className="mt-5 grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end">
             <div>
-              <h1 className="max-w-4xl text-5xl font-extralight tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-7xl">
+              <h1 className="max-w-4xl font-display text-5xl font-medium tracking-tight text-foreground sm:text-7xl">
                 {t('title')}
               </h1>
-              <p className="mt-6 max-w-2xl text-base leading-7 text-zinc-600 dark:text-zinc-400">
+              <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground">
                 {t('description')}
               </p>
             </div>
-            <div className="border border-zinc-200 p-5 dark:border-zinc-800">
-              <p className="text-sm text-zinc-500 dark:text-zinc-400">{t('publishedOnly')}</p>
-              <p className="mt-3 text-4xl font-light text-zinc-950 dark:text-zinc-50">
+            <div className="rounded-xl border border-border bg-card p-5 dark:border-kclub-navy-700 dark:bg-kclub-navy-900">
+              <p className="text-sm text-muted-foreground">{t('publishedOnly')}</p>
+              <p className="mt-3 font-display text-4xl font-medium text-foreground">
                 {businesses.length}
               </p>
             </div>
@@ -73,6 +71,7 @@ export default async function DirectoryPage({ params }: { params: Promise<{ loca
                 actionLabel={t('viewDetails')}
                 externalLabel={t('website')}
                 featuredLabel={t('featuredTopLabel')}
+                verifiedLabel={t('verifiedPartner')}
               />
             ) : null}
 
@@ -84,6 +83,7 @@ export default async function DirectoryPage({ params }: { params: Promise<{ loca
                 actionLabel={t('viewDetails')}
                 externalLabel={t('website')}
                 featuredLabel={t('recommendedLabel')}
+                verifiedLabel={t('verifiedPartner')}
               />
             ) : null}
 
@@ -93,6 +93,7 @@ export default async function DirectoryPage({ params }: { params: Promise<{ loca
               locale={locale}
               actionLabel={t('viewDetails')}
               externalLabel={t('website')}
+              verifiedLabel={t('verifiedPartner')}
             />
           </div>
         )}
@@ -108,6 +109,7 @@ function DirectorySection({
   actionLabel,
   externalLabel,
   featuredLabel,
+  verifiedLabel,
 }: {
   title: string;
   businesses: Awaited<ReturnType<typeof getPublicBusinesses>>;
@@ -115,12 +117,11 @@ function DirectorySection({
   actionLabel: string;
   externalLabel: string;
   featuredLabel?: string;
+  verifiedLabel: string;
 }) {
   return (
     <section>
-      <h2 className="text-2xl font-light tracking-tight text-zinc-950 dark:text-zinc-50">
-        {title}
-      </h2>
+      <h2 className="font-display text-2xl font-medium tracking-tight text-foreground">{title}</h2>
       <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
         {businesses.map((business) => (
           <BusinessCard
@@ -130,6 +131,7 @@ function DirectorySection({
             actionLabel={actionLabel}
             externalLabel={externalLabel}
             featuredLabel={featuredLabel}
+            verifiedLabel={verifiedLabel}
           />
         ))}
       </div>

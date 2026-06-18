@@ -41,6 +41,7 @@ export const AUDIT_ACTIONS = [
   'BUSINESS_REJECTED',
   'BUSINESS_HIDDEN',
   'BUSINESS_FEATURED_UPDATED',
+  'BUSINESS_PUBLISHED',
   'BUSINESS_SUBMITTED',
   'BUSINESS_UPDATED',
   'INTRODUCTION_APPROVED',
@@ -49,6 +50,8 @@ export const AUDIT_ACTIONS = [
   'INTRODUCTION_SUBMITTED',
   'INTRODUCTION_CANCELED',
   'SUBSCRIPTION_CANCELED',
+  'CHECKOUT_CREATED',
+  'SUBSCRIPTION_SYNCED',
   'STAFF_ROLE_UPDATED',
   'STRIPE_WEBHOOK_REPLAYED',
 ] as const;
@@ -95,6 +98,11 @@ export type StaffAuthSessionDto = {
   profile: StaffProfileDto;
   token: string;
   expiresAt: IsoDateTime;
+};
+
+export type StaffTotpSetupDto = {
+  provisioningUri: string;
+  manualKey: string;
 };
 
 export type AdminUserListItemDto = {
@@ -218,6 +226,10 @@ export type MemberIntroductionDto = IntroductionDto & {
   requesterBusinessSlug: string;
   targetBusinessName: string;
   targetBusinessSlug: string;
+};
+
+export type CheckoutSessionDto = {
+  checkoutUrl: string;
 };
 
 export type AuditLogDto = {

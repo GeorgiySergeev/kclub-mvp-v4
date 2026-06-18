@@ -10,10 +10,19 @@ import {
   type MemberIntroductionDto,
   type PublicBusinessListItemDto,
 } from '@kclub/contracts';
-import { Badge, Surface } from '@kclub/ui';
+import { Badge } from '@kclub/ui';
 
 import type { Locale } from '@/i18n/routing';
 import { parseAuthResponse } from '@/features/auth/utils/api';
+import { MemberPanel, MemberPanelHeader } from './cabinet/MemberPanel';
+import {
+  memberActionButtonClasses,
+  memberAlertErrorClasses,
+  memberAlertSuccessClasses,
+  memberFormInputClasses,
+  memberFormLabelClasses,
+  memberInfoTileClasses,
+} from './cabinet/styles';
 
 const STATUS_LABEL_KEYS: Record<string, string> = {
   SUBMITTED: 'statusSubmitted',
@@ -189,59 +198,42 @@ export function IntroductionsPanel({
 
   if (isLoading) {
     return (
-      <Surface className="max-w-none">
+      <MemberPanel>
         <p className="text-sm text-zinc-600 dark:text-zinc-400">{tCommon('loading')}</p>
-      </Surface>
+      </MemberPanel>
     );
   }
 
   if (publishedOwnBusinesses.length === 0) {
     return (
-      <Surface className="max-w-none">
-        <h2 className="text-xl font-medium text-zinc-950 dark:text-zinc-50">{t('title')}</h2>
-        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{t('noPublishedBusiness')}</p>
-      </Surface>
+      <MemberPanel>
+        <MemberPanelHeader title={t('title')} description={t('noPublishedBusiness')} />
+      </MemberPanel>
     );
   }
 
   return (
-    <Surface className="max-w-none space-y-6">
-      <h2 className="text-xl font-medium text-zinc-950 dark:text-zinc-50">{t('title')}</h2>
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">{t('description')}</p>
+    <MemberPanel>
+      <MemberPanelHeader title={t('title')} description={t('description')} />
 
-      {error && (
-        <div className="rounded-md bg-red-50 p-3 text-sm text-red-800 dark:bg-red-950 dark:text-red-200">
-          {error}
-        </div>
-      )}
+      {error && <div className={memberAlertErrorClasses}>{error}</div>}
 
-      {/* Submit form */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium text-zinc-950 dark:text-zinc-50">{t('submitTitle')}</h3>
+      <div className="space-y-4 border-t border-zinc-200 pt-8 dark:border-zinc-800">
+        <h3 className="text-base font-medium text-zinc-950 dark:text-zinc-50">{t('submitTitle')}</h3>
 
         <form onSubmit={handleSubmitIntroduction} className="space-y-4">
-          {submitError && (
-            <div className="rounded-md bg-red-50 p-3 text-sm text-red-800 dark:bg-red-950 dark:text-red-200">
-              {submitError}
-            </div>
-          )}
+          {submitError && <div className={memberAlertErrorClasses}>{submitError}</div>}
 
-          {submitSuccess && (
-            <div className="rounded-md bg-green-50 p-3 text-sm text-green-800 dark:bg-green-950 dark:text-green-200">
-              {t('submitSuccess')}
-            </div>
-          )}
+          {submitSuccess && <div className={memberAlertSuccessClasses}>{t('submitSuccess')}</div>}
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                {t('requesterBusinessLabel')}
-              </label>
+              <label className={memberFormLabelClasses}>{t('requesterBusinessLabel')}</label>
               <select
                 value={selectedRequesterBusinessId}
                 onChange={(e) => setSelectedRequesterBusinessId(e.target.value)}
                 required
-                className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 focus:border-zinc-950 focus:outline-none focus:ring-1 focus:ring-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-50 dark:focus:ring-zinc-50"
+                className={memberFormInputClasses}
               >
                 {publishedOwnBusinesses.map((b) => (
                   <option key={b.id} value={b.id}>
@@ -252,14 +244,12 @@ export function IntroductionsPanel({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                {t('targetBusinessLabel')}
-              </label>
+              <label className={memberFormLabelClasses}>{t('targetBusinessLabel')}</label>
               <select
                 value={selectedTargetBusinessId}
                 onChange={(e) => setSelectedTargetBusinessId(e.target.value)}
                 required
-                className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 focus:border-zinc-950 focus:outline-none focus:ring-1 focus:ring-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-50 dark:focus:ring-zinc-50"
+                className={memberFormInputClasses}
               >
                 <option value="">{t('selectPlaceholder')}</option>
                 {availableTargets.map((b) => (
@@ -272,32 +262,25 @@ export function IntroductionsPanel({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              {t('messageLabel')}
-            </label>
+            <label className={memberFormLabelClasses}>{t('messageLabel')}</label>
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               maxLength={500}
               rows={3}
               placeholder={t('messagePlaceholder')}
-              className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 focus:border-zinc-950 focus:outline-none focus:ring-1 focus:ring-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-50 dark:focus:ring-zinc-50"
+              className={memberFormInputClasses}
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="rounded-md bg-zinc-950 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"
-          >
+          <button type="submit" disabled={isSubmitting} className={memberActionButtonClasses}>
             {isSubmitting ? tCommon('saving') : t('submitCta')}
           </button>
         </form>
       </div>
 
-      {/* Introductions list */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium text-zinc-950 dark:text-zinc-50">{t('listTitle')}</h3>
+      <div className="space-y-4 border-t border-zinc-200 pt-8 dark:border-zinc-800">
+        <h3 className="text-base font-medium text-zinc-950 dark:text-zinc-50">{t('listTitle')}</h3>
 
         {introductions.length === 0 && (
           <p className="text-sm text-zinc-600 dark:text-zinc-400">{t('emptyList')}</p>
@@ -305,7 +288,7 @@ export function IntroductionsPanel({
 
         <div className="space-y-3">
           {introductions.map((intro) => (
-            <Surface key={intro.id} className="space-y-3 p-4">
+            <div key={intro.id} className={memberInfoTileClasses}>
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
                   <p className="text-sm text-zinc-950 dark:text-zinc-50">
@@ -321,7 +304,7 @@ export function IntroductionsPanel({
                       {t('rejectionReasonLabel')}: {intro.rejectionReason}
                     </p>
                   )}
-                  <p className="text-xs text-zinc-500 dark:text-zinc-500">
+                  <p className="text-xs text-zinc-500">
                     {new Date(intro.createdAt).toLocaleDateString()}
                   </p>
                 </div>
@@ -340,10 +323,10 @@ export function IntroductionsPanel({
                   )}
                 </div>
               </div>
-            </Surface>
+            </div>
           ))}
         </div>
       </div>
-    </Surface>
+    </MemberPanel>
   );
 }

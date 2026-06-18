@@ -6,10 +6,13 @@ import { useTranslations } from 'next-intl';
 
 import type { MemberCardDto } from '@kclub/contracts';
 import { MEMBER_API_ROUTES } from '@kclub/contracts';
-import { Badge, EmptyState, Surface, linkClasses } from '@kclub/ui';
+import { Badge } from '@kclub/ui';
 
+import { ClubCardVisual } from '@/components/premium';
 import type { Locale } from '@/i18n/routing';
 import { parseAuthResponse } from '@/features/auth/utils/api';
+import { MemberInfoTile, MemberPanel, MemberPanelHeader } from './cabinet/MemberPanel';
+import { memberSecondaryButtonClasses } from './cabinet/styles';
 
 export function CardPanel({ locale }: { locale: Locale }) {
   const t = useTranslations('member.dashboard.card');
@@ -53,18 +56,26 @@ export function CardPanel({ locale }: { locale: Locale }) {
 
   if (isLoading) {
     return (
-      <Surface className="max-w-none">
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">{tCommon('loading')}</p>
-      </Surface>
+      <MemberPanel>
+        <p className="text-sm text-muted-foreground">{tCommon('loading')}</p>
+      </MemberPanel>
     );
   }
 
   if (error) {
-    return <EmptyState title={t('errorTitle')} description={error} />;
+    return (
+      <MemberPanel>
+        <MemberPanelHeader title={t('errorTitle')} description={error} />
+      </MemberPanel>
+    );
   }
 
   if (!card) {
-    return <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />;
+    return (
+      <MemberPanel>
+        <MemberPanelHeader title={t('emptyTitle')} description={t('emptyDescription')} />
+      </MemberPanel>
+    );
   }
 
   const verifyHref = `/${locale}/verify-card/${encodeURIComponent(card.cardNumber)}`;
@@ -77,37 +88,39 @@ export function CardPanel({ locale }: { locale: Locale }) {
       t('expiresAt'),
       card.expiresAt ? new Date(card.expiresAt).toLocaleDateString(locale) : t('noExpiration'),
     ],
-  ];
+  ] as const;
+
+  const isVip = card.membershipTier === 'VIP';
 
   return (
-    <Surface className="max-w-none overflow-hidden p-0">
-      <div className="bg-zinc-950 p-6 text-white dark:bg-zinc-50 dark:text-zinc-950">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] opacity-70">{t('eyebrow')}</p>
-            <h2 className="mt-6 text-3xl font-light tracking-[0.08em]">{card.cardNumber}</h2>
-          </div>
-          <Badge variant="success">{card.status}</Badge>
+    <MemberPanel noPadding className="overflow-hidden">
+      <div className="border-b border-border bg-kclub-navy-950 p-6 dark:border-kclub-navy-700 sm:p-8">
+        <ClubCardVisual
+          cardNumber={card.cardNumber}
+          membershipTier={card.membershipTier}
+          status={card.status}
+          brandLabel={t('eyebrow')}
+          tierLabel={card.membershipTier}
+          statusLabel={card.status}
+        />
+        <div className="mt-4 flex justify-end">
+          <Badge variant={isVip ? 'vip' : 'member'} className="text-[0.65rem] uppercase tracking-[0.1em]">
+            {card.membershipTier}
+          </Badge>
         </div>
-        <p className="mt-10 text-sm opacity-80">{card.membershipTier}</p>
       </div>
 
-      <div className="grid gap-4 p-6 sm:grid-cols-2">
+      <div className="grid gap-3 p-6 sm:grid-cols-2 sm:p-8">
         {rows.map(([label, value]) => (
-          <div key={label} className="rounded-md bg-zinc-50 p-4 dark:bg-zinc-900">
-            <dt className="text-xs uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-400">
-              {label}
-            </dt>
-            <dd className="mt-2 text-sm text-zinc-950 dark:text-zinc-50">{value}</dd>
-          </div>
+          <MemberInfoTile key={label} label={label} value={value} />
         ))}
       </div>
 
-      <div className="border-t border-zinc-200 px-6 py-4 dark:border-zinc-800">
-        <Link href={verifyHref} className={linkClasses}>
+      <div className="border-t border-border px-6 py-4 dark:border-kclub-navy-700 sm:px-8">
+        <Link href={verifyHref} className={memberSecondaryButtonClasses}>
           {t('verifyLink')}
         </Link>
       </div>
-    </Surface>
+    </MemberPanel>
   );
 }

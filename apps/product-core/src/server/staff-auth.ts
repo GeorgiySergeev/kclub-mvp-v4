@@ -1,4 +1,5 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
+import * as OTPAuth from 'otpauth';
 
 import {
   ERROR_CODES,
@@ -9,11 +10,16 @@ import {
   type StaffAuthSessionDto,
   type StaffProfileDto,
   type StaffRole,
+  type StaffTotpSetupDto,
 } from '@kclub/contracts';
+import { getPrismaClient } from '@/server/db';
+import { encryptSecret, decryptSecret } from '@/server/totp-crypto';
 
 const SESSION_TTL_SECONDS = 60 * 60 * 8;
 const DEFAULT_DEV_OTP = '000000';
 const DEFAULT_DEV_TOTP = '123456';
+
+const totpSecretCache = new Map<string, string>();
 
 type StaffRecord = {
   id: string;
@@ -267,7 +273,47 @@ export async function handleStaffTotpVerify(request: Request): Promise<Response>
       403,
     );
   }
-  if (!isValidDevTotp(body.code)) {
+
+  let isValidCode = false;
+
+  try {
+    const prisma = getPrismaClient();
+    const twoFactor = await prisma.admin2FA.findUnique({
+      where: { admin_user_id: staff.id },
+    });
+
+    if (twoFactor?.secret_ciphertext) {
+      const secret = decryptSecret(twoFactor.secret_ciphertext);
+      const totp = new OTPAuth.TOTP({
+        issuer: 'KCLUB',
+        label: staff.phone,
+        algorithm: 'SHA1',
+        digits: 6,
+        period: 30,
+        secret: OTPAuth.Secret.fromBase32(secret),
+      });
+      isValidCode = totp.validate({ token: body.code, window: 1 }) !== null;
+
+      if (isValidCode && !twoFactor.verified_at) {
+        await prisma.$transaction([
+          prisma.admin2FA.update({
+            where: { id: twoFactor.id },
+            data: { verified_at: new Date() },
+          }),
+          prisma.adminUser.update({
+            where: { id: staff.id },
+            data: { totp_verified_at: new Date() },
+          }),
+        ]);
+      }
+    } else {
+      isValidCode = isValidDevTotp(body.code);
+    }
+  } catch {
+    isValidCode = isValidDevTotp(body.code);
+  }
+
+  if (!isValidCode) {
     return error(ERROR_CODES.AUTH_STAFF_2FA_REQUIRED, 'Invalid authenticator code', 401);
   }
 
@@ -287,6 +333,88 @@ export async function handleStaffTotpVerify(request: Request): Promise<Response>
       profile: staffToProfile(staff, true),
       token: verifiedToken,
       expiresAt: new Date(expiresAt * 1000).toISOString(),
+    }),
+  );
+}
+
+export async function handleStaffTotpSetup(request: Request): Promise<Response> {
+  const token = getBearerToken(request);
+  if (!token) {
+    return error(ERROR_CODES.AUTH_SESSION_REQUIRED, 'Staff session is required', 401);
+  }
+
+  const payload = readSessionToken(token);
+  if (!payload) {
+    return error(ERROR_CODES.AUTH_SESSION_INVALID, 'Staff session is invalid or expired', 401);
+  }
+
+  if (payload.totpVerified) {
+    return error(
+      ERROR_CODES.VALIDATION_INVALID_INPUT,
+      'TOTP is already configured for this account',
+      400,
+    );
+  }
+
+  const staff = findStaffByPhone(payload.phone);
+  if (!staff?.isActive || staff.id !== payload.sub) {
+    return error(
+      ERROR_CODES.AUTH_STAFF_NOT_ALLOWED,
+      'This phone is not allowed for staff access',
+      403,
+    );
+  }
+
+  let secret: string;
+  let provisioningUri: string;
+
+  try {
+    const prisma = getPrismaClient();
+
+    const existing = await prisma.admin2FA.findUnique({
+      where: { admin_user_id: staff.id },
+    });
+
+    if (existing?.secret_ciphertext && !existing.verified_at) {
+      secret = decryptSecret(existing.secret_ciphertext);
+    } else if (existing?.verified_at) {
+      return error(
+        ERROR_CODES.VALIDATION_INVALID_INPUT,
+        'TOTP is already verified for this account',
+        400,
+      );
+    } else {
+      const newSecret = new OTPAuth.Secret({ size: 20 });
+      secret = newSecret.base32;
+      const encrypted = encryptSecret(secret);
+
+      await prisma.admin2FA.create({
+        data: {
+          admin_user_id: staff.id,
+          secret_ciphertext: encrypted,
+        },
+      });
+    }
+  } catch {
+    const newSecret = new OTPAuth.Secret({ size: 20 });
+    secret = newSecret.base32;
+  }
+
+  const totp = new OTPAuth.TOTP({
+    issuer: 'KCLUB',
+    label: staff.phone,
+    algorithm: 'SHA1',
+    digits: 6,
+    period: 30,
+    secret: OTPAuth.Secret.fromBase32(secret),
+  });
+
+  provisioningUri = totp.toString();
+
+  return Response.json(
+    success<StaffTotpSetupDto>({
+      provisioningUri,
+      manualKey: secret,
     }),
   );
 }

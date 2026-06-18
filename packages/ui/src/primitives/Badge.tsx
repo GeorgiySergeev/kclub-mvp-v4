@@ -1,6 +1,6 @@
 import { cn } from '../classes';
 
-type BadgeVariant = 'default' | 'outline' | 'success';
+type BadgeVariant = 'default' | 'outline' | 'success' | 'member' | 'vip' | 'business';
 
 export function Badge({
   variant = 'default',
@@ -15,11 +15,16 @@ export function Badge({
       className={cn(
         'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
         {
-          'bg-zinc-100 text-zinc-900 dark:bg-zinc-800 dark:text-zinc-50': variant === 'default',
-          'border border-zinc-300 text-zinc-600 dark:border-zinc-700 dark:text-zinc-400':
-            variant === 'outline',
-          'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100':
+          'bg-secondary text-secondary-foreground': variant === 'default',
+          'border border-border text-muted-foreground': variant === 'outline',
+          'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-100':
             variant === 'success',
+          'border border-kclub-navy-600/30 bg-kclub-navy-800/50 text-slate-300':
+            variant === 'member',
+          'border border-kclub-gold-500/40 bg-kclub-gold-500/15 text-kclub-gold-300':
+            variant === 'vip',
+          'border border-kclub-navy-600 bg-kclub-navy-800 text-kclub-canvas':
+            variant === 'business',
         },
         className,
       )}

@@ -8,6 +8,13 @@ import { MEMBER_API_ROUTES, type MemberBusinessProfileDto } from '@kclub/contrac
 import type { Locale } from '@/i18n/routing';
 import { parseAuthResponse } from '@/features/auth/utils/api';
 import type { TaxonomyOption } from './BusinessPanel';
+import {
+  memberActionButtonClasses,
+  memberAlertErrorClasses,
+  memberAlertSuccessClasses,
+  memberFormInputClasses,
+  memberFormLabelClasses,
+} from './cabinet/styles';
 
 type BusinessFormProps = {
   locale: Locale;
@@ -129,20 +136,20 @@ export function BusinessForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div className="rounded-md bg-red-50 p-3 text-sm text-red-800 dark:bg-red-950 dark:text-red-200">
+        <div className={memberAlertErrorClasses}>
           {error}
         </div>
       )}
 
       {success && (
-        <div className="rounded-md bg-green-50 p-3 text-sm text-green-800 dark:bg-green-950 dark:text-green-200">
+        <div className={memberAlertSuccessClasses}>
           {isEdit ? t('editSuccess') : t('submitSuccess')}
         </div>
       )}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <label className={memberFormLabelClasses}>
             {t('nameLabel')}
           </label>
           <input
@@ -152,12 +159,12 @@ export function BusinessForm({
             required
             minLength={2}
             maxLength={100}
-            className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 focus:border-zinc-950 focus:outline-none focus:ring-1 focus:ring-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-50 dark:focus:ring-zinc-50"
+            className={memberFormInputClasses}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <label className={memberFormLabelClasses}>
             {t('representativeNameLabel')}
           </label>
           <input
@@ -167,12 +174,12 @@ export function BusinessForm({
             required
             minLength={2}
             maxLength={100}
-            className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 focus:border-zinc-950 focus:outline-none focus:ring-1 focus:ring-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-50 dark:focus:ring-zinc-50"
+            className={memberFormInputClasses}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <label className={memberFormLabelClasses}>
             {t('representativeEmailLabel')}
           </label>
           <input
@@ -180,12 +187,12 @@ export function BusinessForm({
             value={representativeEmail}
             onChange={(e) => setRepresentativeEmail(e.target.value)}
             required
-            className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 focus:border-zinc-950 focus:outline-none focus:ring-1 focus:ring-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-50 dark:focus:ring-zinc-50"
+            className={memberFormInputClasses}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <label className={memberFormLabelClasses}>
             {t('representativePhoneLabel')}
           </label>
           <input
@@ -193,7 +200,7 @@ export function BusinessForm({
             value={representativePhone}
             onChange={(e) => setRepresentativePhone(e.target.value)}
             required
-            className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 focus:border-zinc-950 focus:outline-none focus:ring-1 focus:ring-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-50 dark:focus:ring-zinc-50"
+            className={memberFormInputClasses}
           />
         </div>
       </div>
@@ -201,14 +208,14 @@ export function BusinessForm({
       {!isEdit && (
         <div className="grid gap-4 sm:grid-cols-3">
           <div>
-            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <label className={memberFormLabelClasses}>
               {t('countryLabel')}
             </label>
             <select
               value={countryId}
               onChange={(e) => setCountryId(e.target.value)}
               required
-              className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 focus:border-zinc-950 focus:outline-none focus:ring-1 focus:ring-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-50 dark:focus:ring-zinc-50"
+              className={memberFormInputClasses}
             >
               <option value="">{t('selectPlaceholder')}</option>
               {countryOptions.map((c) => (
@@ -220,7 +227,7 @@ export function BusinessForm({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <label className={memberFormLabelClasses}>
               {t('cityLabel')}
             </label>
             <select
@@ -228,7 +235,7 @@ export function BusinessForm({
               onChange={(e) => setCityId(e.target.value)}
               required
               disabled={!countryId}
-              className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 focus:border-zinc-950 focus:outline-none focus:ring-1 focus:ring-zinc-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-50 dark:focus:ring-zinc-50"
+              className={memberFormInputClasses}
             >
               <option value="">{t('selectPlaceholder')}</option>
               {cityOptions.map((c) => (
@@ -240,14 +247,14 @@ export function BusinessForm({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            <label className={memberFormLabelClasses}>
               {t('categoryLabel')}
             </label>
             <select
               value={categoryId}
               onChange={(e) => setCategoryId(e.target.value)}
               required
-              className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 focus:border-zinc-950 focus:outline-none focus:ring-1 focus:ring-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-50 dark:focus:ring-zinc-50"
+              className={memberFormInputClasses}
             >
               <option value="">{t('selectPlaceholder')}</option>
               {categoryOptions.map((c) => (
@@ -262,32 +269,32 @@ export function BusinessForm({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <label className={memberFormLabelClasses}>
             {t('websiteUrlLabel')}
           </label>
           <input
             type="url"
             value={websiteUrl}
             onChange={(e) => setWebsiteUrl(e.target.value)}
-            className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 focus:border-zinc-950 focus:outline-none focus:ring-1 focus:ring-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-50 dark:focus:ring-zinc-50"
+            className={memberFormInputClasses}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+          <label className={memberFormLabelClasses}>
             {t('socialUrlLabel')}
           </label>
           <input
             type="url"
             value={socialUrl}
             onChange={(e) => setSocialUrl(e.target.value)}
-            className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 focus:border-zinc-950 focus:outline-none focus:ring-1 focus:ring-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-50 dark:focus:ring-zinc-50"
+            className={memberFormInputClasses}
           />
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+        <label className={memberFormLabelClasses}>
           {t('briefDescriptionLabel')}
         </label>
         <textarea
@@ -295,15 +302,11 @@ export function BusinessForm({
           onChange={(e) => setBriefDescription(e.target.value)}
           maxLength={500}
           rows={3}
-          className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 focus:border-zinc-950 focus:outline-none focus:ring-1 focus:ring-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-50 dark:focus:ring-zinc-50"
+          className={memberFormInputClasses}
         />
       </div>
 
-      <button
-        type="submit"
-        disabled={isSubmitting}
-        className="rounded-md bg-zinc-950 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"
-      >
+      <button type="submit" disabled={isSubmitting} className={memberActionButtonClasses}>
         {isSubmitting ? tCommon('saving') : isEdit ? t('editSubmit') : t('submitCta')}
       </button>
     </form>

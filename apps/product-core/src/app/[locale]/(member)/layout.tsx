@@ -30,12 +30,12 @@ export default async function MemberLayout(props: {
   }
 
   return (
-    <div className="flex min-h-screen flex-col bg-zinc-50 dark:bg-zinc-900">
-      <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95">
-        <Container className="flex h-12 items-center justify-between">
+    <div className="flex min-h-screen flex-col bg-secondary/50 dark:bg-kclub-navy-950">
+      <header className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md dark:border-kclub-navy-700 dark:bg-kclub-navy-950/90">
+        <Container className="flex h-14 items-center justify-between">
           <Link
             href={`/${locale}`}
-            className="text-sm font-light uppercase tracking-widest text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 focus:ring-offset-white dark:text-zinc-50 dark:focus:ring-zinc-50 dark:focus:ring-offset-zinc-950"
+            className="font-display text-sm font-medium uppercase tracking-[0.18em] text-foreground outline-none transition duration-200 hover:text-kclub-gold-600 focus:ring-2 focus:ring-kclub-gold-500 focus:ring-offset-2 focus:ring-offset-background dark:hover:text-kclub-gold-300"
           >
             {t('brand')}
           </Link>
@@ -43,7 +43,7 @@ export default async function MemberLayout(props: {
       </header>
 
       <main id="content" className="flex-1">
-        <Container className="py-8">{props.children}</Container>
+        <Container className="py-8 sm:py-10">{props.children}</Container>
       </main>
     </div>
   );

@@ -31,21 +31,21 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
       ];
 
   return (
-    <header className="sticky top-0 z-50 h-12 border-b border-zinc-200 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95">
+    <header className="sticky top-0 z-50 h-14 border-b border-border bg-background/90 backdrop-blur-md dark:border-kclub-navy-700 dark:bg-kclub-navy-950/90">
       <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link
           href={`/${locale}`}
-          className="text-sm font-light uppercase tracking-widest text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 focus:ring-offset-white dark:text-zinc-50 dark:focus:ring-zinc-50 dark:focus:ring-offset-zinc-950"
+          className="font-display text-sm font-medium uppercase tracking-[0.18em] text-foreground outline-none transition duration-200 hover:text-kclub-gold-600 focus:ring-2 focus:ring-kclub-gold-500 focus:ring-offset-2 focus:ring-offset-background dark:hover:text-kclub-gold-300"
         >
           {t('brand')}
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm text-zinc-600 dark:text-zinc-400 md:flex">
+        <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex">
           {navItems.map((item) => (
             <Link
               key={item.key}
               href={item.href}
-              className="transition hover:text-zinc-950 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 focus:ring-offset-white dark:hover:text-zinc-50 dark:focus:ring-zinc-50 dark:focus:ring-offset-zinc-950"
+              className="transition duration-200 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-kclub-gold-500 focus:ring-offset-2 focus:ring-offset-background"
             >
               {t(`nav.${item.key}`)}
             </Link>
@@ -64,7 +64,7 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
             {localeOpen && (
               <div
                 id="locale-switcher"
-                className="absolute right-0 top-full z-50 mt-1 w-32 rounded-md border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-950"
+                className="absolute right-0 top-full z-50 mt-1 w-32 rounded-md border border-border bg-card py-1 shadow-panel dark:border-kclub-navy-700 dark:bg-kclub-navy-900"
                 onMouseLeave={() => setLocaleOpen(false)}
               >
                 {locales.map((item) => (
@@ -73,10 +73,8 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
                     href={`/${item}`}
                     onClick={() => setLocaleOpen(false)}
                     className={cn(
-                      'block px-4 py-2 text-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-900 dark:hover:bg-zinc-900 dark:focus:ring-zinc-50',
-                      item === locale
-                        ? 'font-medium text-zinc-900 dark:text-zinc-50'
-                        : 'text-zinc-600 dark:text-zinc-400',
+                      'block px-4 py-2 text-sm transition duration-200 hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-inset focus:ring-kclub-gold-500 dark:hover:bg-kclub-navy-800',
+                      item === locale ? 'font-medium text-foreground' : 'text-muted-foreground',
                     )}
                   >
                     {t(`locale.${item}`)}
@@ -97,7 +95,7 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
             aria-expanded={open}
             aria-controls="mobile-navigation"
             onClick={() => setOpen((value) => !value)}
-            className="inline-flex h-11 w-11 items-center justify-center border border-zinc-200 bg-white text-zinc-900 transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 focus:ring-offset-white dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:bg-zinc-900 dark:focus:ring-zinc-50 dark:focus:ring-offset-zinc-950"
+            className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-border bg-card text-foreground transition duration-200 hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-kclub-gold-500 focus:ring-offset-2 focus:ring-offset-background dark:border-kclub-navy-700 dark:bg-kclub-navy-900 dark:hover:bg-kclub-navy-800"
           >
             {open ? (
               <X aria-hidden="true" size={20} strokeWidth={1.5} />
@@ -111,7 +109,7 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
       {open ? (
         <div
           id="mobile-navigation"
-          className="fixed inset-x-0 top-12 z-50 border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 md:hidden"
+          className="fixed inset-x-0 top-14 z-50 border-b border-border bg-background dark:border-kclub-navy-700 dark:bg-kclub-navy-950 md:hidden"
         >
           <nav className="mx-auto grid max-w-6xl gap-1 px-4 py-4">
             {navItems.map((item) => (
@@ -119,14 +117,12 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
                 key={item.key}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="border border-zinc-200 px-4 py-3 text-sm text-zinc-900 transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900 dark:focus:ring-zinc-50"
+                className="rounded-md border border-border px-4 py-3 text-sm text-foreground transition duration-200 hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-kclub-gold-500 dark:border-kclub-navy-700 dark:hover:bg-kclub-navy-800"
               >
                 {t(`nav.${item.key}`)}
               </Link>
             ))}
-            <p className="mt-2 px-4 pt-2 text-xs font-normal uppercase tracking-widest text-zinc-500">
-              {t('footer.locales')}
-            </p>
+            <p className="kclub-overline mt-2 px-4 pt-2 text-muted-foreground">{t('footer.locales')}</p>
             <div className="grid gap-1">
               {locales.map((item) => (
                 <Link
@@ -134,10 +130,10 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
                   href={`/${item}`}
                   onClick={() => setOpen(false)}
                   className={cn(
-                    'border px-4 py-3 text-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-800 dark:hover:bg-zinc-900 dark:focus:ring-zinc-50',
+                    'rounded-md border px-4 py-3 text-sm transition duration-200 hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-kclub-gold-500 dark:hover:bg-kclub-navy-800',
                     item === locale
-                      ? 'border-zinc-900 text-zinc-900 dark:border-zinc-50 dark:text-zinc-50'
-                      : 'border-zinc-200 text-zinc-600 dark:border-zinc-800 dark:text-zinc-400',
+                      ? 'border-kclub-gold-500/40 text-foreground'
+                      : 'border-border text-muted-foreground dark:border-kclub-navy-700',
                   )}
                 >
                   {t(`locale.${item}`)}

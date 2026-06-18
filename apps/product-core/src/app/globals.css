@@ -2,16 +2,141 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: light;
-}
-
+:root,
 .dark {
   color-scheme: dark;
+
+  /* === SURFACES (dark-first) === */
+  --ds-bg: #0a0a0a;
+  --ds-surface: #111111;
+  --ds-surface-2: #1a1a1a;
+  --ds-surface-hover: #222222;
+  --ds-border: #262626;
+  --ds-border-strong: #333333;
+
+  /* === TEXT === */
+  --ds-text: #ededed;
+  --ds-text-muted: #888888;
+  --ds-text-faint: #444444;
+  --ds-text-inverse: #0a0a0a;
+
+  /* === ACCENT (Vercel-style blue — primary CTA, links, active states) === */
+  --ds-accent: oklch(78.9% 0.154 211.53);
+  --ds-accent-hover: #60a5fa;
+  --ds-accent-subtle: rgba(59, 130, 246, 0.1);
+
+  /* === BRAND (gold — logo, tier badges, brand identity) === */
+  --ds-brand: #d4af37;
+  --ds-brand-hover: #e6c14a;
+  --ds-brand-subtle: rgba(212, 175, 55, 0.1);
+
+  /* === SEMANTIC === */
+  --ds-success: #22c55e;
+  --ds-success-subtle: rgba(34, 197, 94, 0.1);
+  --ds-warning: #f59e0b;
+  --ds-warning-subtle: rgba(245, 158, 11, 0.1);
+  --ds-error: #ef4444;
+  --ds-error-subtle: rgba(239, 68, 68, 0.1);
+  --ds-info: #3b82f6;
+  --ds-info-subtle: rgba(59, 130, 246, 0.1);
+
+  /* === TYPE SCALE (compact — max --text-xl for dashboards) === */
+  --ds-display-1: clamp(3rem, 5vw + 1rem, 5rem);
+  --ds-display-2: clamp(2.5rem, 4vw + 1rem, 4rem);
+  --ds-display-3: clamp(2rem, 3vw + 1rem, 3rem);
+
+  --ds-text-xs: 0.75rem;
+  --ds-text-sm: 0.875rem;
+  --ds-text-base: 1rem;
+  --ds-text-lg: 1.125rem;
+  --ds-text-xl: 1.25rem;
+  --ds-text-2xl: 1.5rem;
+
+  /* === SPACING (4px base unit) === */
+  --ds-space-1: 0.25rem;
+  --ds-space-2: 0.5rem;
+  --ds-space-3: 0.75rem;
+  --ds-space-4: 1rem;
+  --ds-space-5: 1.25rem;
+  --ds-space-6: 1.5rem;
+  --ds-space-8: 2rem;
+  --ds-space-10: 2.5rem;
+  --ds-space-12: 3rem;
+  --ds-space-16: 4rem;
+
+  /* === RADIUS === */
+  --ds-radius-sm: 0.25rem;
+  --ds-radius-md: 0.375rem;
+  --ds-radius-lg: 0.5rem;
+  --ds-radius-xl: 0.75rem;
+
+  /* === SHADOWS === */
+  --ds-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --ds-shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+  --ds-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+  --ds-shadow-inset: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --ds-shadow-focus: 0 0 0 2px var(--ds-bg), 0 0 0 4px var(--ds-accent);
+
+  /* === TRANSITIONS === */
+  --ds-transition-fast: 100ms cubic-bezier(0.16, 1, 0.3, 1);
+  --ds-transition-base: 150ms cubic-bezier(0.16, 1, 0.3, 1);
+  --ds-transition-slow: 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  --ds-transition-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ds-transition-entrance: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* === LAYOUT === */
+  --kc-header-h: 3.5rem;
+  --kc-sidebar-w: 15rem;
+  --kc-sidebar-collapsed-w: 3.5rem;
+  --kc-max-w: 80rem;
+  --kc-gutter: clamp(1rem, 4vw, 2.5rem);
+
+  /* ===================================================================
+     BRIDGE: shadcn token names → design token system.
+     =================================================================== */
+  --background: var(--ds-bg);
+  --foreground: var(--ds-text);
+  --card: var(--ds-surface);
+  --card-foreground: var(--ds-text);
+  --popover: var(--ds-surface-2);
+  --popover-foreground: var(--ds-text);
+  --primary: var(--ds-brand);
+  --primary-foreground: var(--ds-text-inverse);
+  --secondary: var(--ds-surface-2);
+  --secondary-foreground: var(--ds-text);
+  --muted: var(--ds-surface-2);
+  --muted-foreground: var(--ds-text-muted);
+  --accent: var(--ds-surface-2);
+  --accent-foreground: var(--ds-text);
+  --destructive: var(--ds-error);
+  --destructive-foreground: var(--ds-text);
+  --border: var(--ds-border);
+  --input: var(--ds-border);
+  --ring: var(--ds-accent);
+  --success: var(--ds-success);
+  --accent-hover: var(--ds-brand-hover);
+
+  /* Charts */
+  --chart-1: var(--ds-text-muted);
+  --chart-2: var(--ds-text-faint);
+  --chart-3: var(--ds-border-strong);
+  --chart-4: var(--ds-border);
+  --chart-5: var(--ds-surface-hover);
+
+  /* Sidebar (admin scope will override) */
+  --sidebar: var(--ds-surface);
+  --sidebar-foreground: var(--ds-text);
+  --sidebar-primary: var(--ds-brand);
+  --sidebar-primary-foreground: var(--ds-text-inverse);
+  --sidebar-accent: var(--ds-surface-hover);
+  --sidebar-accent-foreground: var(--ds-text);
+  --sidebar-border: var(--ds-border);
+  --sidebar-ring: var(--ds-accent);
 }
 
 * {
   box-sizing: border-box;
+  outline: none;
 }
 
 html {
@@ -20,34 +145,101 @@ html {
 
 body {
   margin: 0;
-  background: #ffffff;
-  color: #18181b;
-}
-
-.dark body {
-  background: #09090b;
-  color: #fafafa;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body), 'Segoe UI', system-ui, sans-serif;
 }
 
 button,
 a {
   -webkit-tap-highlight-color: transparent;
-  outline: none;
 }
 
 ::selection {
-  background: #18181b;
-  color: #ffffff;
-}
-
-.dark ::selection {
-  background: #fafafa;
-  color: #09090b;
+  background: var(--ds-brand);
+  color: var(--ds-text-inverse);
 }
 
 @layer base {
   *:focus:not(:focus-visible) {
     outline: none;
     box-shadow: none;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+}
+
+@layer utilities {
+  .kclub-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  }
+
+  .kclub-heading-display {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  .kclub-overline {
+    font-family: var(--font-body), sans-serif;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .kclub-gradient-gold {
+    background: linear-gradient(135deg, #d4af6a 0%, #c9a227 50%, #a8841a 100%);
+  }
+
+  .kclub-text-gradient-gold {
+    background: linear-gradient(135deg, #f5e6c4 0%, #c9a227 50%, #d4af6a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .kclub-border-gold {
+    border-color: rgba(201, 162, 39, 0.35);
+  }
+
+  .kclub-card-member {
+    background: linear-gradient(145deg, #0a0f1e 0%, #111827 100%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 12px 40px rgba(4, 8, 18, 0.35);
+  }
+
+  .kclub-card-vip {
+    background: linear-gradient(145deg, #040812 0%, #0a0f1e 55%, #111827 100%);
+    border: 1px solid rgba(201, 162, 39, 0.35);
+    box-shadow:
+      0 8px 32px rgba(201, 162, 39, 0.18),
+      0 12px 40px rgba(4, 8, 18, 0.4);
+  }
+
+  .kclub-card-vip::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 100% 0%, rgba(201, 162, 39, 0.12), transparent 55%);
+    pointer-events: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
