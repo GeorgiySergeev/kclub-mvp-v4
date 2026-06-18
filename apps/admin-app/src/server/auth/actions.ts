@@ -3,7 +3,12 @@
 import { redirect } from 'next/navigation';
 
 import { clearStaffSession, readStaffSession, setStaffSession } from '@/server/auth/session';
-import type { ApiResponse, StaffAuthChallengeDto, StaffAuthSessionDto } from '@kclub/contracts';
+import type {
+  ApiResponse,
+  StaffAuthChallengeDto,
+  StaffAuthSessionDto,
+  StaffTotpSetupDto,
+} from '@kclub/contracts';
 
 function getProductCoreBaseUrl() {
   return (
@@ -63,7 +68,14 @@ export async function verifyStaffOtpAction(formData: FormData) {
   }
 
   await setStaffSession(payload.data.token, payload.data.expiresAt);
-  redirect(payload.data.state === 'AUTHENTICATED' ? '/dashboard' : '/auth/2fa-required');
+
+  if (payload.data.state === 'AUTHENTICATED') {
+    redirect('/dashboard');
+  } else if (payload.data.state === 'TOTP_SETUP_REQUIRED') {
+    redirect('/auth/totp-setup');
+  } else {
+    redirect('/auth/2fa-required');
+  }
 }
 
 export async function verifyStaffTotpAction(formData: FormData) {
@@ -88,6 +100,35 @@ export async function verifyStaffTotpAction(formData: FormData) {
 
   await setStaffSession(payload.data.token, payload.data.expiresAt);
   redirect('/dashboard');
+}
+
+export async function setupStaffTotpAction(): Promise<{
+  provisioningUri: string;
+  manualKey: string;
+} | null> {
+  const session = await readStaffSession();
+  if (!session?.token) {
+    redirect('/auth/sign-in');
+  }
+
+  const response = await fetch(`${getProductCoreBaseUrl()}/api/admin/v1/staff-auth/totp/setup`, {
+    method: 'GET',
+    cache: 'no-store',
+    headers: {
+      authorization: `Bearer ${session.token}`,
+    },
+  });
+
+  const payload = (await response.json().catch(() => null)) as ApiResponse<StaffTotpSetupDto> | null;
+
+  if (!response.ok || !payload?.data) {
+    return null;
+  }
+
+  return {
+    provisioningUri: payload.data.provisioningUri,
+    manualKey: payload.data.manualKey,
+  };
 }
 
 export async function logoutAction() {

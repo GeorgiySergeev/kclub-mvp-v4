@@ -97,6 +97,11 @@ export type StaffAuthSessionDto = {
   expiresAt: IsoDateTime;
 };
 
+export type StaffTotpSetupDto = {
+  provisioningUri: string;
+  manualKey: string;
+};
+
 export type AdminUserListItemDto = {
   id: EntityId;
   phone: string;

@@ -84,7 +84,18 @@
         "items": [
           "Everything in MEMBER",
           "VIP subscription management",
+          "Priority partner directory access",
+          "Private member benefits and offers"
+        ]
+      },
+      "business": {
+        "name": "BUSINESS",
+        "price": "Placement",
+        "cta": "Start Business Profile",
+        "items": [
+          "Everything in VIP",
           "Submit and manage a business profile",
+          "Paid partner placement after moderation",
           "Business introductions after publication"
         ]
       }

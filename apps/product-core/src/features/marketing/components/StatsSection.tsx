@@ -1,31 +1,95 @@
-import { useTranslations } from 'next-intl';
+'use client';
+
+import { useLocale, useTranslations } from 'next-intl';
+import { useEffect, useMemo, useRef, useState } from 'react';
 
 const stats = [
-  { value: '1 200+', key: 'members' },
-  { value: '12', key: 'countries' },
-  { value: '340+', key: 'partners' },
-  { value: '5', key: 'years' },
+  { value: 1200, suffix: '+', key: 'members' },
+  { value: 12, suffix: '', key: 'countries' },
+  { value: 340, suffix: '+', key: 'partners' },
+  { value: 5, suffix: '', key: 'years' },
 ] as const;
 
 export function StatsSection() {
   const t = useTranslations('home');
+  const locale = useLocale();
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const [visible, setVisible] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const numberFormat = useMemo(
+    () => new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }),
+    [locale],
+  );
+
+  useEffect(() => {
+    const section = sectionRef.current;
+
+    if (!section) {
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.32 },
+    );
+
+    observer.observe(section);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!visible) {
+      return undefined;
+    }
+
+    let frame = 0;
+    const startedAt = performance.now();
+    const duration = 900;
+
+    const tick = (now: number) => {
+      const nextProgress = Math.min((now - startedAt) / duration, 1);
+      const eased = 1 - Math.pow(1 - nextProgress, 3);
+
+      setProgress(eased);
+
+      if (nextProgress < 1) {
+        frame = requestAnimationFrame(tick);
+      }
+    };
+
+    frame = requestAnimationFrame(tick);
+
+    return () => cancelAnimationFrame(frame);
+  }, [visible]);
 
   return (
-    <section id="stats" className="border-y border-zinc-200 dark:border-zinc-800">
-      <div className="mx-auto grid max-w-6xl grid-cols-2 px-4 sm:px-6 lg:grid-cols-4 lg:px-8">
-        {stats.map((stat, index) => (
-          <div
-            key={stat.key}
-            className={`border-zinc-200 py-8 dark:border-zinc-800 sm:py-10 ${index % 2 === 0 ? 'border-r lg:border-r' : 'lg:border-r'} ${index === stats.length - 1 ? 'lg:border-r-0' : ''}`}
-          >
-            <p className="text-4xl font-light tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-5xl">
-              {stat.value}
-            </p>
-            <p className="mt-3 text-xs font-normal uppercase tracking-widest text-zinc-500">
-              {t(`stats.${stat.key}`)}
-            </p>
-          </div>
-        ))}
+    <section ref={sectionRef} id="stats" className="border-y border-zinc-200 bg-white py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
+        <div className="grid auto-rows-fr grid-cols-2 gap-px overflow-hidden border border-zinc-300 bg-zinc-300 lg:grid-cols-4">
+          {stats.map((stat) => (
+            <div
+              key={stat.key}
+              className="flex min-h-40 flex-col items-center justify-center bg-white px-3 py-8 text-center sm:px-6 sm:py-11"
+            >
+              <p className="whitespace-nowrap text-4xl font-black leading-none text-[#202022] sm:text-5xl lg:text-6xl">
+                {numberFormat
+                  .format(Math.round(stat.value * progress))
+                  .replace(/[, \u00a0\u202f]/g, ' ')}
+                {stat.suffix}
+                <span className="text-[#ff0030]">.</span>
+              </p>
+              <p className="mx-auto mt-4 max-w-36 text-xs font-bold uppercase leading-5 text-zinc-500">
+                {t(`stats.${stat.key}`)}
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );

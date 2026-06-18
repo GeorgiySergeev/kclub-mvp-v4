@@ -22,6 +22,7 @@ body {
   margin: 0;
   background: #ffffff;
   color: #18181b;
+  text-rendering: optimizeLegibility;
 }
 
 .dark body {
@@ -49,5 +50,40 @@ a {
   *:focus:not(:focus-visible) {
     outline: none;
     box-shadow: none;
+  }
+}
+
+@layer utilities {
+  .kclub-outline-text {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.86);
+    text-shadow: 0 0 28px rgba(255, 255, 255, 0.08);
+  }
+
+  .kclub-hero-visual {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(18, 18, 20, 0.92) 0%,
+        rgba(18, 18, 20, 0.5) 46%,
+        rgba(18, 18, 20, 0.24) 100%
+      ),
+      linear-gradient(135deg, rgba(255, 0, 38, 0.22) 0%, rgba(255, 0, 38, 0) 34%),
+      linear-gradient(24deg, rgba(255, 255, 255, 0.12) 0 1px, transparent 1px 52px),
+      linear-gradient(118deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 68px),
+      radial-gradient(
+        circle at 72% 34%,
+        rgba(255, 255, 255, 0.16),
+        transparent 0 8%,
+        transparent 24%
+      ),
+      linear-gradient(110deg, #17171a 0%, #26262a 48%, #111113 100%);
+  }
+
+  .kclub-noise {
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+    background-size: 44px 44px;
   }
 }

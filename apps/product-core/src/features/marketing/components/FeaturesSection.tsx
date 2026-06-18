@@ -13,33 +13,33 @@ export function FeaturesSection() {
   const items = t.raw('features.items') as FeatureItem[];
 
   return (
-    <section className="border-b border-zinc-200 py-16 dark:border-zinc-800 sm:py-24">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl">
-          <p className="text-xs font-normal uppercase tracking-widest text-zinc-500">
+    <section className="border-b border-zinc-200 bg-[#f4f4f2] py-16 sm:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
+        <div className="grid gap-8 lg:grid-cols-[0.72fr_1fr] lg:items-end">
+          <p className="border-l-4 border-[#ff0030] pl-4 text-xs font-bold uppercase text-zinc-500">
             {t('features.eyebrow')}
           </p>
-          <h2 className="mt-4 text-4xl font-extralight tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-5xl">
+          <h2 className="max-w-3xl text-4xl font-black uppercase leading-tight text-[#202022] sm:text-6xl">
             {t('features.title')}
           </h2>
         </div>
-        <div className="mt-12 grid gap-px border border-zinc-200 bg-zinc-200 dark:border-zinc-800 dark:bg-zinc-800 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-px border border-zinc-300 bg-zinc-300 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item, index) => {
             const Icon = icons[index];
 
             return (
-              <article key={item.title} className="bg-white p-6 dark:bg-zinc-950">
-                <Icon
-                  aria-hidden="true"
-                  size={20}
-                  strokeWidth={1}
-                  className="text-zinc-900 dark:text-zinc-50"
-                />
-                <div className="my-5 h-px w-10 bg-zinc-200 dark:bg-zinc-800" />
-                <h3 className="text-lg font-light tracking-tight text-zinc-950 dark:text-zinc-50">
+              <article
+                key={item.title}
+                className="group bg-white p-6 transition hover:bg-[#202022] sm:p-8"
+              >
+                <div className="flex h-12 w-12 items-center justify-center border border-zinc-200 text-[#ff0030] transition group-hover:border-white/20 group-hover:text-white">
+                  <Icon aria-hidden="true" size={22} strokeWidth={1.6} />
+                </div>
+                <div className="my-7 h-px w-12 bg-[#ff0030]" />
+                <h3 className="text-xl font-black uppercase text-[#202022] transition group-hover:text-white">
                   {item.title}
                 </h3>
-                <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+                <p className="group-hover:text-white/72 mt-4 text-sm font-medium leading-7 text-zinc-600 transition">
                   {item.description}
                 </p>
               </article>

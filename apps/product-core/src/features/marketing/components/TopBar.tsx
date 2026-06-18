@@ -1,6 +1,6 @@
 'use client';
 
-import { Globe, Menu, X } from 'lucide-react';
+import { ArrowUpRight, Globe, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 import { useState } from 'react';
@@ -15,7 +15,13 @@ type NavItem = {
   href: string;
 };
 
-export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; isAuthenticated?: boolean }) {
+export function TopBar({
+  locale,
+  isAuthenticated = false,
+}: {
+  locale: Locale;
+  isAuthenticated?: boolean;
+}) {
   const t = useTranslations('home');
   const [open, setOpen] = useState(false);
   const [localeOpen, setLocaleOpen] = useState(false);
@@ -31,32 +37,42 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
       ];
 
   return (
-    <header className="sticky top-0 z-50 h-12 border-b border-zinc-200 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/95">
-      <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 h-[72px] border-b border-white/10 bg-[#202022] text-white shadow-[0_1px_0_rgba(255,255,255,0.04)]">
+      <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-10">
         <Link
           href={`/${locale}`}
-          className="text-sm font-light uppercase tracking-widest text-zinc-900 outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 focus:ring-offset-white dark:text-zinc-50 dark:focus:ring-zinc-50 dark:focus:ring-offset-zinc-950"
+          className="group inline-flex items-center gap-3 outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#202022]"
         >
-          {t('brand')}
+          <span className="flex h-11 w-11 items-center justify-center bg-[#ff0030] text-base font-black uppercase text-white">
+            K
+          </span>
+          <span className="grid text-sm font-semibold leading-none text-white">
+            <span>KYLYVNYK</span>
+            <span className="text-white/72 font-normal">CLUB</span>
+          </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm text-zinc-600 dark:text-zinc-400 md:flex">
+        <nav className="hidden h-full items-center text-sm font-semibold uppercase text-white md:flex">
           {navItems.map((item) => (
             <Link
               key={item.key}
               href={item.href}
-              className="transition hover:text-zinc-950 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 focus:ring-offset-white dark:hover:text-zinc-50 dark:focus:ring-zinc-50 dark:focus:ring-offset-zinc-950"
+              className="flex h-full items-center border-l border-white/10 px-5 transition hover:bg-white/[0.06] hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
             >
               {t(`nav.${item.key}`)}
+              {item.key === 'join' ? (
+                <ArrowUpRight aria-hidden="true" className="ml-2 text-[#ff0030]" size={15} />
+              ) : null}
             </Link>
           ))}
 
-          <div className="relative">
+          <div className="relative flex h-full items-center border-l border-white/10 px-3">
             <IconButton
               aria-label={t('footer.locales')}
               aria-expanded={localeOpen}
               aria-controls="locale-switcher"
               onClick={() => setLocaleOpen((v) => !v)}
+              className="border-white/10 bg-transparent text-white hover:bg-white/[0.06] focus:ring-white focus:ring-offset-[#202022]"
             >
               <Globe aria-hidden="true" size={16} strokeWidth={1.5} />
             </IconButton>
@@ -64,7 +80,7 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
             {localeOpen && (
               <div
                 id="locale-switcher"
-                className="absolute right-0 top-full z-50 mt-1 w-32 rounded-md border border-zinc-200 bg-white py-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-950"
+                className="absolute right-0 top-full z-50 mt-0 w-36 border border-white/10 bg-[#202022] py-1 shadow-2xl"
                 onMouseLeave={() => setLocaleOpen(false)}
               >
                 {locales.map((item) => (
@@ -73,10 +89,8 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
                     href={`/${item}`}
                     onClick={() => setLocaleOpen(false)}
                     className={cn(
-                      'block px-4 py-2 text-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-zinc-900 dark:hover:bg-zinc-900 dark:focus:ring-zinc-50',
-                      item === locale
-                        ? 'font-medium text-zinc-900 dark:text-zinc-50'
-                        : 'text-zinc-600 dark:text-zinc-400',
+                      'block px-4 py-3 text-sm normal-case transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white',
+                      item === locale ? 'font-semibold text-white' : 'text-white/68',
                     )}
                   >
                     {t(`locale.${item}`)}
@@ -86,18 +100,20 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
             )}
           </div>
 
-          <ThemeToggle className="h-10 w-10" />
+          <div className="flex h-full items-center border-l border-r border-white/10 px-3">
+            <ThemeToggle className="h-10 w-10 border-white/10 bg-transparent text-white hover:bg-white/[0.06] focus:ring-white focus:ring-offset-[#202022]" />
+          </div>
         </nav>
 
         <div className="flex items-center gap-2 md:hidden">
-          <ThemeToggle />
+          <ThemeToggle className="border-white/10 bg-transparent text-white hover:bg-white/[0.06] focus:ring-white focus:ring-offset-[#202022]" />
           <button
             type="button"
             aria-label={open ? t('common.close') : t('common.menu')}
             aria-expanded={open}
             aria-controls="mobile-navigation"
             onClick={() => setOpen((value) => !value)}
-            className="inline-flex h-11 w-11 items-center justify-center border border-zinc-200 bg-white text-zinc-900 transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 focus:ring-offset-white dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:hover:bg-zinc-900 dark:focus:ring-zinc-50 dark:focus:ring-offset-zinc-950"
+            className="inline-flex h-11 w-11 items-center justify-center border border-white/10 bg-transparent text-white transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#202022]"
           >
             {open ? (
               <X aria-hidden="true" size={20} strokeWidth={1.5} />
@@ -111,20 +127,21 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
       {open ? (
         <div
           id="mobile-navigation"
-          className="fixed inset-x-0 top-12 z-50 border-b border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950 md:hidden"
+          className="fixed inset-x-0 top-[72px] z-50 border-b border-white/10 bg-[#202022] text-white shadow-2xl md:hidden"
         >
-          <nav className="mx-auto grid max-w-6xl gap-1 px-4 py-4">
+          <nav className="mx-auto grid max-w-7xl gap-2 px-4 py-4">
             {navItems.map((item) => (
               <Link
                 key={item.key}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="border border-zinc-200 px-4 py-3 text-sm text-zinc-900 transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-800 dark:text-zinc-50 dark:hover:bg-zinc-900 dark:focus:ring-zinc-50"
+                className="flex items-center justify-between border border-white/10 px-4 py-3 text-sm font-semibold uppercase text-white transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-white"
               >
                 {t(`nav.${item.key}`)}
+                <ArrowUpRight aria-hidden="true" size={16} className="text-[#ff0030]" />
               </Link>
             ))}
-            <p className="mt-2 px-4 pt-2 text-xs font-normal uppercase tracking-widest text-zinc-500">
+            <p className="text-white/54 mt-2 px-4 pt-2 text-xs font-semibold uppercase">
               {t('footer.locales')}
             </p>
             <div className="grid gap-1">
@@ -134,10 +151,8 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
                   href={`/${item}`}
                   onClick={() => setOpen(false)}
                   className={cn(
-                    'border px-4 py-3 text-sm transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-900 dark:border-zinc-800 dark:hover:bg-zinc-900 dark:focus:ring-zinc-50',
-                    item === locale
-                      ? 'border-zinc-900 text-zinc-900 dark:border-zinc-50 dark:text-zinc-50'
-                      : 'border-zinc-200 text-zinc-600 dark:border-zinc-800 dark:text-zinc-400',
+                    'border px-4 py-3 text-sm transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-white',
+                    item === locale ? 'border-white text-white' : 'text-white/68 border-white/10',
                   )}
                 >
                   {t(`locale.${item}`)}

@@ -21,24 +21,26 @@ export function FeaturedBusinesses({
 
   if (items.length === 0) {
     return (
-      <section className="border-b border-zinc-200 py-16 dark:border-zinc-800 sm:py-24">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <EmptyState
-            title={t('featured.emptyTitle')}
-            description={t('featured.emptyDescription')}
-          />
+      <section className="border-b border-zinc-200 bg-white py-16 sm:py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
+          <div className="border border-zinc-300 bg-[#f4f4f2] p-8">
+            <EmptyState
+              title={t('featured.emptyTitle')}
+              description={t('featured.emptyDescription')}
+            />
+          </div>
         </div>
       </section>
     );
   }
 
   return (
-    <section className="border-b border-zinc-200 py-16 dark:border-zinc-800 sm:py-24">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <p className="text-xs font-normal uppercase tracking-widest text-zinc-500">
+    <section className="border-b border-zinc-200 bg-[#f4f4f2] py-16 sm:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
+        <p className="border-l-4 border-[#ff0030] pl-4 text-xs font-bold uppercase text-zinc-500">
           {t('featured.eyebrow')}
         </p>
-        <h2 className="mt-4 text-4xl font-extralight tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-5xl">
+        <h2 className="mt-5 max-w-4xl text-4xl font-black uppercase leading-tight text-[#202022] sm:text-6xl">
           {t('featured.title')}
         </h2>
         <div className="-mx-4 mt-12 flex snap-x gap-4 overflow-x-auto px-4 pb-2 sm:mx-0 sm:grid sm:grid-cols-3 sm:overflow-visible sm:px-0 sm:pb-0">
