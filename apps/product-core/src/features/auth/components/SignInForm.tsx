@@ -108,11 +108,11 @@ export function SignInForm({ locale }: { locale: Locale }) {
         </p>
       </section>
 
-      <div className="relative mx-auto w-full max-w-[440px] overflow-hidden border border-zinc-200 bg-white p-6 shadow-[0_24px_80px_-40px_rgba(0,0,0,0.45)] dark:border-white/10 dark:bg-[#141416] sm:p-8">
-        <div className="absolute inset-x-0 top-0 h-1 bg-[#ff0030]" />
+      <div className="relative mx-auto w-full max-w-[440px] overflow-hidden border border-zinc-200 bg-white p-6 shadow-[0_24px_80px_-40px_rgba(0,0,0,0.45)] dark:border-white/10 dark:bg-surface sm:p-8">
+        <div className="absolute inset-x-0 top-0 h-1 bg-accent" />
 
         <div className="mb-10 text-center">
-          <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center border border-zinc-200 bg-zinc-100 dark:border-white/10 dark:bg-[#101012]">
+          <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center border border-zinc-200 bg-zinc-100 dark:border-white/10 dark:bg-surface-muted">
             <svg
               className="h-6 w-6 text-zinc-700 dark:text-white/80"
               fill="none"

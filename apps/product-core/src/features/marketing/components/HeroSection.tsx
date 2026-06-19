@@ -1,4 +1,4 @@
-import { ArrowDown, ArrowUpRight, QrCode } from 'lucide-react';
+import { ArrowUpRight, QrCode } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
@@ -8,108 +8,133 @@ export function HeroSection({ locale }: { locale: Locale }) {
   const t = useTranslations('home');
 
   return (
-    <section className="kclub-premium-hero relative isolate min-h-[calc(100vh-112px)] overflow-hidden">
+    <section className="kclub-premium-hero relative isolate min-h-[calc(100vh-112px)] overflow-hidden border-b border-zinc-200 dark:border-border">
       <div className="kclub-hero-visual absolute inset-0" aria-hidden="true" />
       <div className="kclub-premium-hero-tint absolute inset-0" aria-hidden="true" />
       <div
         className="kclub-premium-hero-fade absolute bottom-0 left-0 right-0 h-24"
         aria-hidden="true"
       />
+      <div
+        className="absolute inset-y-0 right-[10%] hidden w-px bg-zinc-300/80 lg:block dark:bg-white/10"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute left-0 top-[6.625rem] hidden h-px w-full bg-zinc-300/70 lg:block dark:bg-white/10"
+        aria-hidden="true"
+      />
 
-      <div className="relative mx-auto grid min-h-[calc(100vh-112px)] max-w-7xl items-center gap-12 px-4 py-10 sm:px-6 lg:grid-cols-[1.03fr_0.97fr] lg:px-10">
-        <div className="min-w-0 max-w-3xl pt-8 lg:pt-0">
-          <p className="dark:text-white/78 mb-6 border-l-2 border-[#ff0030] pl-4 text-sm font-semibold uppercase tracking-[0.22em] text-zinc-600">
+      <div className="relative mx-auto grid min-h-[calc(100vh-112px)] max-w-7xl items-center gap-11 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-20 lg:px-10 lg:py-[6.625rem] xl:gap-[5rem]">
+        <div className="min-w-0 max-w-3xl lg:pr-6">
+          <p className="kclub-section-label mb-11 border-l border-accent pl-4 text-xs font-semibold uppercase tracking-[0.24em] text-zinc-600 dark:text-white/70">
             {t('hero.eyebrow')}
           </p>
-          <h1 className="max-w-full break-words text-[clamp(2.2rem,10.5vw,5.2rem)] font-black uppercase leading-[0.96] sm:text-[clamp(3rem,5.6vw,5.2rem)]">
+
+          <h1 className="kclub-hero-display max-w-full text-balance uppercase">
             <span className="kclub-outline-text block">{t('hero.titleLine1')}</span>
-            <span className="block">{t('hero.titleLine2')}</span>
+            <span className="mt-2 block sm:whitespace-nowrap">{t('hero.titleLine2')}</span>
           </h1>
-          <p className="dark:text-white/86 mt-8 max-w-2xl text-base font-semibold leading-8 text-zinc-600 sm:text-lg">
-            {t('hero.subline')}
-          </p>
-          <div className="mt-10 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-            <Link
-              href={`/${locale}/sign-up`}
-              className="inline-flex h-14 w-full items-center justify-between gap-8 border border-[#ff0030] bg-[#ff0030] px-5 text-sm font-bold text-white shadow-[0_18px_42px_rgba(255,0,48,0.22)] transition hover:border-[#d90029] hover:bg-[#d90029] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f3ef] dark:focus-visible:ring-white dark:focus-visible:ring-offset-[#101012] sm:w-auto sm:min-w-52"
-            >
-              {t('hero.primaryCta')}
-              <ArrowUpRight aria-hidden="true" size={20} strokeWidth={2} />
+
+          <p className="kclub-hero-copy mt-11">{t('hero.subline')}</p>
+
+          <div className="mt-11 flex w-full flex-col gap-4 sm:w-auto sm:flex-row">
+            <Link href={`/${locale}/sign-up`} className="kclub-button-primary w-full sm:w-auto">
+              <span>{t('hero.primaryCta')}</span>
+              <ArrowUpRight aria-hidden="true" size={18} strokeWidth={2} />
             </Link>
-            <Link
-              href={`/${locale}/directory`}
-              className="bg-white/62 dark:border-white/18 inline-flex h-14 w-full items-center justify-between gap-8 border border-zinc-300/80 px-5 text-sm font-bold text-zinc-950 shadow-[0_18px_42px_rgba(24,24,27,0.06)] backdrop-blur transition hover:border-zinc-400 hover:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] focus-visible:ring-offset-2 focus-visible:ring-offset-[#f5f3ef] dark:bg-white/[0.05] dark:text-white dark:hover:border-white/30 dark:hover:bg-white/[0.1] dark:focus-visible:ring-white dark:focus-visible:ring-offset-[#101012] sm:w-auto sm:min-w-52"
-            >
-              {t('hero.secondaryCta')}
-              <ArrowUpRight aria-hidden="true" size={20} strokeWidth={2} />
+            <Link href={`/${locale}/directory`} className="kclub-button-secondary w-full sm:w-auto">
+              <span>{t('hero.secondaryCta')}</span>
+              <ArrowUpRight aria-hidden="true" size={18} strokeWidth={2} />
             </Link>
+          </div>
+
+          <div className="mt-20 grid gap-8 border-t border-zinc-200 pt-8 sm:grid-cols-3 dark:border-border">
+            <div className="kclub-hero-stat">
+              <p className="kclub-hero-stat-label">{t('hero.stats.verified.title')}</p>
+              <p className="kclub-hero-stat-copy">{t('hero.stats.verified.copy')}</p>
+            </div>
+            <div className="kclub-hero-stat">
+              <p className="kclub-hero-stat-label">{t('hero.stats.access.title')}</p>
+              <p className="kclub-hero-stat-copy">{t('hero.stats.access.copy')}</p>
+            </div>
+            <div className="kclub-hero-stat">
+              <p className="kclub-hero-stat-label">{t('hero.stats.reach.title')}</p>
+              <p className="kclub-hero-stat-copy">{t('hero.stats.reach.copy')}</p>
+            </div>
           </div>
         </div>
 
-        <div className="hidden lg:block">
-          <div className="relative ml-auto h-[520px] max-w-[520px]">
-            <div
-              className="bg-white/28 absolute -inset-6 border border-white/55 shadow-[0_40px_120px_rgba(24,24,27,0.14)] backdrop-blur-md dark:border-white/10 dark:bg-white/[0.035] dark:shadow-[0_44px_130px_rgba(0,0,0,0.46)]"
-              aria-hidden="true"
-            />
-            <div
-              className="bg-zinc-950/8 dark:border-white/12 absolute left-10 top-8 h-[430px] w-[350px] rotate-[-8deg] border border-zinc-300/80 shadow-[0_32px_90px_rgba(24,24,27,0.14)] dark:bg-white/[0.04]"
-              aria-hidden="true"
-            />
-            <div className="border-zinc-950/12 dark:border-white/14 relative ml-auto flex h-full max-w-[392px] rotate-[3deg] flex-col justify-between overflow-hidden border bg-[linear-gradient(135deg,#151518_0%,#252528_46%,#08080a_100%)] p-7 text-white shadow-[0_34px_100px_rgba(24,24,27,0.34)] dark:shadow-[0_36px_110px_rgba(0,0,0,0.58)]">
+        {/* <div className="flex justify-center lg:justify-end">
+          <div className="w-full max-w-[640px] lg:max-w-[560px] xl:max-w-[600px]">
+            <div className="kclub-hero-card aspect-[1.62/1] min-h-[240px] lg:min-h-0">
               <div
-                className="absolute inset-0 bg-[linear-gradient(118deg,rgba(255,255,255,0.16),transparent_28%,rgba(255,0,48,0.22)_54%,transparent_72%),radial-gradient(circle_at_78%_18%,rgba(255,255,255,0.24),transparent_20%)]"
+                className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,0,37,0.06),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.72),rgba(244,244,245,0.92))] dark:bg-[linear-gradient(135deg,rgba(255,0,37,0.08),transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.04),rgba(0,0,0,0.18))]"
                 aria-hidden="true"
               />
-              <div className="kclub-noise absolute inset-0 opacity-35" aria-hidden="true" />
+              <div className="absolute inset-x-0 top-[34%] h-px bg-zinc-200 dark:bg-white/10" aria-hidden="true" />
+              <div className="absolute inset-x-0 bottom-[28%] h-px bg-zinc-200 dark:bg-white/10" aria-hidden="true" />
 
-              <div className="relative flex items-start justify-between">
-                <div>
-                  <p className="text-white/58 text-[11px] font-semibold uppercase tracking-[0.32em]">
-                    Private Access
-                  </p>
-                  <p className="mt-3 text-3xl font-black uppercase leading-none">KCLUB</p>
+              <div className="relative flex h-full flex-col justify-between">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-4">
+                      <span className="inline-flex h-11 w-11 items-center justify-center border border-accent bg-accent/10 text-sm font-semibold text-zinc-950 dark:text-white">
+                        K
+                      </span>
+                      <div>
+                        <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-zinc-500 dark:text-white/60">
+                          {t('hero.cardEyebrow')}
+                        </p>
+                        <p className="mt-2 text-[1.5rem] font-semibold leading-[1.2] tracking-[0.12em] text-zinc-950 dark:text-white sm:text-[2rem]">
+                          KCLUB
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                  <span className="inline-flex shrink-0 border border-accent px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.24em] text-zinc-950 dark:text-white">
+                    VIP
+                  </span>
                 </div>
-                <span className="flex h-12 w-12 items-center justify-center bg-[#ff0030] text-base font-black">
-                  K
-                </span>
-              </div>
 
-              <div className="relative grid gap-7">
-                <div className="h-11 w-16 rounded-md border border-white/20 bg-[linear-gradient(135deg,rgba(255,255,255,0.4),rgba(255,255,255,0.08))] shadow-inner" />
-                <div>
-                  <p className="text-white/46 text-[11px] font-semibold uppercase tracking-[0.28em]">
-                    Member
+                <div className="mt-8 grid grid-cols-[minmax(0,1fr)_auto] items-end gap-6">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.28em] text-zinc-500 dark:text-white/60">
+                    Member ID
                   </p>
-                  <p className="mt-3 text-4xl font-black uppercase tracking-[0.05em]">VIP</p>
+                  <div className="row-span-2 flex h-20 w-20 items-center justify-center border border-zinc-300 bg-zinc-50 dark:border-border dark:bg-black/20 sm:h-24 sm:w-24">
+                    <QrCode
+                      aria-hidden="true"
+                      size={44}
+                      strokeWidth={1.3}
+                      className="text-zinc-700 dark:text-white/90"
+                    />
+                  </div>
+                  <p className="font-mono text-xl tracking-[0.16em] text-zinc-950 dark:text-white sm:text-2xl">
+                    KC-024801
+                  </p>
                 </div>
-                <div className="grid grid-cols-[1fr_auto] items-end gap-8">
+
+                <div className="mt-6 grid grid-cols-2 items-end gap-4">
                   <div>
-                    <p className="text-white/46 text-[11px] font-semibold uppercase tracking-[0.28em]">
-                      Card No.
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-zinc-500 dark:text-white/50">
+                      {t('hero.cardCaption')}
                     </p>
-                    <p className="text-white/88 mt-3 font-mono text-lg tracking-[0.24em]">
-                      VIP-024801
+                    <p className="mt-2 text-sm font-semibold leading-6 text-zinc-600 dark:text-white/70">
+                      Since 2019
                     </p>
                   </div>
-                  <div className="bg-white/8 flex h-20 w-20 items-center justify-center border border-white/20">
-                    <QrCode aria-hidden="true" size={42} strokeWidth={1.4} />
+                  <div className="text-right">
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-zinc-500 dark:text-white/50">
+                      Valid thru
+                    </p>
+                    <p className="mt-2 font-mono text-base tracking-[0.14em] text-zinc-900 dark:text-white sm:text-lg">
+                      12/26
+                    </p>
                   </div>
-                </div>
-              </div>
-
-              <div className="relative flex items-end justify-between">
-                <p className="text-white/52 max-w-36 text-xs font-semibold uppercase leading-5 tracking-[0.2em]">
-                  Verified Member Network
-                </p>
-                <div className="text-right">
-                  <p className="text-white/42 text-[10px] uppercase tracking-[0.28em]">Valid</p>
-                  <p className="text-white/78 mt-1 font-mono text-sm tracking-[0.12em]">2026</p>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

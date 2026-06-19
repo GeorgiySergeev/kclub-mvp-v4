@@ -1,6 +1,5 @@
 import type { Config } from 'tailwindcss';
 
-// Example placeholder for shared tailwind config
 export const sharedConfig: Omit<Config, 'content'> = {
   theme: {
     extend: {
@@ -11,6 +10,47 @@ export const sharedConfig: Omit<Config, 'content'> = {
           500: '#14b8a6',
           900: '#134e4a',
         },
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+        surface: {
+          DEFAULT: 'var(--surface)',
+          muted: 'var(--surface-muted)',
+          raised: 'var(--surface-raised)',
+        },
+        border: 'var(--border)',
+        'border-strong': 'var(--border-strong)',
+        primary: {
+          DEFAULT: 'var(--primary)',
+          foreground: 'var(--primary-foreground)',
+        },
+        secondary: {
+          DEFAULT: 'var(--secondary)',
+          foreground: 'var(--secondary-foreground)',
+        },
+        accent: {
+          DEFAULT: 'var(--accent)',
+          hover: 'var(--accent-hover)',
+          foreground: 'var(--accent-foreground)',
+        },
+        muted: {
+          DEFAULT: 'var(--muted)',
+          foreground: 'var(--muted-foreground)',
+        },
+        destructive: {
+          DEFAULT: 'var(--destructive)',
+          foreground: 'var(--destructive-foreground)',
+        },
+      },
+      borderRadius: {
+        sm: 'var(--radius-sm)',
+        md: 'var(--radius-md)',
+        lg: 'var(--radius-lg)',
+      },
+      ringColor: {
+        focus: 'var(--focus-ring)',
+      },
+      ringOffsetColor: {
+        focus: 'var(--focus-ring-offset)',
       },
     },
   },

@@ -72,21 +72,21 @@ export function StatsSection() {
     <section
       ref={sectionRef}
       id="stats"
-      className="kclub-border border-y bg-white py-8 dark:bg-[#09090b]"
+      className="kclub-border border-y bg-white py-8 dark:bg-background"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
         <div className="kclub-border-strong grid auto-rows-fr grid-cols-2 gap-px overflow-hidden border bg-zinc-300 dark:bg-white/10 lg:grid-cols-4">
           {stats.map((stat) => (
             <div
               key={stat.key}
-              className="flex min-h-40 flex-col items-center justify-center bg-white px-3 py-8 text-center dark:bg-[#18181a] sm:px-6 sm:py-11"
+              className="flex min-h-40 flex-col items-center justify-center bg-white px-3 py-8 text-center dark:bg-surface sm:px-6 sm:py-11"
             >
               <p className="whitespace-nowrap text-4xl font-black leading-none text-zinc-950 dark:text-white sm:text-5xl lg:text-6xl">
                 {numberFormat
                   .format(Math.round(stat.value * progress))
                   .replace(/[, \u00a0\u202f]/g, ' ')}
                 {stat.suffix}
-                <span className="text-[#ff0030]">.</span>
+                <span className="text-accent">.</span>
               </p>
               <p className="mx-auto mt-4 max-w-36 text-xs font-bold uppercase leading-5 text-zinc-500 dark:text-white/60">
                 {t(`stats.${stat.key}`)}

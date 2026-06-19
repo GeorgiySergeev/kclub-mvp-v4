@@ -10,7 +10,7 @@ import {
   type MemberIntroductionDto,
   type PublicBusinessListItemDto,
 } from '@kclub/contracts';
-import { Badge, Surface } from '@kclub/ui';
+import { Badge, Skeleton, Surface } from '@kclub/ui';
 
 import type { Locale } from '@/i18n/routing';
 import { parseAuthResponse } from '@/features/auth/utils/api';
@@ -192,8 +192,24 @@ export function IntroductionsPanel({
 
   if (isLoading) {
     return (
-      <Surface className="kclub-panel max-w-none rounded-none px-6 py-6 shadow-none ring-0">
-        <p className="dark:text-white/66 text-sm text-zinc-600">{tCommon('loading')}</p>
+      <Surface className="kclub-panel max-w-none space-y-6 rounded-none px-6 py-6 shadow-none ring-0">
+        <Skeleton className="h-7 w-48" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-3/4" />
+        <div className="space-y-4">
+          <Skeleton className="h-6 w-40" />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Skeleton className="h-20" />
+            <Skeleton className="h-20" />
+          </div>
+          <Skeleton className="h-20" />
+          <Skeleton className="h-10 w-32" />
+        </div>
+        <div className="space-y-4">
+          <Skeleton className="h-6 w-36" />
+          <Skeleton className="h-24" />
+          <Skeleton className="h-24" />
+        </div>
       </Surface>
     );
   }

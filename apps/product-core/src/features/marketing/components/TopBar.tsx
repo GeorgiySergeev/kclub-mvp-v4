@@ -104,9 +104,9 @@ export function TopBar({
       <div className="kclub-shell flex h-full items-center justify-between">
         <Link
           href={`/${locale}`}
-          className="group inline-flex items-center gap-3 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-white dark:focus-visible:ring-offset-[#151516]"
+          className="group inline-flex items-center gap-3 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-focus dark:focus-visible:ring-white dark:focus-visible:ring-offset-focus"
         >
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[#ff0030] text-base font-black uppercase text-white shadow-[0_10px_30px_rgba(255,0,48,0.28)]">
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent text-base font-black uppercase text-white shadow-[0_10px_30px_rgba(255,0,48,0.28)]">
             K
           </span>
           <span className="grid text-sm font-semibold leading-none text-zinc-950 dark:text-white">
@@ -120,7 +120,7 @@ export function TopBar({
             <Link
               key={item.key}
               href={item.href}
-              className="kclub-topbar-link group inline-flex h-11 items-center px-1 uppercase tracking-[0.08em] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] focus-visible:ring-offset-4"
+              className="kclub-topbar-link group inline-flex h-11 items-center px-1 uppercase tracking-[0.08em] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
             >
               {t(`nav.${item.key}`)}
             </Link>
@@ -135,7 +135,7 @@ export function TopBar({
                 setLocaleOpen((value) => !value);
                 setAccountOpen(false);
               }}
-              className="kclub-topbar-control h-10 w-10 focus-visible:ring-[#ff0030]"
+              className="kclub-topbar-control h-10 w-10 focus-visible:ring-accent"
             >
               <Globe aria-hidden="true" size={16} strokeWidth={1.5} />
             </IconButton>
@@ -151,7 +151,7 @@ export function TopBar({
                     href={`/${item}`}
                     onClick={() => setLocaleOpen(false)}
                     className={cn(
-                      'block px-4 py-3 text-sm normal-case transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset dark:focus-visible:ring-[#ff0030]',
+                      'block px-4 py-3 text-sm normal-case transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset dark:focus-visible:ring-accent',
                       item === locale
                         ? 'font-semibold text-zinc-950 dark:text-white'
                         : 'dark:text-white/68 text-zinc-500',
@@ -178,7 +178,7 @@ export function TopBar({
                 setAccountOpen((value) => !value);
                 setLocaleOpen(false);
               }}
-              className="kclub-topbar-control inline-flex h-10 items-center gap-2 px-3 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] focus-visible:ring-offset-2"
+              className="kclub-topbar-control inline-flex h-10 items-center gap-2 px-3 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
             >
               <UserRound aria-hidden="true" size={17} strokeWidth={1.6} />
               <ChevronDown
@@ -238,7 +238,7 @@ export function TopBar({
             aria-expanded={open}
             aria-controls="mobile-navigation"
             onClick={() => setOpen((value) => !value)}
-            className="kclub-topbar-control inline-flex h-11 w-11 items-center justify-center border shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] focus-visible:ring-offset-2"
+            className="kclub-topbar-control inline-flex h-11 w-11 items-center justify-center border shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
           >
             {open ? (
               <X aria-hidden="true" size={20} strokeWidth={1.5} />
@@ -260,10 +260,10 @@ export function TopBar({
                 key={item.key}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="flex items-center justify-between rounded-md border border-zinc-200/80 bg-white/70 px-4 py-3 text-sm font-semibold uppercase tracking-[0.08em] text-zinc-950 transition hover:bg-zinc-950 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] dark:border-white/10 dark:bg-white/[0.04] dark:text-white dark:hover:bg-white dark:hover:text-zinc-950 dark:focus-visible:ring-white"
+                className="flex items-center justify-between rounded-md border border-zinc-200/80 bg-white/70 px-4 py-3 text-sm font-semibold uppercase tracking-[0.08em] text-zinc-950 transition hover:bg-zinc-950 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-accent dark:border-white/10 dark:bg-white/[0.04] dark:text-white dark:hover:bg-white dark:hover:text-zinc-950 dark:focus-visible:ring-white"
               >
                 {t(`nav.${item.key}`)}
-                <ArrowUpRight aria-hidden="true" size={16} className="text-[#ff0030]" />
+                <ArrowUpRight aria-hidden="true" size={16} className="text-accent" />
               </Link>
             ))}
             <p className="dark:text-white/54 mt-2 px-4 pt-2 text-xs font-semibold uppercase tracking-[0.08em] text-zinc-500">
@@ -309,7 +309,7 @@ export function TopBar({
                   href={`/${item}`}
                   onClick={() => setOpen(false)}
                   className={cn(
-                    'border px-4 py-3 text-sm transition hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] dark:hover:bg-white/[0.06] dark:focus-visible:ring-white',
+                    'border px-4 py-3 text-sm transition hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent dark:hover:bg-white/[0.06] dark:focus-visible:ring-white',
                     item === locale
                       ? 'border-zinc-950 text-zinc-950 dark:border-white dark:text-white'
                       : 'dark:text-white/68 border-zinc-200 text-zinc-500 dark:border-white/10',
@@ -339,7 +339,7 @@ function AccountLink({
     <Link
       href={href}
       onClick={onClick}
-      className="dark:text-white/72 flex items-center gap-3 rounded px-3 py-2.5 text-sm text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#ff0030] dark:hover:bg-white/[0.08] dark:hover:text-white dark:focus-visible:ring-white"
+      className="dark:text-white/72 flex items-center gap-3 rounded px-3 py-2.5 text-sm text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent dark:hover:bg-white/[0.08] dark:hover:text-white dark:focus-visible:ring-white"
     >
       {children}
     </Link>
@@ -360,7 +360,7 @@ function AccountButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="dark:text-white/72 flex w-full items-center gap-3 rounded px-3 py-2.5 text-left text-sm text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#ff0030] disabled:cursor-wait disabled:opacity-60 dark:hover:bg-white/[0.08] dark:hover:text-white dark:focus-visible:ring-white"
+      className="dark:text-white/72 flex w-full items-center gap-3 rounded px-3 py-2.5 text-left text-sm text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent disabled:cursor-wait disabled:opacity-60 dark:hover:bg-white/[0.08] dark:hover:text-white dark:focus-visible:ring-white"
     >
       {children}
     </button>
@@ -380,7 +380,7 @@ function MobileLink({
     <Link
       href={href}
       onClick={onClick}
-      className="dark:text-white/72 flex items-center gap-3 rounded-md border border-zinc-200 px-4 py-3 text-sm text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] dark:border-white/10 dark:hover:bg-white/[0.08] dark:hover:text-white dark:focus-visible:ring-white"
+      className="dark:text-white/72 flex items-center gap-3 rounded-md border border-zinc-200 px-4 py-3 text-sm text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent dark:border-white/10 dark:hover:bg-white/[0.08] dark:hover:text-white dark:focus-visible:ring-white"
     >
       {children}
     </Link>
@@ -401,7 +401,7 @@ function MobileButton({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="dark:text-white/72 flex items-center gap-3 rounded-md border border-zinc-200 px-4 py-3 text-left text-sm text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] disabled:cursor-wait disabled:opacity-60 dark:border-white/10 dark:hover:bg-white/[0.08] dark:hover:text-white dark:focus-visible:ring-white"
+      className="dark:text-white/72 flex items-center gap-3 rounded-md border border-zinc-200 px-4 py-3 text-left text-sm text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:cursor-wait disabled:opacity-60 dark:border-white/10 dark:hover:bg-white/[0.08] dark:hover:text-white dark:focus-visible:ring-white"
     >
       {children}
     </button>

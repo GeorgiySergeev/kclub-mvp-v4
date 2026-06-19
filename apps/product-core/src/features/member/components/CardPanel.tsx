@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 
 import type { MemberCardDto } from '@kclub/contracts';
 import { MEMBER_API_ROUTES } from '@kclub/contracts';
-import { Badge, EmptyState, Surface, linkClasses } from '@kclub/ui';
+import { Badge, EmptyState, Skeleton, Surface, linkClasses } from '@kclub/ui';
 
 import type { Locale } from '@/i18n/routing';
 import { parseAuthResponse } from '@/features/auth/utils/api';
@@ -53,8 +53,21 @@ export function CardPanel({ locale }: { locale: Locale }) {
 
   if (isLoading) {
     return (
-      <Surface className="kclub-panel max-w-none rounded-none px-6 py-6 shadow-none ring-0">
-        <p className="dark:text-white/66 text-sm text-zinc-600">{tCommon('loading')}</p>
+      <Surface className="kclub-panel max-w-none overflow-hidden rounded-none p-0 shadow-none ring-0">
+        <div className="kclub-hero-visual space-y-4 p-6">
+          <Skeleton className="h-3 w-20" />
+          <Skeleton className="h-8 w-48" />
+          <Skeleton className="mt-6 h-3 w-24" />
+        </div>
+        <div className="grid gap-4 p-6 sm:grid-cols-2">
+          <Skeleton className="h-16" />
+          <Skeleton className="h-16" />
+          <Skeleton className="h-16" />
+          <Skeleton className="h-16" />
+        </div>
+        <div className="border-t border-zinc-200 px-6 py-4 dark:border-white/10">
+          <Skeleton className="h-4 w-32" />
+        </div>
       </Surface>
     );
   }

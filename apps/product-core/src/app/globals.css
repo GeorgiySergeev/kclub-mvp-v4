@@ -2,53 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  color-scheme: dark;
-}
-
-.light {
-  color-scheme: light;
-}
-
-.dark {
-  color-scheme: dark;
-}
-
-* {
-  box-sizing: border-box;
-}
-
 html {
   scroll-behavior: smooth;
 }
 
 body {
   margin: 0;
-  background: #ffffff;
-  color: #18181b;
+  background: var(--background);
+  color: var(--foreground);
   overflow-x: clip;
   text-rendering: optimizeLegibility;
-}
-
-.dark body {
-  background: #09090b;
-  color: #fafafa;
 }
 
 button,
 a {
   -webkit-tap-highlight-color: transparent;
   outline: none;
-}
-
-::selection {
-  background: #18181b;
-  color: #ffffff;
-}
-
-.dark ::selection {
-  background: #fafafa;
-  color: #09090b;
 }
 
 @layer base {
@@ -66,71 +35,71 @@ a {
   }
 
   .kclub-page-band {
-    @apply border-b border-zinc-200 dark:border-white/10;
+    @apply border-b border-border;
   }
 
   .kclub-surface {
-    @apply bg-white dark:bg-[#18181a];
+    @apply bg-surface;
   }
 
   .kclub-surface-raised {
-    @apply bg-white dark:bg-[#202022];
+    @apply bg-surface-raised;
   }
 
   .kclub-surface-muted {
-    @apply bg-[#f4f4f2] dark:bg-[#111113];
+    @apply bg-surface-muted;
   }
 
   .kclub-surface-card {
-    @apply bg-white dark:bg-[#1e1e20];
+    @apply bg-surface;
   }
 
   .kclub-border {
-    @apply border-zinc-200 dark:border-white/10;
+    @apply border-border;
   }
 
   .kclub-border-strong {
-    @apply border-zinc-300 dark:border-white/10;
+    @apply border-border-strong;
   }
 
   .kclub-text-heading {
-    @apply font-black uppercase text-[#202022] dark:text-white;
+    @apply font-black uppercase text-foreground;
   }
 
   .kclub-text-body {
-    @apply text-zinc-600 dark:text-white/70;
+    @apply text-muted-foreground;
   }
 
   .kclub-text-muted {
-    @apply text-zinc-500 dark:text-white/60;
+    @apply text-muted;
   }
 
   .kclub-text-primary {
-    @apply text-[#202022] dark:text-white;
+    @apply text-foreground;
   }
 
   .kclub-accent {
-    @apply text-[#ff0030];
+    @apply text-accent;
   }
 
   .kclub-accent-bg {
-    @apply bg-[#ff0030];
+    @apply bg-accent;
   }
 
   .kclub-section-label {
-    @apply text-[11px] font-semibold uppercase tracking-[0.28em] text-[#ff0030];
+    @apply text-[11px] font-semibold uppercase tracking-[0.28em] text-accent;
   }
 
   .kclub-panel {
-    @apply border border-zinc-200 bg-white text-zinc-950 dark:border-white/10 dark:bg-[#141416] dark:text-white;
+    @apply border border-border bg-surface text-foreground;
   }
 
   .kclub-panel-soft {
-    @apply border border-zinc-200 bg-zinc-50/80 text-zinc-950 dark:border-white/10 dark:bg-[#101012] dark:text-white;
+    @apply border border-border bg-surface-muted text-foreground;
   }
 
   .kclub-panel-strong {
-    @apply border border-zinc-300 bg-[#f4f4f2] text-zinc-950 dark:border-white/10 dark:bg-[#0c0c0e] dark:text-white;
+    @apply border border-border-strong bg-surface-muted text-foreground;
   }
 
   .kclub-card-grid {
@@ -138,43 +107,71 @@ a {
   }
 
   .kclub-display {
-    @apply text-4xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white sm:text-5xl lg:text-6xl;
+    @apply text-4xl font-black uppercase tracking-[0.01em] text-foreground sm:text-5xl lg:text-6xl;
   }
 
   .kclub-title-lg {
-    @apply text-3xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white sm:text-4xl;
+    @apply text-3xl font-black uppercase tracking-[0.01em] text-foreground sm:text-4xl;
   }
 
   .kclub-title-md {
-    @apply text-2xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white;
+    @apply text-2xl font-black uppercase tracking-[0.01em] text-foreground;
   }
 
   .kclub-copy {
-    @apply text-sm leading-7 text-zinc-600 dark:text-white/70 sm:text-base;
+    @apply text-sm leading-7 text-muted-foreground sm:text-base;
+  }
+
+  .kclub-hero-stat {
+    @apply border-l border-accent pl-4;
   }
 
   .kclub-button-primary {
-    @apply inline-flex items-center justify-center gap-2 border border-[#ff0030] bg-[#ff0030] px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-white transition hover:border-[#d40028] hover:bg-[#d40028] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#09090b];
+    @apply inline-flex min-h-[50px] min-w-[200px] items-start justify-between border border-accent bg-accent pb-0 pl-2 pr-11 pt-[22px] text-base font-semibold text-accent-foreground transition hover:bg-accent-hover hover:border-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-focus;
   }
 
   .kclub-button-secondary {
-    @apply inline-flex items-center justify-center gap-2 border border-zinc-300 bg-transparent px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-zinc-950 transition hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-white/20 dark:text-white dark:hover:bg-white/5 dark:focus-visible:ring-offset-[#09090b];
+    @apply inline-flex min-h-[50px] min-w-[200px] items-start justify-between border border-accent bg-transparent pb-0 pl-2 pr-11 pt-[22px] text-base font-semibold text-foreground transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-focus;
+  }
+
+  .kclub-button-secondary:hover {
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+  }
+
+  .kclub-hero-display {
+    @apply text-[clamp(2.75rem,7.2vw,5.25rem)] font-bold leading-[1.07] tracking-normal text-foreground;
+  }
+
+  .kclub-hero-copy {
+    @apply max-w-2xl text-base font-semibold leading-6 text-muted-foreground;
+  }
+
+  .kclub-hero-stat-label {
+    @apply text-sm font-semibold leading-6 text-foreground;
+  }
+
+  .kclub-hero-stat-copy {
+    @apply mt-2 text-sm font-semibold leading-6 text-muted-foreground;
+  }
+
+  .kclub-hero-card {
+    @apply relative overflow-hidden rounded-lg border border-border bg-surface text-foreground shadow-[rgba(0,0,0,0.15)_0px_8px_16px_0px] sm:p-5 p-4;
   }
 
   .kclub-toggle-button {
-    @apply inline-flex h-11 w-11 items-center justify-center border border-zinc-200 bg-white text-zinc-950 transition hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-white/10 dark:bg-[#111113] dark:text-white dark:hover:bg-[#18181b] dark:focus-visible:ring-offset-[#09090b];
+    @apply inline-flex h-11 w-11 items-center justify-center border border-border bg-surface text-foreground transition hover:bg-surface-muted focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-focus;
   }
 
   .kclub-premium-header {
     border-color: rgba(228, 228, 231, 0.7);
     background: rgba(255, 255, 255, 0.9);
-    color: #18181b;
+    color: var(--foreground);
   }
 
   .dark .kclub-premium-header {
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--border);
     background: rgba(16, 16, 18, 0.92);
-    color: #ffffff;
+    color: var(--foreground);
     box-shadow: 0 18px 54px rgba(0, 0, 0, 0.34);
   }
 
@@ -191,7 +188,7 @@ a {
     left: 0;
     width: 100%;
     height: 1px;
-    background: #ff0030;
+    background: var(--accent);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.3s ease;
@@ -216,7 +213,7 @@ a {
 
   .kclub-topbar-link {
     position: relative;
-    color: #52525b;
+    color: var(--muted-foreground);
   }
 
   .kclub-topbar-link::after {
@@ -226,7 +223,7 @@ a {
     left: 0;
     width: 100%;
     height: 1px;
-    background: #ff0030;
+    background: var(--accent);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.3s ease;
@@ -237,7 +234,7 @@ a {
   }
 
   .kclub-topbar-link:hover {
-    color: #18181b;
+    color: var(--foreground);
   }
 
   .dark .kclub-topbar-link {
@@ -245,7 +242,7 @@ a {
   }
 
   .dark .kclub-topbar-link:hover {
-    color: #ffffff;
+    color: var(--foreground);
   }
 
   .kclub-topbar-control {
@@ -254,7 +251,7 @@ a {
     border-width: 0;
     background: transparent;
     box-shadow: none;
-    color: #18181b;
+    color: var(--foreground);
   }
 
   .kclub-topbar-control::after {
@@ -264,7 +261,7 @@ a {
     left: 0;
     width: 100%;
     height: 1px;
-    background: #ff0030;
+    background: var(--accent);
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.3s ease;
@@ -277,7 +274,7 @@ a {
   .kclub-topbar-control:hover {
     border-color: transparent;
     background: transparent;
-    color: #18181b;
+    color: var(--foreground);
   }
 
   .dark .kclub-topbar-control {
@@ -291,7 +288,7 @@ a {
   .dark .kclub-topbar-control:hover {
     border-color: transparent;
     background: transparent;
-    color: #ffffff;
+    color: var(--foreground);
   }
 
   .kclub-topbar-menu {
@@ -300,13 +297,13 @@ a {
   }
 
   .dark .kclub-topbar-menu {
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--border);
     background: rgba(24, 24, 26, 0.96);
   }
 
   .kclub-topbar-menu a,
   .kclub-topbar-menu button {
-    color: #3f3f46;
+    color: var(--muted-foreground);
   }
 
   .dark .kclub-topbar-menu a,
@@ -317,131 +314,138 @@ a {
   .kclub-mobile-nav-panel {
     border-color: rgba(228, 228, 231, 0.8);
     background: rgba(255, 255, 255, 0.96);
-    color: #18181b;
+    color: var(--foreground);
   }
 
   .dark .kclub-mobile-nav-panel {
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--border);
     background: rgba(21, 21, 22, 0.96);
-    color: #ffffff;
+    color: var(--foreground);
   }
 
   .kclub-mobile-nav-panel a,
   .kclub-mobile-nav-panel button {
     border-color: rgba(228, 228, 231, 0.9);
-    color: #3f3f46;
+    color: var(--muted-foreground);
   }
 
   .kclub-mobile-nav-panel a:hover,
   .kclub-mobile-nav-panel button:hover {
     background: rgba(244, 244, 245, 1);
-    color: #18181b;
+    color: var(--foreground);
   }
 
   .dark .kclub-mobile-nav-panel a,
   .dark .kclub-mobile-nav-panel button {
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: var(--border);
     color: rgba(255, 255, 255, 0.78);
   }
 
   .dark .kclub-mobile-nav-panel a:hover,
   .dark .kclub-mobile-nav-panel button:hover {
     background: rgba(255, 255, 255, 0.08);
-    color: #ffffff;
+    color: var(--foreground);
   }
 
   .kclub-premium-hero {
-    background: #f5f3ef;
-    color: #18181b;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.98) 0%,
+      rgba(244, 244, 245, 0.92) 100%
+    );
+    color: var(--foreground);
   }
 
   .dark .kclub-premium-hero {
-    background: #101012;
-    color: #ffffff;
+    background:
+      radial-gradient(circle at 18% 0%, rgba(255, 0, 48, 0.08), transparent 34%),
+      linear-gradient(180deg, #121212 0%, #0f0f0f 100%);
+    color: var(--foreground);
   }
 
   .kclub-premium-hero-tint {
     background: linear-gradient(
-      90deg,
-      rgba(245, 243, 239, 0.82),
-      rgba(245, 243, 239, 0.5) 48%,
-      rgba(245, 243, 239, 0.18)
+      125deg,
+      rgba(255, 255, 255, 0.72),
+      rgba(255, 255, 255, 0.28) 42%,
+      rgba(255, 255, 255, 0) 74%
     );
   }
 
   .dark .kclub-premium-hero-tint {
     background: linear-gradient(
-      90deg,
-      rgba(16, 16, 18, 0.92),
-      rgba(16, 16, 18, 0.56) 48%,
-      rgba(16, 16, 18, 0.2)
+      125deg,
+      rgba(18, 18, 18, 0.92),
+      rgba(18, 18, 18, 0.52) 42%,
+      rgba(18, 18, 18, 0) 74%
     );
   }
 
   .kclub-premium-hero-fade {
-    background: linear-gradient(to top, #f5f3ef, transparent);
+    background: linear-gradient(to top, rgba(244, 244, 245, 0.96), transparent);
   }
 
   .dark .kclub-premium-hero-fade {
-    background: linear-gradient(to top, #101012, transparent);
+    background: linear-gradient(to top, rgba(18, 18, 18, 0.98), transparent);
   }
 
   .kclub-field {
-    @apply block w-full border border-zinc-300 bg-white px-4 py-3 text-sm text-zinc-950 placeholder:text-zinc-400 focus:border-[#ff0030] focus:outline-none focus:ring-2 focus:ring-[#ff0030]/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:bg-[#101012] dark:text-white dark:placeholder:text-white/35;
+    @apply block w-full border border-border bg-surface px-4 py-3 text-sm text-foreground placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-surface-muted;
+  }
+
+  .kclub-field:focus {
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent);
   }
 
   .kclub-checkbox {
-    @apply h-4 w-4 border-zinc-300 bg-white text-[#ff0030] focus:ring-[#ff0030] dark:border-white/20 dark:bg-[#101012];
+    @apply h-4 w-4 border-border bg-surface text-accent focus:ring-accent dark:bg-surface-muted;
   }
 
   .kclub-note {
-    @apply text-xs uppercase tracking-[0.18em] text-zinc-500 dark:text-white/45;
+    @apply text-xs uppercase tracking-[0.18em] text-muted;
   }
 
   .kclub-outline-text {
     color: transparent;
-    -webkit-text-stroke: 1px rgba(24, 24, 27, 0.86);
-    text-shadow: 0 0 28px rgba(24, 24, 27, 0.08);
+    -webkit-text-stroke: 1px rgba(24, 24, 27, 0.82);
+    text-shadow: none;
   }
 
   .dark .kclub-outline-text {
-    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.86);
-    text-shadow: 0 0 28px rgba(255, 255, 255, 0.08);
+    -webkit-text-stroke: 1px rgba(255, 255, 255, 0.92);
+    text-shadow: none;
   }
 
   .kclub-hero-visual {
     background:
       linear-gradient(
         90deg,
-        rgba(250, 250, 250, 0.96) 0%,
-        rgba(250, 250, 250, 0.72) 46%,
-        rgba(250, 250, 250, 0.4) 100%
+        rgba(255, 255, 255, 0.98),
+        rgba(255, 255, 255, 0.58) 50%,
+        rgba(255, 255, 255, 0.1) 100%
       ),
-      linear-gradient(135deg, rgba(255, 0, 38, 0.14) 0%, rgba(255, 0, 38, 0) 34%),
-      linear-gradient(24deg, rgba(24, 24, 27, 0.06) 0 1px, transparent 1px 52px),
-      linear-gradient(118deg, rgba(24, 24, 27, 0.04) 0 1px, transparent 1px 68px),
-      radial-gradient(circle at 72% 34%, rgba(255, 0, 48, 0.08), transparent 0 8%, transparent 24%),
-      linear-gradient(110deg, #f4f4f5 0%, #e4e4e7 48%, #fafafa 100%);
+      linear-gradient(0deg, rgba(24, 24, 27, 0.05) 0 1px, transparent 1px 80px),
+      linear-gradient(90deg, rgba(24, 24, 27, 0.04) 0 1px, transparent 1px 80px),
+      linear-gradient(135deg, rgba(244, 244, 245, 0.96) 0%, rgba(228, 228, 231, 0.72) 100%);
   }
 
   .dark .kclub-hero-visual {
     background:
       linear-gradient(
         90deg,
-        rgba(18, 18, 20, 0.92) 0%,
-        rgba(18, 18, 20, 0.5) 46%,
-        rgba(18, 18, 20, 0.24) 100%
+        rgba(18, 18, 18, 0.96),
+        rgba(18, 18, 18, 0.52) 52%,
+        rgba(18, 18, 18, 0.08) 100%
       ),
-      linear-gradient(135deg, rgba(255, 0, 38, 0.22) 0%, rgba(255, 0, 38, 0) 34%),
-      linear-gradient(24deg, rgba(255, 255, 255, 0.12) 0 1px, transparent 1px 52px),
-      linear-gradient(118deg, rgba(255, 255, 255, 0.08) 0 1px, transparent 1px 68px),
+      linear-gradient(0deg, rgba(255, 255, 255, 0.06) 0 1px, transparent 1px 80px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.05) 0 1px, transparent 1px 80px),
       radial-gradient(
-        circle at 72% 34%,
-        rgba(255, 255, 255, 0.16),
-        transparent 0 8%,
-        transparent 24%
+        circle at 78% 24%,
+        rgba(255, 0, 48, 0.12),
+        transparent 0 22%,
+        transparent 40%
       ),
-      linear-gradient(110deg, #17171a 0%, #26262a 48%, #111113 100%);
+      linear-gradient(135deg, rgba(18, 18, 18, 0.98) 0%, rgba(15, 15, 15, 0.98) 100%);
   }
 
   .kclub-noise {

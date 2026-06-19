@@ -21,9 +21,45 @@ This document defines the visual language, component usage rules, and design con
 | Tailwind CSS | Utility-first styling. No plain CSS files, no CSS modules, no styled-components |
 | `@kclub/ui` | Shared primitive components. Always use these before writing custom markup |
 | `cn()` from `@kclub/ui` | Class merging utility. Always use `cn()` to combine Tailwind classes, never string concatenation |
-| `packages/config/tailwind/theme.ts` | Shared Tailwind config — brand color tokens |
+| `packages/config/tailwind/theme.ts` | Shared Tailwind config — brand color tokens and semantic token mappings |
+| `packages/ui/src/styles/tokens.css` | **Canonical source of all semantic theme tokens** (CSS custom properties for light and dark themes) |
 
 **No inline styles.** `style={{}}` is forbidden except for dynamic values that Tailwind cannot express (e.g. a CSS custom property driven by JavaScript). Justify with a comment if used.
+
+### 1.1 Semantic Token Architecture
+
+All theme values flow from a single canonical source:
+
+1. **`packages/ui/src/styles/tokens.css`** defines CSS custom properties (`--background`, `--foreground`, `--surface`, `--accent`, etc.) for both light and dark themes.
+2. **`packages/config/tailwind/theme.ts`** maps those CSS variables to Tailwind color utilities (`bg-background`, `text-accent`, `border-border`, etc.).
+3. **App `globals.css`** files import `@kclub/ui/styles/tokens.css` and only add app-specific styles — they must not redefine core colors.
+4. **UI primitives** consume semantic Tailwind utilities — no hardcoded hex or zinc values.
+
+**Available semantic tokens:**
+
+| Token | Tailwind utility | Use |
+| --- | --- | --- |
+| `--background` | `bg-background`, `text-background` | Page background |
+| `--foreground` | `text-foreground`, `bg-foreground` | Primary text color |
+| `--surface` | `bg-surface` | Card/panel background |
+| `--surface-muted` | `bg-surface-muted` | Subdued background |
+| `--surface-raised` | `bg-surface-raised` | Elevated surface |
+| `--border` | `border-border` | Default border |
+| `--border-strong` | `border-border-strong` | Emphasized border |
+| `--primary` | `bg-primary`, `text-primary` | Primary button bg |
+| `--primary-foreground` | `text-primary-foreground` | Primary button text |
+| `--secondary` | `bg-secondary` | Secondary button bg |
+| `--accent` | `bg-accent`, `text-accent`, `border-accent` | Brand accent (red) |
+| `--accent-hover` | `bg-accent-hover`, `hover:bg-accent-hover` | Accent hover state |
+| `--accent-foreground` | `text-accent-foreground` | Text on accent bg |
+| `--muted` | `text-muted` | Muted text |
+| `--muted-foreground` | `text-muted-foreground` | Secondary muted text |
+| `--destructive` | `text-destructive` | Error/destructive color |
+| `--focus-ring` | `ring-focus` | Focus ring color |
+| `--focus-ring-offset` | `ring-offset-focus` | Focus ring offset color |
+| `--radius-sm/md/lg` | `rounded-sm/md/lg` | Border radius tokens |
+
+**Rule:** Do not add new hardcoded hex values, zinc-scale colors, or rgba values for theme surfaces, borders, or accents in app code. Use the semantic tokens above. The only permitted raw color values are: `brand-*` (teal, for specific brand elements), `green-*`/`red-*`/`yellow-*` (semantic status colors from Section 2.3), and `white`/`black` for shadows and overlays.
 
 ---
 
@@ -165,6 +201,7 @@ All components below are available via `import { ... } from '@kclub/ui'`. **Alwa
 | `Container` | `className` | Page-width centering wrapper |
 | `EmptyState` | `icon`, `title`, `description`, `action` | Empty list / no results within a page section |
 | `PageState` | `icon`, `title`, `description`, `action` | Full-page loading error / 404 / access denied |
+| `Skeleton` | `className` | Placeholder loading shimmer — use for data fetching states |
 | `SkipLink` | — | Accessibility skip-nav — place at top of layout |
 
 ### 5.2 Button Variant Usage
@@ -317,6 +354,9 @@ import { ChevronRight, AlertCircle, CheckCircle2 } from 'lucide-react'
 - **Never use `font-bold`** — use `font-semibold` at most.
 - **Never import icons from heroicons, react-icons, or any library other than `lucide-react`.**
 - **Never mix `tokens.ts` raw class strings with component usage** — use the component, not the token string, when a component exists.
+- **Never add hardcoded hex values** (`#ff0030`, `#18181b`, `#121212`, etc.) for theme surfaces, borders, backgrounds, or accent colors in app components — use semantic tokens (`bg-accent`, `text-foreground`, `bg-surface`, etc.).
+- **Never redefine core theme CSS variables** in app `globals.css` — the canonical source is `packages/ui/src/styles/tokens.css`.
+- **Never use raw zinc-scale colors** (`bg-zinc-900`, `text-zinc-50`, etc.) for theme surfaces, backgrounds, or borders in new code — use semantic tokens instead. Existing zinc-scale usage in primitives is being migrated incrementally.
 
 ---
 
@@ -338,4 +378,5 @@ Do not add product-specific logic (API calls, state, routing) to shared UI primi
 
 | Version | Date       | Summary                                 |
 | ------- | ---------- | --------------------------------------- |
+| `1.1.0` | 2026-06-19 | Added semantic token architecture (Section 1.1), canonical token source in `packages/ui/src/styles/tokens.css`, enforcement rules for no hardcoded theme hex values |
 | `1.0.0` | 2026-06-19 | Initial design system guide for MVP v4  |

@@ -28,11 +28,11 @@ export function Footer({ locale }: { locale: Locale }) {
   ];
 
   return (
-    <footer className="kclub-border border-t bg-zinc-100 text-zinc-950 dark:bg-[#18181a] dark:text-white">
+    <footer className="kclub-border border-t bg-zinc-100 text-zinc-950 dark:bg-surface dark:text-white">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-10">
         <div>
           <h2 className="inline-flex items-center gap-3 text-sm font-bold uppercase">
-            <span className="flex h-10 w-10 items-center justify-center bg-[#ff0030] text-white">
+            <span className="flex h-10 w-10 items-center justify-center bg-accent text-white">
               K
             </span>
             {t('brand')}
@@ -51,7 +51,7 @@ export function Footer({ locale }: { locale: Locale }) {
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="dark:text-white/68 text-sm font-medium text-zinc-600 transition hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] dark:hover:text-white dark:focus-visible:ring-white"
+                    className="dark:text-white/68 text-sm font-medium text-zinc-600 transition hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent dark:hover:text-white dark:focus-visible:ring-white"
                   >
                     {link.label}
                   </Link>
@@ -69,7 +69,7 @@ export function Footer({ locale }: { locale: Locale }) {
               <li key={item}>
                 <Link
                   href={`/${item}`}
-                  className="dark:text-white/68 text-sm font-medium text-zinc-600 transition hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] dark:hover:text-white dark:focus-visible:ring-white"
+                  className="dark:text-white/68 text-sm font-medium text-zinc-600 transition hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent dark:hover:text-white dark:focus-visible:ring-white"
                 >
                   {t(`locale.${item}`)}
                 </Link>

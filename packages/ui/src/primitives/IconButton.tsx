@@ -4,7 +4,7 @@ export function IconButton({ className, ...props }: React.ButtonHTMLAttributes<H
   return (
     <button
       className={cn(
-        'inline-flex h-11 w-11 items-center justify-center bg-white text-zinc-900 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-900 focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-zinc-800 dark:text-zinc-50',
+        'inline-flex h-11 w-11 items-center justify-center bg-surface text-foreground transition focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-focus',
         className,
       )}
       {...props}
