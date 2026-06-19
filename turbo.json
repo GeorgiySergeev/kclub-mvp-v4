@@ -20,6 +20,15 @@
       "dependsOn": ["^build"],
       "cache": false,
       "persistent": true
+    },
+    "start:e2e": {
+      "dependsOn": ["^build"],
+      "cache": false,
+      "persistent": true
+    },
+    "e2e": {
+      "dependsOn": ["build"],
+      "cache": false
     }
   }
 }

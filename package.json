@@ -14,7 +14,11 @@
     "test": "turbo run test",
     "test:contracts": "bun -e \"const fs = require('fs'); const { spawnSync } = require('child_process'); const filters = [['packages/contracts/package.json', '@kclub/contracts'], ['packages/test-utils/package.json', '@kclub/test-utils']].filter(([path]) => fs.existsSync(path)).flatMap(([, name]) => ['--filter=' + name]); if (filters.length === 0) { console.log('No contract workspaces yet; skipping until Phase 2.'); process.exit(0); } const result = spawnSync('bun', ['x', 'turbo', 'run', 'test', ...filters], { stdio: 'inherit', shell: process.platform === 'win32' }); process.exit(result.status ?? 1);\"",
     "format": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "e2e": "playwright test",
+    "e2e:ui": "playwright test --ui",
+    "e2e:product-core": "playwright test --project=product-core",
+    "e2e:admin-app": "playwright test --project=admin-app"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^8.61.0",
@@ -26,6 +30,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "prettier": "^3.6.2",
     "prettier-plugin-tailwindcss": "^0.8.0",
+    "@playwright/test": "^1.52.0",
     "turbo": "^2.5.4",
     "typescript": "^5.8.3"
   }

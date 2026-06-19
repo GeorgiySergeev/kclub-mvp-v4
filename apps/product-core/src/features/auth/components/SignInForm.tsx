@@ -152,6 +152,7 @@ export function SignInForm({ locale }: { locale: Locale }) {
                 onChange={(e) => setPhone(e.target.value)}
                 disabled={isLoading}
                 className={inputClassName}
+                data-testid="auth-phone-input"
               />
             </Field>
             {error && (
@@ -159,7 +160,7 @@ export function SignInForm({ locale }: { locale: Locale }) {
                 {error}
               </p>
             )}
-            <Button type="submit" fullWidth disabled={isLoading} className={buttonClassName}>
+            <Button type="submit" fullWidth disabled={isLoading} className={buttonClassName} data-testid="auth-submit-phone">
               {isLoading ? tCommon('loading') : t('submit')}
               <ArrowRight aria-hidden="true" size={16} strokeWidth={1.7} />
             </Button>
@@ -182,6 +183,7 @@ export function SignInForm({ locale }: { locale: Locale }) {
                 onChange={(e) => setOtp(e.target.value)}
                 disabled={isLoading}
                 className={inputClassName}
+                data-testid="auth-otp-input"
               />
             </Field>
             {error && (
@@ -189,7 +191,7 @@ export function SignInForm({ locale }: { locale: Locale }) {
                 {error}
               </p>
             )}
-            <Button type="submit" fullWidth disabled={isLoading} className={buttonClassName}>
+            <Button type="submit" fullWidth disabled={isLoading} className={buttonClassName} data-testid="auth-submit-otp">
               {isLoading ? tCommon('loading') : tCommon('submitOtp')}
               <ArrowRight aria-hidden="true" size={16} strokeWidth={1.7} />
             </Button>

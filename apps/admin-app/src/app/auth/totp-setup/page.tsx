@@ -67,7 +67,7 @@ export default async function TotpSetupPage({ searchParams }: TotpSetupPageProps
 
             <div className="w-full space-y-2">
               <Label className="text-xs text-muted-foreground">Manual entry key</Label>
-              <div className="rounded-md border bg-muted/50 px-3 py-2 font-mono text-sm break-all select-all">
+              <div className="bg-muted/50 select-all break-all rounded-md border px-3 py-2 font-mono text-sm">
                 {setupData.manualKey}
               </div>
             </div>

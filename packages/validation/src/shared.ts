@@ -4,7 +4,7 @@ import { z, type ZodError, type ZodIssue } from 'zod';
 export const phoneSchema = z
   .string()
   .trim()
-  .transform((val) => val.replace(/[\s\-\(\)]/g, ''))
+  .transform((val) => val.replace(/[\s\-()]/g, ''))
   .pipe(z.string().regex(/^\+[1-9]\d{7,14}$/, 'Phone must use E.164 format'));
 
 export const otpCodeSchema = z

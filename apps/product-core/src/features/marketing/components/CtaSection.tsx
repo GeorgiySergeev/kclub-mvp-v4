@@ -8,7 +8,7 @@ export function CtaSection({ locale }: { locale: Locale }) {
   const t = useTranslations('home');
 
   return (
-    <section className="border-y kclub-border bg-zinc-100 py-16 text-zinc-950 dark:bg-[#202022] dark:text-white sm:py-24">
+    <section className="kclub-border border-y bg-zinc-100 py-16 text-zinc-950 dark:bg-[#202022] dark:text-white sm:py-24">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[1fr_auto] lg:items-end lg:px-10">
         <div>
           <p className="mb-5 border-l-4 border-[#ff0030] pl-4 text-xs font-bold uppercase text-zinc-500 dark:text-white/60">

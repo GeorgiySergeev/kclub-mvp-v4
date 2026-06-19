@@ -23,7 +23,7 @@ export function ServicesSection({ locale }: { locale: Locale }) {
   ];
 
   return (
-    <section className="border-b kclub-border bg-white py-16 dark:bg-[#09090b] sm:py-24">
+    <section className="kclub-border border-b bg-white py-16 dark:bg-[#09090b] sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
         <p className="border-l-4 border-[#ff0030] pl-4 text-xs font-bold uppercase text-zinc-500 dark:text-white/60">
           {t('services.eyebrow')}
@@ -31,7 +31,7 @@ export function ServicesSection({ locale }: { locale: Locale }) {
         <h2 className="mt-5 max-w-4xl text-4xl font-black uppercase leading-tight text-zinc-950 dark:text-white sm:text-6xl">
           {t('services.title')}
         </h2>
-        <div className="mt-12 grid gap-px border kclub-border-strong bg-zinc-300 dark:bg-white/10 lg:grid-cols-3">
+        <div className="kclub-border-strong mt-12 grid gap-px border bg-zinc-300 dark:bg-white/10 lg:grid-cols-3">
           {plans.map((plan) => (
             <article
               key={plan.name}
@@ -42,16 +42,23 @@ export function ServicesSection({ locale }: { locale: Locale }) {
               ) : null}
               <div className="flex items-start justify-between gap-6">
                 <div>
-                  <h3 className="text-sm font-black uppercase text-zinc-500 dark:text-white/60">{plan.name}</h3>
-                  <p className="mt-5 text-5xl font-black text-zinc-950 dark:text-white">{plan.price}</p>
+                  <h3 className="text-sm font-black uppercase text-zinc-500 dark:text-white/60">
+                    {plan.name}
+                  </h3>
+                  <p className="mt-5 text-5xl font-black text-zinc-950 dark:text-white">
+                    {plan.price}
+                  </p>
                 </div>
-                <span className="flex h-12 w-12 items-center justify-center border kclub-border text-[#ff0030]">
+                <span className="kclub-border flex h-12 w-12 items-center justify-center border text-[#ff0030]">
                   <ArrowUpRight aria-hidden="true" size={22} />
                 </span>
               </div>
               <ul className="mt-8 grid gap-4">
                 {plan.items.map((item) => (
-                  <li key={item} className="flex gap-3 text-sm font-medium leading-6 text-zinc-600 dark:text-white/70">
+                  <li
+                    key={item}
+                    className="flex gap-3 text-sm font-medium leading-6 text-zinc-600 dark:text-white/70"
+                  >
                     <Check
                       aria-hidden="true"
                       size={18}

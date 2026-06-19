@@ -12,7 +12,7 @@ export function TestimonialsSection() {
   const items = t.raw('testimonials.items') as Testimonial[];
 
   return (
-    <section className="border-b kclub-border bg-white py-16 dark:bg-[#09090b] sm:py-24">
+    <section className="kclub-border border-b bg-white py-16 dark:bg-[#09090b] sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
         <p className="border-l-4 border-[#ff0030] pl-4 text-xs font-bold uppercase text-zinc-500 dark:text-white/60">
           {t('testimonials.eyebrow')}
@@ -20,7 +20,7 @@ export function TestimonialsSection() {
         <h2 className="mt-5 max-w-4xl text-4xl font-black uppercase leading-tight text-zinc-950 dark:text-white sm:text-6xl">
           {t('testimonials.title')}
         </h2>
-        <div className="mt-12 grid gap-px border kclub-border-strong bg-zinc-300 dark:bg-white/10 lg:grid-cols-3">
+        <div className="kclub-border-strong mt-12 grid gap-px border bg-zinc-300 dark:bg-white/10 lg:grid-cols-3">
           {items.map((item) => (
             <figure key={item.author} className="bg-white p-6 dark:bg-[#18181a] sm:p-8">
               <blockquote className="text-base font-semibold leading-8 text-zinc-950 dark:text-white">

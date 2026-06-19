@@ -16,9 +16,15 @@
     },
     "nav": {
       "directory": "Directory",
+      "catalog": "Catalog",
       "signIn": "Sign In",
       "join": "Join",
-      "cabinet": "Cabinet"
+      "cabinet": "Cabinet",
+      "account": "Account",
+      "dashboard": "Dashboard",
+      "signOut": "Sign Out",
+      "signingOut": "Signing out...",
+      "signOutError": "Could not sign out. Please try again."
     },
     "hero": {
       "eyebrow": "Kylyvnyk Club Private Membership Club",
@@ -26,7 +32,7 @@
       "titleLine2": "global professionals",
       "subline": "A curated membership network for verified people, trusted partners, and warm business introductions.",
       "primaryCta": "Join Now",
-      "secondaryCta": "Explore Directory"
+      "secondaryCta": "Explore Catalog"
     },
     "stats": {
       "members": "Members",

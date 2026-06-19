@@ -142,6 +142,7 @@ export function SignUpForm({ locale }: { locale: Locale }) {
               <Input
                 id="phone"
                 name="phone"
+                data-testid="auth-phone-input"
                 type="tel"
                 autoComplete="tel"
                 required
@@ -159,7 +160,7 @@ export function SignUpForm({ locale }: { locale: Locale }) {
                 {error}
               </p>
             )}
-            <Button type="submit" fullWidth disabled={isLoading} className={buttonClassName}>
+            <Button type="submit" fullWidth disabled={isLoading} className={buttonClassName} data-testid="auth-submit-phone">
               {isLoading ? tCommon('loading') : t('submit')}
               <ArrowRight aria-hidden="true" size={16} strokeWidth={1.7} />
             </Button>
@@ -171,6 +172,7 @@ export function SignUpForm({ locale }: { locale: Locale }) {
               <Input
                 id="otp"
                 name="otp"
+                data-testid="auth-otp-input"
                 type="text"
                 inputMode="numeric"
                 autoComplete="one-time-code"
@@ -189,7 +191,7 @@ export function SignUpForm({ locale }: { locale: Locale }) {
                 {error}
               </p>
             )}
-            <Button type="submit" fullWidth disabled={isLoading} className={buttonClassName}>
+            <Button type="submit" fullWidth disabled={isLoading} className={buttonClassName} data-testid="auth-submit-otp">
               {isLoading ? tCommon('loading') : tCommon('submitOtp')}
               <ArrowRight aria-hidden="true" size={16} strokeWidth={1.7} />
             </Button>

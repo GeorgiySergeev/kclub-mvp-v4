@@ -15,7 +15,7 @@ export function FaqSection() {
   const [openIndex, setOpenIndex] = useState(0);
 
   return (
-    <section className="border-b kclub-border bg-[#f4f4f2] py-16 dark:bg-[#111113] sm:py-24">
+    <section className="kclub-border border-b bg-[#f4f4f2] py-16 dark:bg-[#111113] sm:py-24">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[0.8fr_1.2fr] lg:px-10">
         <div>
           <p className="border-l-4 border-[#ff0030] pl-4 text-xs font-bold uppercase text-zinc-500 dark:text-white/60">
@@ -25,14 +25,14 @@ export function FaqSection() {
             {t('faq.title')}
           </h2>
         </div>
-        <div className="border-t kclub-border-strong bg-white dark:bg-[#18181a]">
+        <div className="kclub-border-strong border-t bg-white dark:bg-[#18181a]">
           {items.map((item, index) => {
             const open = openIndex === index;
             const panelId = `faq-panel-${index}`;
             const buttonId = `faq-button-${index}`;
 
             return (
-              <div key={item.question} className="border-b kclub-border-strong">
+              <div key={item.question} className="kclub-border-strong border-b">
                 <button
                   id={buttonId}
                   type="button"

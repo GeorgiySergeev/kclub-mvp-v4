@@ -38,3 +38,53 @@ jobs:
 
       - name: Build Applications
         run: bun run build
+
+  e2e:
+    needs: validate
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+      E2E_TEST_SECRET: e2e-test-secret-ci
+      NEXT_PUBLIC_SUPABASE_URL: http://localhost:54321
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: dummy-anon-key
+      SUPABASE_SERVICE_ROLE_KEY: dummy-service-role-key
+      DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test
+      ADMIN_JWT_SECRET: e2e-admin-jwt-secret
+      ADMIN_STAFF_ALLOWLIST_JSON: '[]'
+      PRODUCT_CORE_URL: http://localhost:3000
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
+        with:
+          bun-version: latest
+
+      - name: Install Dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Install Playwright Browsers
+        run: bunx playwright install --with-deps chromium
+
+      - name: Build Applications
+        run: bun run build
+
+      - name: Run E2E Tests
+        run: bun run e2e
+
+      - name: Upload Playwright Report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 14
+
+      - name: Upload Test Results
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: test-results/
+          retention-days: 14

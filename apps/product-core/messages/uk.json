@@ -16,9 +16,15 @@
     },
     "nav": {
       "directory": "Directory",
+      "catalog": "Каталог",
       "signIn": "Sign In",
       "join": "Join",
-      "cabinet": "Кабінет"
+      "cabinet": "Кабінет",
+      "account": "Акаунт",
+      "dashboard": "Кабінет",
+      "signOut": "Вийти",
+      "signingOut": "Вихід...",
+      "signOutError": "Не вдалося вийти. Спробуйте ще раз."
     },
     "hero": {
       "eyebrow": "Private Membership Club",

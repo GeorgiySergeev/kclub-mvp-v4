@@ -18,44 +18,44 @@ When in doubt: **follow this document first**, then `BLUEPRINT.md`, then `SPEC.m
 
 ### 1.1 General Rules
 
-| Entity | Style | Example |
-| --- | --- | --- |
-| Variables | `camelCase` | `userId`, `cardStatus`, `isActive` |
-| Function parameters | `camelCase` | `memberId`, `rawPayload` |
-| Functions and methods | `camelCase` | `getCardStatus()`, `issueCard()` |
-| React components | `PascalCase` | `MemberCard`, `BusinessForm` |
-| TypeScript types and interfaces | `PascalCase` | `MemberDto`, `ApiResponse<T>` |
-| Zod schemas | `PascalCase` + `Schema` suffix | `SubmitBusinessSchema`, `OnboardingSchema` |
-| Enum-like `as const` objects | `SCREAMING_SNAKE_CASE` values | `UNDER_REVIEW`, `PAST_DUE` |
-| Module-level constants | `SCREAMING_SNAKE_CASE` | `MAX_FEATURED_COUNT`, `SESSION_TTL_HOURS` |
-| CSS/Tailwind class variables | `camelCase` | `buttonVariants` |
+| Entity                          | Style                          | Example                                    |
+| ------------------------------- | ------------------------------ | ------------------------------------------ |
+| Variables                       | `camelCase`                    | `userId`, `cardStatus`, `isActive`         |
+| Function parameters             | `camelCase`                    | `memberId`, `rawPayload`                   |
+| Functions and methods           | `camelCase`                    | `getCardStatus()`, `issueCard()`           |
+| React components                | `PascalCase`                   | `MemberCard`, `BusinessForm`               |
+| TypeScript types and interfaces | `PascalCase`                   | `MemberDto`, `ApiResponse<T>`              |
+| Zod schemas                     | `PascalCase` + `Schema` suffix | `SubmitBusinessSchema`, `OnboardingSchema` |
+| Enum-like `as const` objects    | `SCREAMING_SNAKE_CASE` values  | `UNDER_REVIEW`, `PAST_DUE`                 |
+| Module-level constants          | `SCREAMING_SNAKE_CASE`         | `MAX_FEATURED_COUNT`, `SESSION_TTL_HOURS`  |
+| CSS/Tailwind class variables    | `camelCase`                    | `buttonVariants`                           |
 
 ### 1.2 File Naming
 
-| File type | Convention | Example |
-| --- | --- | --- |
-| React component file | `kebab-case.tsx` | `member-card.tsx`, `business-form.tsx` |
-| Utility / helper file | `kebab-case.ts` | `format-date.ts`, `build-slug.ts` |
-| Service file | `kebab-case-service.ts` | `card-service.ts`, `business-service.ts` |
-| Hook file | `use-kebab-case.ts` | `use-card-status.ts`, `use-business-form.ts` |
-| Test file | `*.test.ts` or `*.spec.ts` | `card-service.test.ts` |
-| Route handler | `route.ts` (Next.js convention) | `app/api/v1/cards/route.ts` |
-| Page component | `page.tsx` (Next.js convention) | `app/[locale]/(member)/dashboard/page.tsx` |
-| Layout component | `layout.tsx` (Next.js convention) | `app/[locale]/layout.tsx` |
+| File type             | Convention                        | Example                                      |
+| --------------------- | --------------------------------- | -------------------------------------------- |
+| React component file  | `kebab-case.tsx`                  | `member-card.tsx`, `business-form.tsx`       |
+| Utility / helper file | `kebab-case.ts`                   | `format-date.ts`, `build-slug.ts`            |
+| Service file          | `kebab-case-service.ts`           | `card-service.ts`, `business-service.ts`     |
+| Hook file             | `use-kebab-case.ts`               | `use-card-status.ts`, `use-business-form.ts` |
+| Test file             | `*.test.ts` or `*.spec.ts`        | `card-service.test.ts`                       |
+| Route handler         | `route.ts` (Next.js convention)   | `app/api/v1/cards/route.ts`                  |
+| Page component        | `page.tsx` (Next.js convention)   | `app/[locale]/(member)/dashboard/page.tsx`   |
+| Layout component      | `layout.tsx` (Next.js convention) | `app/[locale]/layout.tsx`                    |
 
 ### 1.3 Service Method Naming
 
 Service methods must follow the **verb + noun** pattern. Use the specific verbs below:
 
-| Operation | Verb | Example |
-| --- | --- | --- |
-| Create a new entity | `create` | `createUser()`, `createCard()` |
-| Retrieve one entity | `get` | `getUser()`, `getCard()` |
-| Retrieve a list | `list` | `listBusinesses()`, `listCards()` |
-| Update fields | `update` | `updateProfile()`, `updateBusiness()` |
-| Delete permanently | `delete` | `deleteCategory()` |
-| State transition | domain verb | `issueCard()`, `approveBusinessProfile()`, `cancelSubscription()`, `publishBusiness()`, `revokeCard()` |
-| Check a condition | `is` / `can` / `has` | `isOnboardingComplete()`, `canSubmitBusiness()` |
+| Operation           | Verb                 | Example                                                                                                |
+| ------------------- | -------------------- | ------------------------------------------------------------------------------------------------------ |
+| Create a new entity | `create`             | `createUser()`, `createCard()`                                                                         |
+| Retrieve one entity | `get`                | `getUser()`, `getCard()`                                                                               |
+| Retrieve a list     | `list`               | `listBusinesses()`, `listCards()`                                                                      |
+| Update fields       | `update`             | `updateProfile()`, `updateBusiness()`                                                                  |
+| Delete permanently  | `delete`             | `deleteCategory()`                                                                                     |
+| State transition    | domain verb          | `issueCard()`, `approveBusinessProfile()`, `cancelSubscription()`, `publishBusiness()`, `revokeCard()` |
+| Check a condition   | `is` / `can` / `has` | `isOnboardingComplete()`, `canSubmitBusiness()`                                                        |
 
 Never name service methods `handle`, `process`, `do`, `execute`, or similar vague verbs.
 
@@ -126,10 +126,10 @@ enum BusinessStatus { UNDER_REVIEW, APPROVED, ... }
 
 ```ts
 // ✅ Correct import order
-import { z } from 'zod'
-import type { BusinessDto } from '@kclub/contracts'
-import { BusinessStatus } from '@kclub/domain'
-import { businessService } from '@/server/services/business-service'
+import { z } from 'zod';
+import type { BusinessDto } from '@kclub/contracts';
+import { BusinessStatus } from '@kclub/domain';
+import { businessService } from '@/server/services/business-service';
 ```
 
 ---
@@ -154,18 +154,18 @@ Every component file follows this order:
 
 ```tsx
 // ✅ Correct structure
-'use client'
+'use client';
 
-import { useState } from 'react'
-import type { BusinessDto } from '@kclub/contracts'
+import { useState } from 'react';
+import type { BusinessDto } from '@kclub/contracts';
 
 type BusinessCardProps = {
-  business: BusinessDto
-  onApprove: (id: string) => void
-}
+  business: BusinessDto;
+  onApprove: (id: string) => void;
+};
 
 export function BusinessCard({ business, onApprove }: BusinessCardProps) {
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
   // ...
 }
 ```
@@ -209,26 +209,26 @@ Every route handler must follow this exact sequence:
 
 ```ts
 // ✅ Canonical route handler
-import { SubmitBusinessSchema } from '@kclub/validation'
-import { canSubmitBusiness } from '@kclub/domain'
-import { businessService } from '@/server/services/business-service'
-import { apiSuccess, apiError } from '@/server/api/response'
-import { getSession } from '@/server/auth/session'
+import { SubmitBusinessSchema } from '@kclub/validation';
+import { canSubmitBusiness } from '@kclub/domain';
+import { businessService } from '@/server/services/business-service';
+import { apiSuccess, apiError } from '@/server/api/response';
+import { getSession } from '@/server/auth/session';
 
 export async function POST(req: Request): Promise<Response> {
-  const session = await getSession()
-  if (!session) return apiError('UNAUTHORIZED', 'Not authenticated')
+  const session = await getSession();
+  if (!session) return apiError('UNAUTHORIZED', 'Not authenticated');
 
-  const body = await req.json()
-  const parsed = SubmitBusinessSchema.safeParse(body)
-  if (!parsed.success) return apiError('VALIDATION_ERROR', parsed.error.flatten())
+  const body = await req.json();
+  const parsed = SubmitBusinessSchema.safeParse(body);
+  if (!parsed.success) return apiError('VALIDATION_ERROR', parsed.error.flatten());
 
   if (!canSubmitBusiness(session.member)) {
-    return apiError('FORBIDDEN', 'VIP subscription required')
+    return apiError('FORBIDDEN', 'VIP subscription required');
   }
 
-  const result = await businessService.submitBusiness(session.member.id, parsed.data)
-  return apiSuccess(result)
+  const result = await businessService.submitBusiness(session.member.id, parsed.data);
+  return apiSuccess(result);
 }
 ```
 
@@ -297,9 +297,9 @@ export const SubmitBusinessSchema = z.object({
   email: z.string().email(),
   phone: PhoneSchema,
   categoryId: UuidSchema,
-})
+});
 
-export type SubmitBusinessInput = z.infer<typeof SubmitBusinessSchema>
+export type SubmitBusinessInput = z.infer<typeof SubmitBusinessSchema>;
 ```
 
 ---
@@ -320,7 +320,7 @@ function mapToCardDto(row: CardRow): CardDto {
     cardNumber: row.card_number,
     status: row.status as CardStatus,
     issuedAt: row.issued_at,
-  }
+  };
 }
 ```
 
@@ -335,10 +335,10 @@ function mapToCardDto(row: CardRow): CardDto {
 
 ```ts
 // ✅ Good
-throw new DomainError('CARD_NOT_FOUND', `Card ${cardId} does not exist`)
+throw new DomainError('CARD_NOT_FOUND', `Card ${cardId} does not exist`);
 
 // ❌ Bad — inline string error code
-throw new Error('card_not_found')
+throw new Error('card_not_found');
 ```
 
 ---
@@ -354,22 +354,22 @@ throw new Error('card_not_found')
 ```ts
 // ✅ Good test description
 describe('card-service', () => {
-  it('should issue a card when onboarding is complete')
-  it('should throw CARD_ALREADY_EXISTS if user has an active card')
-  it('should deny issuance if user is blocked')
-})
+  it('should issue a card when onboarding is complete');
+  it('should throw CARD_ALREADY_EXISTS if user has an active card');
+  it('should deny issuance if user is blocked');
+});
 
 // ❌ Bad — tests implementation detail
 describe('card-service', () => {
-  it('should call db.insert once')
-})
+  it('should call db.insert once');
+});
 ```
 
 ---
 
 ## 11. Comments and Documentation
 
-- **Do not comment obvious code**. Comments explain *why*, not *what*.
+- **Do not comment obvious code**. Comments explain _why_, not _what_.
 - Public functions in shared packages (`@kclub/contracts`, `@kclub/domain`, `@kclub/validation`) must have a JSDoc comment.
 - Complex business rules inline in code must reference the relevant section in `SPEC.md`.
 
@@ -420,6 +420,6 @@ Prettier runs automatically via pre-commit hook or CI. Do not manually reformat 
 
 ## Changelog
 
-| Version | Date       | Summary                                |
-| ------- | ---------- | -------------------------------------- |
-| `1.0.0` | 2026-06-19 | Initial code style guide for MVP v4    |
+| Version | Date       | Summary                             |
+| ------- | ---------- | ----------------------------------- |
+| `1.0.0` | 2026-06-19 | Initial code style guide for MVP v4 |

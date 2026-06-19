@@ -9,7 +9,7 @@ export function getPrismaClient(): PrismaClient {
     cachedPrisma = new NativePrismaClient();
   }
 
-  return cachedPrisma;
+  return cachedPrisma!;
 }
 
 export function resetPrismaClientForTests(): void {
