@@ -8,9 +8,10 @@ Before writing any code, an agent MUST have read:
 
 1. Root `AGENTS.md` — entry point, workflow, and source-of-truth priority.
 2. **`docs/CODESTYLE.md` — naming conventions, TypeScript rules, React/Next.js patterns, service layer, API handler pattern, error handling, and 9 hard prohibitions for AI agents. This is not optional.**
-3. The guide below that matches the current task.
+3. **`docs/DESIGN-SYSTEM.md` — color palette, typography, spacing, component library reference, dark mode rules, icon library, layout patterns, and 11 hard prohibitions for UI code. Required for any task that touches components, pages, or styles.**
+4. The guide below that matches the current task.
 
-Do not skip step 2. If `docs/CODESTYLE.md` was not read in the current session, read it before producing any code output.
+Do not skip steps 2 or 3. If either document was not read in the current session, read it before producing any code output.
 
 ## Specialized Task Guides
 

@@ -8,289 +8,334 @@
 
 ## Purpose
 
-This document is the single source of truth for all visual decisions in KCLUB MVP v4. Every UI component, layout, color choice, and spacing value must align with this document. AI agents and human developers must read this before building or modifying any UI.
+This document defines the visual language, component usage rules, and design constraints for KCLUB MVP v4. All contributors — human and AI agents — must follow these rules. The goal is visual consistency across `apps/product-core` and `apps/admin-app` regardless of who writes the code.
 
-**Rule:** If a visual decision is not covered here, do not invent it. Add a note in the task handoff and wait for a decision before implementing.
+**Source of truth for UI decisions: this document wins over personal taste, prior art from other projects, and generic Tailwind examples from the internet.**
 
 ---
 
 ## 1. Technology Stack
 
-- **Tailwind CSS v4** — utility-first styling. No custom CSS files unless Tailwind cannot achieve the result.
-- **`@kclub/ui`** — shared primitive components. Use these before writing any custom markup.
-- **`@kclub/config/tailwind`** — shared Tailwind theme preset. Both apps extend this config.
-- **`cn()` utility** — from `@kclub/ui` — for conditional class merging. Always use `cn()`, never string concatenation for classes.
-- **No inline `style={{}}` props** — use Tailwind classes only.
-- **No arbitrary Tailwind values** like `w-[347px]` or `text-[13px]` unless explicitly approved here.
+| Tool | Role |
+| --- | --- |
+| Tailwind CSS | Utility-first styling. No plain CSS files, no CSS modules, no styled-components |
+| `@kclub/ui` | Shared primitive components. Always use these before writing custom markup |
+| `cn()` from `@kclub/ui` | Class merging utility. Always use `cn()` to combine Tailwind classes, never string concatenation |
+| `packages/config/tailwind/theme.ts` | Shared Tailwind config — brand color tokens |
+
+**No inline styles.** `style={{}}` is forbidden except for dynamic values that Tailwind cannot express (e.g. a CSS custom property driven by JavaScript). Justify with a comment if used.
 
 ---
 
 ## 2. Color Palette
 
-The palette has two layers: **zinc** (neutral base) and **brand** (accent). Dark mode is supported on all surfaces.
+The palette is built on two scales: **zinc** (neutral) and **brand** (teal/green accent).
 
-### 2.1 Neutral — Zinc Scale
+### 2.1 Zinc — Neutral Scale
 
-All structural colors (text, borders, backgrounds, surfaces) use the `zinc` scale.
+Zinc is the primary scale for all UI chrome: text, borders, backgrounds, and surfaces.
 
-| Token | Tailwind class | Light mode use | Dark mode use |
-| --- | --- | --- | --- |
-| Primary text | `text-zinc-900` | Body copy, headings, labels | `dark:text-zinc-50` |
-| Secondary text | `text-zinc-600` | Captions, helper text, muted | `dark:text-zinc-400` |
-| Placeholder | `text-zinc-400` | Input placeholders | `dark:text-zinc-500` |
-| Primary border | `ring-zinc-300` | Input rings, card borders | `dark:ring-zinc-700` |
-| Subtle border | `ring-zinc-200` | Surface rings | `dark:ring-zinc-800` |
-| Page background | `bg-white` | Page root | `dark:bg-zinc-950` |
-| Surface background | `bg-white` | Cards, panels | `dark:bg-zinc-950` |
-| Input background | *(transparent)* | Inherits surface | `dark:bg-zinc-900` |
-| Button primary bg | `bg-zinc-900` | CTA buttons | `dark:bg-zinc-50` |
-| Button primary text | `text-white` | CTA button label | `dark:text-zinc-950` |
-| Button primary hover | `hover:bg-zinc-700` | CTA hover state | `dark:hover:bg-zinc-200` |
-| Secondary button bg | `bg-white` | Secondary actions | `dark:bg-zinc-900` |
-| Focus ring | `ring-zinc-900` | All focusable elements | `dark:ring-zinc-50` |
+| Token | Light mode use | Dark mode use |
+| --- | --- | --- |
+| `zinc-50` | Page background (very light areas) | — |
+| `zinc-100` | Badge background (default variant) | — |
+| `zinc-200` | Surface ring / card border | — |
+| `zinc-300` | Input ring, border, icon muted | Border, outline badge border |
+| `zinc-400` | Placeholder text, icon decorative | Muted text, muted icon |
+| `zinc-500` | — | Placeholder text |
+| `zinc-600` | Muted text (`textMuted`), ghost button text | Muted text |
+| `zinc-700` | Primary button hover, secondary border dark | Input ring, secondary border |
+| `zinc-800` | — | Secondary button hover bg, surface ring |
+| `zinc-900` | Primary button bg, headings, labels, input text | Focus ring, page bg fills |
+| `zinc-950` | — | Primary button bg, main dark bg |
 
-### 2.2 Brand — Teal Scale
+**Rule:** Do not use `gray-*`, `slate-*`, `neutral-*`, or any other neutral scale. Always use `zinc-*`.
 
-The `brand` color is defined in `packages/config/tailwind/theme.ts` as a teal-based accent.
+### 2.2 Brand — Teal Accent
+
+Defined in `packages/config/tailwind/theme.ts` as custom `brand` colors.
 
 | Token | Value | Use |
 | --- | --- | --- |
-| `brand-50` | `#f0fdfa` | Brand tint backgrounds |
-| `brand-100` | `#ccfbf1` | Brand light badges, highlights |
-| `brand-500` | `#14b8a6` | Brand accent, active states, links (optional) |
-| `brand-900` | `#134e4a` | Brand dark text on light brand backgrounds |
+| `brand-50` | `#f0fdfa` | Light teal background tint |
+| `brand-100` | `#ccfbf1` | Badge or highlight background |
+| `brand-500` | `#14b8a6` | Primary brand accent, links on dark bg, active indicators |
+| `brand-900` | `#134e4a` | Dark brand for text on light brand bg |
 
-**Current status:** Brand color is defined but not yet applied in components. Use `brand-500` for brand accent elements (e.g., active tab indicator, highlighted badge, VIP badge background) when the design calls for a colored accent. Do not use brand color for structural UI (borders, backgrounds, text).
+**Use brand colors sparingly** — only for primary CTAs where zinc-900 is insufficient, active/selected state indicators, brand-identity elements (logo area, club card), and success states where green is too strong.
 
 ### 2.3 Semantic Colors
 
-| Meaning | Classes |
-| --- | --- |
-| Success | `bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100` |
-| Error / Destructive | `bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300` |
-| Warning | `bg-yellow-50 text-yellow-800 dark:bg-yellow-950 dark:text-yellow-300` |
-| Info | `bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300` |
+| Semantic | Light | Dark | Use |
+| --- | --- | --- | --- |
+| Error / validation | `red-600` | `red-400` | `FieldError`, form errors, destructive alerts |
+| Success badge | `green-800` text / `green-100` bg | `green-100` text / `green-900` bg | `Badge variant="success"` |
+| Warning | `yellow-700` text / `yellow-50` bg | `yellow-300` text / `yellow-900` bg | Use sparingly, no component yet |
 
-Semantic colors are used **only for status badges, alert banners, and inline validation messages** — not for layout.
+**Do not invent new semantic colors.** If a color is needed that doesn't fit this table, raise it before implementing.
 
 ---
 
 ## 3. Typography
 
-Tailwind's default type scale is used. No custom fonts are defined — the system uses the native font stack.
+No custom fonts are defined — the stack relies on Tailwind's default system font stack.
 
-### 3.1 Scale
+### 3.1 Size Scale
 
-| Role | Classes | Use |
-| --- | --- | --- |
-| Page heading | `text-2xl font-semibold text-zinc-900` | H1-level page titles |
-| Section heading | `text-lg font-semibold text-zinc-900` | Card titles, section labels |
-| Sub-heading | `text-base font-medium text-zinc-900` | Group labels, sub-sections |
-| Body | `text-sm text-zinc-900` | Default body copy |
-| Muted / caption | `text-sm text-zinc-600 dark:text-zinc-400` | Helper text, timestamps, captions |
-| Label | `text-sm font-medium text-zinc-900 dark:text-zinc-50` | Form field labels |
-| Small / meta | `text-xs text-zinc-500` | Tags, metadata, footnotes |
+| Class | Use |
+| --- | --- |
+| `text-xs` | Labels on badges, small metadata, secondary captions |
+| `text-sm` | Body copy, form labels, button text, table cells, most UI text |
+| `text-base` | Large button (`size="lg"`), intro paragraphs |
+| `text-lg` | Section sub-headings, card titles, `EmptyState` title |
+| `text-xl` | Page section titles |
+| `text-2xl` | Page-level headings |
+| `text-3xl` | Full-page state headings (`PageState` title, `font-light`) |
 
-### 3.2 Rules
+**Rule:** Do not use `text-4xl` or larger without explicit design approval. Do not use arbitrary font sizes (`text-[17px]`).
 
-- Do not use `font-bold` — use `font-semibold` for headings and `font-medium` for emphasis.
-- Do not use `text-black` or `text-white` directly — use the zinc scale.
-- Line height is controlled by Tailwind defaults (`leading-6` for `text-sm` in forms).
-- Do not mix font sizes within a single label or button.
+### 3.2 Weight Scale
+
+| Class | Use |
+| --- | --- |
+| `font-light` | Large display headings only (`PageState`) |
+| `font-normal` | Default — all body text, buttons |
+| `font-medium` | Labels, emphasis text, link text |
+| `font-semibold` | Strong section headings |
+
+Do not use `font-bold` — it is heavier than the design requires.
+
+### 3.3 Common Text Patterns
+
+```tsx
+// Muted helper text
+<p className={textMuted}>Secondary information</p>
+// textMuted = 'text-sm text-zinc-600 dark:text-zinc-400'
+
+// Page-level heading
+<h1 className="text-3xl font-light tracking-tight text-zinc-900 dark:text-zinc-50">
+
+// Section heading
+<h2 className="text-xl font-semibold text-zinc-900 dark:text-zinc-50">
+
+// Form label — use the Label component
+<Label htmlFor="name">Full name</Label>
+
+// Link
+<a className={linkClasses}>Click here</a>
+// linkClasses = 'font-medium text-zinc-900 hover:text-zinc-700 hover:underline dark:text-zinc-50 dark:hover:text-zinc-300'
+```
 
 ---
 
 ## 4. Spacing
 
-All spacing uses Tailwind's 4px base grid. Prefer named scale values over arbitrary ones.
+Use Tailwind's default spacing scale. The project uses these standard values consistently:
 
-### 4.1 Standard Spacing Values
+| Context | Standard spacing |
+| --- | --- |
+| Between form fields | `space-y-4` or `space-y-6` |
+| Inside a `Field` (label → input gap) | `space-y-2` (built into `Field` component) |
+| Inside a card/surface | `px-8 py-10` (built into `Surface`) |
+| Between page sections | `space-y-8` or `gap-8` |
+| Inside a page wrapper | `px-4 sm:px-6 lg:px-8` |
+| Button group gap | `gap-3` or `gap-4` |
+| Empty/page state padding | `py-16` (EmptyState), `min-h-[50vh]` (PageState) |
 
-| Context | Padding | Gap |
+**Rule:** Do not use arbitrary spacing values (`mt-[22px]`). If the scale doesn't fit, use the nearest standard step.
+
+---
+
+## 5. Component Library (`@kclub/ui`)
+
+All components below are available via `import { ... } from '@kclub/ui'`. **Always check this list before writing custom markup.** Creating a duplicate is a bug.
+
+### 5.1 Component Reference
+
+| Component | Props / Variants | When to use |
 | --- | --- | --- |
-| Page outer padding | `px-4 py-6` (mobile) / `px-6 py-10` (sm+) | — |
-| Surface / Card inner padding | `px-8 py-10` | — |
-| Form section | `px-0 py-0` inside Surface | `gap-4` between fields |
-| Button (default) | `px-6 py-2.5` | — |
-| Button (sm) | `px-4 py-2` | — |
-| Button (lg) | `px-8 py-3` | — |
-| Input field | `px-3 py-2.5` | — |
-| Badge | `px-2.5 py-0.5` | — |
-| Stack of form actions | — | `gap-3` |
-| Stack of content cards | — | `gap-4` or `gap-6` |
+| `Button` | `variant`: `primary` \| `secondary` \| `ghost`; `size`: `default` \| `sm` \| `lg`; `fullWidth` | All interactive buttons. Never use raw `<button>` with inline classes |
+| `IconButton` | Standard button attrs | Square icon-only actions (toolbar, close, etc.) |
+| `Input` | Standard input attrs | All text inputs. Never style raw `<input>` manually |
+| `Field` | `className` | Wrapper for label + input + error — always wrap form fields in `Field` |
+| `Label` | Standard label attrs | Form field labels — always use instead of raw `<label>` |
+| `FieldError` | `children` (hides if empty) | Validation error below an input |
+| `Badge` | `variant`: `default` \| `outline` \| `success` | Status chips, category tags, count indicators |
+| `Surface` | `className` | White/dark card panel — forms, auth boxes, content cards |
+| `Container` | `className` | Page-width centering wrapper |
+| `EmptyState` | `icon`, `title`, `description`, `action` | Empty list / no results within a page section |
+| `PageState` | `icon`, `title`, `description`, `action` | Full-page loading error / 404 / access denied |
+| `SkipLink` | — | Accessibility skip-nav — place at top of layout |
 
-### 4.2 Rules
+### 5.2 Button Variant Usage
 
-- Do not use `p-5`, `p-7`, `p-9` — stay on the even rhythm (`p-4`, `p-6`, `p-8`, `p-10`).
-- Use `gap-*` for flex/grid layouts, not margin between siblings.
-- Do not use `margin-top` or `margin-bottom` on components — use `gap` on the parent.
+| Variant | Use | Never use for |
+| --- | --- | --- |
+| `primary` | The single most important action on a screen (submit, confirm, CTA) | Destructive actions |
+| `secondary` | Secondary or alternative action alongside a primary | First/only action |
+| `ghost` | Tertiary action, navigation, cancel, back | Prominent CTAs |
 
----
+**One primary button per visible form/section.** If you have two primary buttons, one of them is wrong.
 
-## 5. Border Radius
-
-| Element | Class |
-| --- | --- |
-| Input, button, badge (rounded) | `rounded-md` |
-| Surface / card | `rounded-2xl` (via `sm:rounded-2xl`) |
-| Full-round badge, avatar | `rounded-full` |
-| Icon button | `rounded-md` |
-
-Do not use `rounded-lg`, `rounded-xl`, or `rounded-sm` — these are not in the system.
-
----
-
-## 6. Shadows and Rings
-
-- Surfaces and buttons use `shadow-sm` — not `shadow`, `shadow-md`, or `shadow-lg`.
-- Borders are implemented as Tailwind **rings** (`ring-1 ring-inset ring-zinc-300`), not `border-*` classes.
-- Focus state always uses `focus-visible:ring-2 focus-visible:ring-offset-2` — never `outline` or `border` for focus.
-
----
-
-## 7. Component Catalog
-
-All components come from `@kclub/ui`. Before writing custom markup, check this table.
-
-| Component | Import | Use for | Do NOT use for |
-| --- | --- | --- | --- |
-| `Button` | `@kclub/ui` | All clickable actions | Navigation links (use `<a>` or `<Link>`) |
-| `IconButton` | `@kclub/ui` | Icon-only actions | Text actions |
-| `Input` | `@kclub/ui` | All text inputs | Textareas, selects (build separately) |
-| `Field` / `Label` / `FieldError` | `@kclub/ui` | Form field wrappers | Non-form labels |
-| `Surface` | `@kclub/ui` | Auth cards, modal-like panels, centered content blocks | Full-width layout containers |
-| `Container` | `@kclub/ui` | Max-width page wrapper | Individual component width control |
-| `Badge` | `@kclub/ui` | Status labels, tags | Large pills, buttons |
-| `EmptyState` | `@kclub/ui` | Empty list / no data states | Page-level errors |
-| `PageState` | `@kclub/ui` | Full-page loading and error states | Inline loading |
-| `SkipLink` | `@kclub/ui` | Accessibility skip-to-content | Any other use |
-
-### 7.1 Button Variants
+### 5.3 Badge Variant Usage
 
 | Variant | Use |
 | --- | --- |
-| `primary` (default) | Main CTA: submit, confirm, proceed |
-| `secondary` | Alternative actions: cancel, back, edit |
-| `ghost` | Low-priority actions: links in nav, tertiary actions |
+| `default` | Neutral status labels (e.g. `UNDER_REVIEW`, `MEMBER`) |
+| `outline` | Low-emphasis tags, categories, optional labels |
+| `success` | Positive status (e.g. `PUBLISHED`, `ACTIVE`, `APPROVED`) |
 
-### 7.2 Badge Variants
-
-| Variant | Use |
-| --- | --- |
-| `default` | Neutral status: ACTIVE, MEMBER |
-| `outline` | Inactive or secondary status |
-| `success` | Positive status: PUBLISHED, APPROVED, VIP |
-
-For destructive statuses (REJECTED, BLOCKED, REVOKED), use semantic red classes directly until a `destructive` badge variant is added.
+For error/rejected status, use a `default` badge with a custom red class override via `className`. Do not add new variants to the `Badge` component without updating this document.
 
 ---
 
-## 8. Icons
+## 6. Dark Mode
 
-- **Use `lucide-react` exclusively** for all icons. Do not use Heroicons, Radix icons, or inline SVGs unless a specific icon does not exist in Lucide.
-- Icon size: `size-4` (16px) for inline/button icons, `size-5` (20px) for standalone icons, `size-6` (24px) for decorative/empty state icons.
-- Icons inside buttons: add `gap-2` between icon and label.
-- Do not add `aria-hidden` manually — Lucide handles accessibility by default when no label is needed.
+Dark mode is supported across all `@kclub/ui` primitives. Rules:
 
----
-
-## 9. Dark Mode
-
-- Dark mode is class-based: `dark:` prefix.
-- Every component in `@kclub/ui` already has dark mode variants — do not override them.
-- When building new components outside `@kclub/ui`, always add `dark:` variants for: background, text, border/ring, and focus ring.
-- Do not build UI that only works in light mode.
+- Always pair every `text-zinc-*` with a `dark:text-zinc-*` counterpart.
+- Always pair every `bg-*` with a `dark:bg-*` counterpart.
+- Always pair every `ring-*` with a `dark:ring-*` counterpart.
+- Use `dark:` variants — never use JavaScript-driven theme switching with class manipulation.
+- Never hardcode `#ffffff` or `#000000` — use Tailwind tokens.
 
 ---
 
-## 10. Responsive Design
+## 7. Layout Patterns
 
-- Mobile-first. Default styles target mobile; `sm:`, `md:`, `lg:` breakpoints add desktop enhancements.
-- `sm` (640px) is the primary breakpoint for layout changes (single to multi-column, card rounding).
-- `Container` component handles max-width — do not add `max-w-*` to page-level wrappers manually.
-- Do not use `xl:` or `2xl:` breakpoints unless explicitly required.
-
----
-
-## 11. UI States — How to Handle Them
-
-Every list, form, and data surface must handle all four states:
-
-| State | How to implement |
-| --- | --- |
-| **Loading** | Use `PageState` for full-page; use a skeleton shimmer (`animate-pulse bg-zinc-100 dark:bg-zinc-800 rounded-md`) for inline |
-| **Empty** | Use `EmptyState` component with a descriptive message and optional CTA |
-| **Error** | Use `PageState` with error variant for page-level; use `FieldError` for form field errors |
-| **Disabled** | Add `disabled` prop to interactive elements; style with `opacity-50 cursor-not-allowed` on the wrapper if needed |
-
-Never show a blank screen or uncaught error to the user.
-
----
-
-## 12. Forms
-
-All forms follow this structure:
+### 7.1 Page Layout
 
 ```tsx
-<form className="flex flex-col gap-4">
+// Standard public/member page
+<Container>
+  <div className="py-12">
+    {/* page content */}
+  </div>
+</Container>
+
+// Auth / onboarding centered card
+<div className="flex min-h-screen items-center justify-center px-4">
+  <Surface>
+    {/* form content */}
+  </Surface>
+</div>
+```
+
+### 7.2 Form Layout
+
+```tsx
+<form className="space-y-6">
   <Field>
     <Label htmlFor="name">Full name</Label>
-    <Input id="name" name="name" placeholder="Your name" />
+    <Input id="name" name="name" />
     <FieldError>{errors.name}</FieldError>
   </Field>
 
   <Field>
     <Label htmlFor="phone">Phone</Label>
-    <Input id="phone" name="phone" type="tel" placeholder="+1 555 000 0000" />
+    <Input id="phone" name="phone" type="tel" />
     <FieldError>{errors.phone}</FieldError>
   </Field>
 
-  <div className="flex flex-col gap-3">
-    <Button type="submit" fullWidth>Submit</Button>
-    <Button type="button" variant="ghost">Cancel</Button>
-  </div>
+  <Button type="submit" fullWidth>Continue</Button>
 </form>
 ```
 
-- Always use `Field` + `Label` + `FieldError` — never raw `<label>` or bare error text.
-- Submit button always `fullWidth` on mobile forms.
-- Error messages go inside `FieldError`, never below the form.
-- Do not use `placeholder` as a substitute for `Label`.
+### 7.3 Empty and Error States
+
+```tsx
+// Within a list section
+<EmptyState
+  icon={<SomeIcon size={40} />}
+  title="No businesses yet"
+  description="Submit your first business profile to get started."
+  action={<Button>Submit business</Button>}
+/>
+
+// Full-page error or access denied
+<PageState
+  icon={<LockIcon size={48} />}
+  title="Access denied"
+  description="You need a VIP subscription to access this section."
+  action={<Button>Upgrade to VIP</Button>}
+/>
+```
 
 ---
 
-## 13. What Agents Must Not Do
+## 8. Icons
 
-- Do not create new color tokens outside the zinc/brand/semantic palette.
-- Do not use `bg-gray-*`, `text-gray-*`, `border-gray-*` — use `zinc` equivalents.
-- Do not build a custom button, input, or badge component — use `@kclub/ui`.
-- Do not add `style={{}}` inline styles.
-- Do not use arbitrary Tailwind values like `w-[500px]`, `text-[15px]`, `mt-[22px]`.
-- Do not add CSS `@apply` directives in component files.
-- Do not add new Tailwind plugins without an ADR.
-- Do not use `rounded-lg` or `rounded-xl` — not in the system.
-- Do not apply `shadow-md` or `shadow-lg` — use `shadow-sm` only.
-- Do not build new primitives in app `components/` that duplicate what exists in `@kclub/ui`.
+The project uses **`lucide-react`** as the icon library.
+
+- Import icons from `lucide-react` only — do not use heroicons, react-icons, or SVG embeds.
+- Use `size` prop for icon sizing: `size={16}` (inline), `size={20}` (button/action), `size={24}` (standard), `size={40}` (EmptyState), `size={48}` (PageState).
+- Pass `aria-hidden={true}` on decorative icons.
+- Pass `aria-label` on standalone icon buttons (via `IconButton`).
+
+```tsx
+import { ChevronRight, AlertCircle, CheckCircle2 } from 'lucide-react'
+
+// Decorative
+<ChevronRight size={16} aria-hidden />
+
+// In EmptyState
+<EmptyState icon={<Building2 size={40} aria-hidden />} title="No businesses" />
+```
 
 ---
 
-## 14. Adding New Components to `@kclub/ui`
+## 9. Responsive Design
 
-When a new shared primitive is needed:
+- **Mobile-first**: write base classes for mobile, use `sm:`, `md:`, `lg:` for larger screens.
+- Breakpoints in use: `sm` (640px) and `lg` (1024px). Avoid `md:` and `xl:` unless specifically needed.
+- Touch targets must be at least 44×44px — use `min-h-[44px] min-w-[44px]` where needed.
+- Tables on mobile: prefer stacked card layout over horizontal scrolling tables.
 
-1. Check that no existing component covers the use case.
-2. Add the component to `packages/ui/src/primitives/`.
-3. Export it from `packages/ui/src/index.ts`.
-4. Follow the same variant/cn pattern as existing primitives.
-5. Add dark mode support.
-6. Document it in this file under Section 7.
+---
 
-Do not add product-specific components (e.g., `MemberCard`, `BusinessRow`) to `@kclub/ui` — those belong in app `features/` or `components/`.
+## 10. Accessibility
+
+- All interactive elements must be keyboard-reachable.
+- All `<img>` elements must have `alt` text.
+- All form inputs must have an associated `<Label>` (via `htmlFor` + `id`).
+- Always include `<SkipLink>` at the top of app layouts.
+- Focus rings are built into all `@kclub/ui` components — do not remove `focus-visible` classes.
+- ARIA roles and labels must be added to custom interactive components.
+
+---
+
+## 11. What AI Agents Must Not Do
+
+- **Never use `style={{}}`** inline styles unless unavoidable and commented.
+- **Never use raw `<button>`** with manual classes — always use `<Button>` from `@kclub/ui`.
+- **Never use raw `<input>`** with manual classes — always use `<Input>` and `<Field>`.
+- **Never use raw `<label>`** — always use `<Label>`.
+- **Never use color tokens outside the defined palette** (`gray-*`, `slate-*`, arbitrary hex values).
+- **Never create a new primitive component** without first checking if one exists in `@kclub/ui`.
+- **Never add a new `Badge` variant** in app code — extend the component in `@kclub/ui` if genuinely needed.
+- **Never hardcode pixel values** in Tailwind classes (`text-[15px]`, `mt-[22px]`) — use the scale.
+- **Never use `font-bold`** — use `font-semibold` at most.
+- **Never import icons from heroicons, react-icons, or any library other than `lucide-react`.**
+- **Never mix `tokens.ts` raw class strings with component usage** — use the component, not the token string, when a component exists.
+
+---
+
+## 12. Adding New UI Components
+
+Before adding a new component to `packages/ui/src/primitives/`:
+
+1. Confirm the component is used in both apps or is genuinely shared.
+2. Check this document and the existing primitives — it may already exist.
+3. Follow the same pattern as existing primitives: props type above the function, `cn()` for class merging, dark mode variants on every color class.
+4. Export from `packages/ui/src/index.ts`.
+5. Update this document with the new component in the reference table (Section 5.1).
+
+Do not add product-specific logic (API calls, state, routing) to shared UI primitives.
 
 ---
 
 ## Changelog
 
-| Version | Date       | Summary                                         |
-| ------- | ---------- | ----------------------------------------------- |
-| `1.0.0` | 2026-06-19 | Initial design system documentation for MVP v4  |
+| Version | Date       | Summary                                 |
+| ------- | ---------- | --------------------------------------- |
+| `1.0.0` | 2026-06-19 | Initial design system guide for MVP v4  |
