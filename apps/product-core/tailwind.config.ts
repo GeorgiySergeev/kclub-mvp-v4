@@ -9,7 +9,8 @@ const config: Config = {
     extend: {
       fontFamily: {
         sans: [
-          'Inter',
+          'var(--font-titillium)',
+          'Titillium Web',
           'ui-sans-serif',
           'system-ui',
           'sans-serif',

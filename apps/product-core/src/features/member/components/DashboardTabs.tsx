@@ -48,9 +48,9 @@ export async function DashboardTabs({
               key={tab}
               href={`/${locale}/m/dashboard?tab=${tab}`}
               className={cn(
-                'border-b-2 px-3 py-3 text-xs font-semibold uppercase tracking-[0.2em] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#09090b]',
+                'border-b-2 px-3 py-3 text-xs font-semibold uppercase tracking-[0.2em] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-focus dark:focus-visible:ring-offset-focus',
                 activeTab === tab
-                  ? 'border-[#ff0030] text-zinc-950 dark:text-white'
+                  ? 'border-accent text-zinc-950 dark:text-white'
                   : 'dark:text-white/48 border-transparent text-zinc-500 hover:text-zinc-950 dark:hover:text-white',
               )}
               aria-current={activeTab === tab ? 'page' : undefined}

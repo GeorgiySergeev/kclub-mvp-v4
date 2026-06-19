@@ -10,10 +10,10 @@ export function AboutSection() {
   const facts = t.raw('about.facts') as Fact[];
 
   return (
-    <section className="kclub-border border-b bg-zinc-100 py-16 text-zinc-950 dark:bg-[#202022] dark:text-white sm:py-24">
+    <section className="kclub-border border-b bg-zinc-100 py-16 text-zinc-950 dark:bg-surface-raised dark:text-white sm:py-24">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[1.25fr_0.75fr] lg:px-10">
         <div>
-          <p className="border-l-4 border-[#ff0030] pl-4 text-xs font-bold uppercase text-zinc-500 dark:text-white/60">
+          <p className="border-l-4 border-accent pl-4 text-xs font-bold uppercase text-zinc-500 dark:text-white/60">
             {t('about.eyebrow')}
           </p>
           <h2 className="mt-5 max-w-4xl text-4xl font-black uppercase leading-tight sm:text-6xl">
@@ -39,7 +39,7 @@ export function AboutSection() {
                 </dt>
                 <dd className="mt-2 text-4xl font-black">
                   {fact.value}
-                  <span className="text-[#ff0030]">.</span>
+                  <span className="text-accent">.</span>
                 </dd>
               </div>
             ))}

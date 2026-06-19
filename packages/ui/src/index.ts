@@ -20,3 +20,4 @@ export { Surface } from './primitives/Surface';
 export { Badge } from './primitives/Badge';
 export { EmptyState } from './primitives/EmptyState';
 export { PageState } from './primitives/PageState';
+export { Skeleton } from './primitives/Skeleton';

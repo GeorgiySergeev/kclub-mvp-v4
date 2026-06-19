@@ -31,8 +31,24 @@
       "titleLine1": "Private access for",
       "titleLine2": "global professionals",
       "subline": "A curated membership network for verified people, trusted partners, and warm business introductions.",
+      "cardEyebrow": "Private member card",
+      "cardCaption": "Verified access",
       "primaryCta": "Join Now",
-      "secondaryCta": "Explore Directory"
+      "secondaryCta": "Explore Directory",
+      "stats": {
+        "verified": {
+          "title": "Verified members",
+          "copy": "Private onboarding and QR-backed identity."
+        },
+        "access": {
+          "title": "Trusted access",
+          "copy": "A quieter network for premium business context."
+        },
+        "reach": {
+          "title": "Global reach",
+          "copy": "Members, partners, and warm introductions."
+        }
+      }
     },
     "stats": {
       "members": "Members",

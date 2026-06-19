@@ -23,9 +23,9 @@ export function ServicesSection({ locale }: { locale: Locale }) {
   ];
 
   return (
-    <section className="kclub-border border-b bg-white py-16 dark:bg-[#09090b] sm:py-24">
+    <section className="kclub-border border-b bg-white py-16 dark:bg-background sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
-        <p className="border-l-4 border-[#ff0030] pl-4 text-xs font-bold uppercase text-zinc-500 dark:text-white/60">
+        <p className="border-l-4 border-accent pl-4 text-xs font-bold uppercase text-zinc-500 dark:text-white/60">
           {t('services.eyebrow')}
         </p>
         <h2 className="mt-5 max-w-4xl text-4xl font-black uppercase leading-tight text-zinc-950 dark:text-white sm:text-6xl">
@@ -35,10 +35,10 @@ export function ServicesSection({ locale }: { locale: Locale }) {
           {plans.map((plan) => (
             <article
               key={plan.name}
-              className={`bg-white p-6 dark:bg-[#18181a] sm:p-9 ${plan.featured ? 'relative overflow-hidden' : ''}`}
+              className={`bg-white p-6 dark:bg-surface sm:p-9 ${plan.featured ? 'relative overflow-hidden' : ''}`}
             >
               {plan.featured ? (
-                <div className="absolute inset-x-0 top-0 h-1.5 bg-[#ff0030]" />
+                <div className="absolute inset-x-0 top-0 h-1.5 bg-accent" />
               ) : null}
               <div className="flex items-start justify-between gap-6">
                 <div>
@@ -49,7 +49,7 @@ export function ServicesSection({ locale }: { locale: Locale }) {
                     {plan.price}
                   </p>
                 </div>
-                <span className="kclub-border flex h-12 w-12 items-center justify-center border text-[#ff0030]">
+                <span className="kclub-border flex h-12 w-12 items-center justify-center border text-accent">
                   <ArrowUpRight aria-hidden="true" size={22} />
                 </span>
               </div>
@@ -63,7 +63,7 @@ export function ServicesSection({ locale }: { locale: Locale }) {
                       aria-hidden="true"
                       size={18}
                       strokeWidth={1.5}
-                      className="mt-1 shrink-0 text-[#ff0030]"
+                      className="mt-1 shrink-0 text-accent"
                     />
                     <span>{item}</span>
                   </li>
@@ -71,7 +71,7 @@ export function ServicesSection({ locale }: { locale: Locale }) {
               </ul>
               <Link
                 href={plan.href}
-                className={`mt-8 inline-flex h-14 w-full items-center justify-between gap-8 border px-5 text-sm font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#18181a] sm:w-auto ${plan.featured ? 'border-[#ff0030] bg-[#ff0030] text-white hover:bg-[#d90029]' : 'border-zinc-950 text-zinc-950 hover:bg-zinc-950 hover:text-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-zinc-950'}`}
+                className={`mt-8 inline-flex h-14 w-full items-center justify-between gap-8 border px-5 text-sm font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-focus dark:focus-visible:ring-offset-focus sm:w-auto ${plan.featured ? 'border-accent bg-accent text-white hover:bg-accent-hover' : 'border-zinc-950 text-zinc-950 hover:bg-zinc-950 hover:text-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-zinc-950'}`}
               >
                 {plan.cta}
                 <ArrowUpRight aria-hidden="true" size={18} />

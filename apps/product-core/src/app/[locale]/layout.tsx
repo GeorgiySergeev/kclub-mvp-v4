@@ -3,11 +3,13 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
+import '@kclub/ui/styles/tokens.css';
 import '../globals.css';
 
-import { SkipLink } from '@kclub/ui';
+import { SkipLink, cn } from '@kclub/ui';
 import { ThemeProvider } from '@/features/marketing/components/ThemeProvider';
 import { isLocale } from '@/i18n/routing';
+import { titilliumWeb } from '@/lib/fonts';
 
 export default async function LocaleLayout(props: {
   children: ReactNode;
@@ -23,7 +25,11 @@ export default async function LocaleLayout(props: {
   return (
     <html lang={params.locale} suppressHydrationWarning>
       <body
-        className="min-h-screen bg-white font-sans text-zinc-900 antialiased dark:bg-zinc-950 dark:text-zinc-50"
+        className={cn(
+          titilliumWeb.variable,
+          titilliumWeb.className,
+          'min-h-screen bg-white font-sans text-zinc-900 antialiased dark:bg-[#121212] dark:text-white',
+        )}
         suppressHydrationWarning
       >
         <SkipLink />

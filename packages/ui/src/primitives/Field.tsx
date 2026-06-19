@@ -7,7 +7,7 @@ export function Field({ className, children }: { className?: string; children: R
 export function Label({ className, ...props }: React.LabelHTMLAttributes<HTMLLabelElement>) {
   return (
     <label
-      className={cn('block text-sm font-medium text-zinc-900 dark:text-zinc-50', className)}
+      className={cn('block text-sm font-medium text-foreground', className)}
       {...props}
     />
   );
@@ -20,7 +20,7 @@ export function FieldError({
 }: React.HTMLAttributes<HTMLParagraphElement>) {
   if (!children) return null;
   return (
-    <p className={cn('text-sm text-red-600 dark:text-red-400', className)} {...props}>
+    <p className={cn('text-sm text-destructive', className)} {...props}>
       {children}
     </p>
   );
