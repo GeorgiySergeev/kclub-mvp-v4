@@ -73,9 +73,11 @@ export async function BusinessPanel({
   const editBusiness = canEditBusiness ? activeBusiness : (rejectedBusiness ?? null);
 
   return (
-    <Surface className="max-w-none space-y-6">
-      <h2 className="text-xl font-medium text-zinc-950 dark:text-zinc-50">{t('title')}</h2>
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">{t('description')}</p>
+    <Surface className="kclub-panel max-w-none space-y-6 rounded-none px-6 py-6 shadow-none ring-0">
+      <h2 className="text-xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
+        {t('title')}
+      </h2>
+      <p className="dark:text-white/66 text-sm leading-7 text-zinc-600">{t('description')}</p>
 
       {ownBusinesses.length > 0 && (
         <div className="space-y-4">
@@ -87,7 +89,7 @@ export async function BusinessPanel({
 
       {canSubmit && (
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-zinc-950 dark:text-zinc-50">
+          <h3 className="text-lg font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
             {t('submitTitle')}
           </h3>
           <BusinessForm
@@ -102,9 +104,11 @@ export async function BusinessPanel({
 
       {editBusiness && (
         <div className="space-y-4">
-          <h3 className="text-lg font-medium text-zinc-950 dark:text-zinc-50">{t('editTitle')}</h3>
+          <h3 className="text-lg font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
+            {t('editTitle')}
+          </h3>
           {editBusiness.status === 'REJECTED' && editBusiness.rejectionReason && (
-            <div className="rounded-md bg-red-50 p-4 text-sm text-red-800 dark:bg-red-950 dark:text-red-200">
+            <div className="border border-red-200 bg-red-50 p-4 text-sm text-red-800 dark:border-red-500/30 dark:bg-red-950/40 dark:text-red-200">
               <strong>{t('rejectionReasonLabel')}:</strong> {editBusiness.rejectionReason}
             </div>
           )}
@@ -119,7 +123,7 @@ export async function BusinessPanel({
       )}
 
       {!canSubmit && !editBusiness && (
-        <div className="rounded-md bg-zinc-50 p-4 text-sm text-zinc-600 dark:bg-zinc-900 dark:text-zinc-400">
+        <div className="kclub-panel-soft dark:text-white/62 p-4 text-sm text-zinc-600">
           {t('noEditAvailable')}
         </div>
       )}
@@ -137,11 +141,13 @@ async function BusinessStatusCard({
   const t = await getTranslations({ locale, namespace: 'member.dashboard.business' });
 
   return (
-    <Surface className="space-y-3 p-4">
+    <Surface className="kclub-panel-soft max-w-none space-y-3 rounded-none p-4 shadow-none ring-0">
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h4 className="font-medium text-zinc-950 dark:text-zinc-50">{business.name}</h4>
-          <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+          <h4 className="font-semibold uppercase tracking-[0.02em] text-zinc-950 dark:text-white">
+            {business.name}
+          </h4>
+          <p className="dark:text-white/62 mt-1 text-sm text-zinc-600">
             {business.categoryName} &middot; {business.cityName}, {business.countryName}
           </p>
         </div>

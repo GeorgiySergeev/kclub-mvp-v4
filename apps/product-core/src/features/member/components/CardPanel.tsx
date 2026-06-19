@@ -53,8 +53,8 @@ export function CardPanel({ locale }: { locale: Locale }) {
 
   if (isLoading) {
     return (
-      <Surface className="max-w-none">
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">{tCommon('loading')}</p>
+      <Surface className="kclub-panel max-w-none rounded-none px-6 py-6 shadow-none ring-0">
+        <p className="dark:text-white/66 text-sm text-zinc-600">{tCommon('loading')}</p>
       </Surface>
     );
   }
@@ -80,30 +80,34 @@ export function CardPanel({ locale }: { locale: Locale }) {
   ];
 
   return (
-    <Surface className="max-w-none overflow-hidden p-0">
-      <div className="bg-zinc-950 p-6 text-white dark:bg-zinc-50 dark:text-zinc-950">
+    <Surface className="kclub-panel max-w-none overflow-hidden rounded-none p-0 shadow-none ring-0">
+      <div className="kclub-hero-visual p-6 text-white">
         <div className="flex items-start justify-between gap-4">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] opacity-70">{t('eyebrow')}</p>
-            <h2 className="mt-6 text-3xl font-light tracking-[0.08em]">{card.cardNumber}</h2>
+            <p className="text-xs uppercase tracking-[0.2em] text-white/70">{t('eyebrow')}</p>
+            <h2 className="mt-6 text-3xl font-black uppercase tracking-[0.08em]">
+              {card.cardNumber}
+            </h2>
           </div>
           <Badge variant="success">{card.status}</Badge>
         </div>
-        <p className="mt-10 text-sm opacity-80">{card.membershipTier}</p>
+        <p className="mt-10 text-sm uppercase tracking-[0.2em] text-white/80">
+          {card.membershipTier}
+        </p>
       </div>
 
       <div className="grid gap-4 p-6 sm:grid-cols-2">
         {rows.map(([label, value]) => (
-          <div key={label} className="rounded-md bg-zinc-50 p-4 dark:bg-zinc-900">
-            <dt className="text-xs uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-400">
+          <div key={label} className="kclub-panel-soft p-4">
+            <dt className="dark:text-white/48 text-xs uppercase tracking-[0.14em] text-zinc-500">
               {label}
             </dt>
-            <dd className="mt-2 text-sm text-zinc-950 dark:text-zinc-50">{value}</dd>
+            <dd className="mt-2 text-sm text-zinc-950 dark:text-white">{value}</dd>
           </div>
         ))}
       </div>
 
-      <div className="border-t border-zinc-200 px-6 py-4 dark:border-zinc-800">
+      <div className="border-t border-zinc-200 px-6 py-4 dark:border-white/10">
         <Link href={verifyHref} className={linkClasses}>
           {t('verifyLink')}
         </Link>

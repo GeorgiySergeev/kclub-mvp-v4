@@ -37,27 +37,27 @@ export function TopBar({
       ];
 
   return (
-    <header className="sticky top-0 z-50 h-[72px] border-b border-white/10 bg-[#202022] text-white shadow-[0_1px_0_rgba(255,255,255,0.04)]">
-      <div className="mx-auto flex h-full max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-10">
+    <header className="sticky top-0 z-50 h-[72px] border-b kclub-border bg-white text-zinc-950 shadow-sm dark:bg-[#202022] dark:text-white dark:shadow-[0_1px_0_rgba(255,255,255,0.04)]">
+      <div className="kclub-shell flex h-full items-center justify-between">
         <Link
           href={`/${locale}`}
-          className="group inline-flex items-center gap-3 outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#202022]"
+          className="group inline-flex items-center gap-3 outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-white dark:focus-visible:ring-offset-[#202022]"
         >
           <span className="flex h-11 w-11 items-center justify-center bg-[#ff0030] text-base font-black uppercase text-white">
             K
           </span>
-          <span className="grid text-sm font-semibold leading-none text-white">
+          <span className="grid text-sm font-semibold leading-none text-zinc-950 dark:text-white">
             <span>KYLYVNYK</span>
-            <span className="text-white/72 font-normal">CLUB</span>
+            <span className="font-normal text-zinc-500 dark:text-white/72">CLUB</span>
           </span>
         </Link>
 
-        <nav className="hidden h-full items-center text-sm font-semibold uppercase text-white md:flex">
+        <nav className="hidden h-full items-center text-sm font-semibold uppercase text-zinc-950 dark:text-white md:flex">
           {navItems.map((item) => (
             <Link
               key={item.key}
               href={item.href}
-              className="flex h-full items-center border-l border-white/10 px-5 transition hover:bg-white/[0.06] hover:text-white focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+              className="flex h-full items-center border-l kclub-border px-5 transition hover:bg-zinc-100 hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#ff0030] dark:hover:bg-white/[0.06] dark:hover:text-white dark:focus-visible:ring-white"
             >
               {t(`nav.${item.key}`)}
               {item.key === 'join' ? (
@@ -66,13 +66,13 @@ export function TopBar({
             </Link>
           ))}
 
-          <div className="relative flex h-full items-center border-l border-white/10 px-3">
+          <div className="relative flex h-full items-center border-l kclub-border px-3">
             <IconButton
               aria-label={t('footer.locales')}
               aria-expanded={localeOpen}
               aria-controls="locale-switcher"
               onClick={() => setLocaleOpen((v) => !v)}
-              className="border-white/10 bg-transparent text-white hover:bg-white/[0.06] focus:ring-white focus:ring-offset-[#202022]"
+              className="border-zinc-200 bg-transparent text-zinc-950 hover:bg-zinc-100 focus-visible:ring-[#ff0030] focus-visible:ring-offset-white dark:border-white/10 dark:text-white dark:hover:bg-white/[0.06] dark:focus-visible:ring-white dark:focus-visible:ring-offset-[#202022]"
             >
               <Globe aria-hidden="true" size={16} strokeWidth={1.5} />
             </IconButton>
@@ -80,7 +80,7 @@ export function TopBar({
             {localeOpen && (
               <div
                 id="locale-switcher"
-                className="absolute right-0 top-full z-50 mt-0 w-36 border border-white/10 bg-[#202022] py-1 shadow-2xl"
+                className="absolute right-0 top-full z-50 mt-0 w-36 border kclub-border bg-white py-1 shadow-2xl dark:bg-[#202022]"
                 onMouseLeave={() => setLocaleOpen(false)}
               >
                 {locales.map((item) => (
@@ -89,8 +89,10 @@ export function TopBar({
                     href={`/${item}`}
                     onClick={() => setLocaleOpen(false)}
                     className={cn(
-                      'block px-4 py-3 text-sm normal-case transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white',
-                      item === locale ? 'font-semibold text-white' : 'text-white/68',
+                      'block px-4 py-3 text-sm normal-case transition hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#ff0030] dark:hover:bg-white/[0.06] dark:focus-visible:ring-white',
+                      item === locale
+                        ? 'font-semibold text-zinc-950 dark:text-white'
+                        : 'text-zinc-500 dark:text-white/68',
                     )}
                   >
                     {t(`locale.${item}`)}
@@ -100,20 +102,20 @@ export function TopBar({
             )}
           </div>
 
-          <div className="flex h-full items-center border-l border-r border-white/10 px-3">
-            <ThemeToggle className="h-10 w-10 border-white/10 bg-transparent text-white hover:bg-white/[0.06] focus:ring-white focus:ring-offset-[#202022]" />
+          <div className="flex h-full items-center border-l border-r kclub-border px-3">
+            <ThemeToggle className="h-10 w-10" />
           </div>
         </nav>
 
         <div className="flex items-center gap-2 md:hidden">
-          <ThemeToggle className="border-white/10 bg-transparent text-white hover:bg-white/[0.06] focus:ring-white focus:ring-offset-[#202022]" />
+          <ThemeToggle className="h-10 w-10" />
           <button
             type="button"
             aria-label={open ? t('common.close') : t('common.menu')}
             aria-expanded={open}
             aria-controls="mobile-navigation"
             onClick={() => setOpen((value) => !value)}
-            className="inline-flex h-11 w-11 items-center justify-center border border-white/10 bg-transparent text-white transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#202022]"
+            className="inline-flex h-11 w-11 items-center justify-center border kclub-border bg-transparent text-zinc-950 transition hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:text-white dark:hover:bg-white/[0.06] dark:focus-visible:ring-white dark:focus-visible:ring-offset-[#202022]"
           >
             {open ? (
               <X aria-hidden="true" size={20} strokeWidth={1.5} />
@@ -127,21 +129,21 @@ export function TopBar({
       {open ? (
         <div
           id="mobile-navigation"
-          className="fixed inset-x-0 top-[72px] z-50 border-b border-white/10 bg-[#202022] text-white shadow-2xl md:hidden"
+          className="fixed inset-x-0 top-[72px] z-50 border-b kclub-border bg-white text-zinc-950 shadow-2xl dark:bg-[#202022] dark:text-white md:hidden"
         >
-          <nav className="mx-auto grid max-w-7xl gap-2 px-4 py-4">
+          <nav className="kclub-shell grid gap-2 py-4">
             {navItems.map((item) => (
               <Link
                 key={item.key}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="flex items-center justify-between border border-white/10 px-4 py-3 text-sm font-semibold uppercase text-white transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-white"
+                className="flex items-center justify-between border kclub-border px-4 py-3 text-sm font-semibold uppercase text-zinc-950 transition hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] dark:text-white dark:hover:bg-white/[0.06] dark:focus-visible:ring-white"
               >
                 {t(`nav.${item.key}`)}
                 <ArrowUpRight aria-hidden="true" size={16} className="text-[#ff0030]" />
               </Link>
             ))}
-            <p className="text-white/54 mt-2 px-4 pt-2 text-xs font-semibold uppercase">
+            <p className="mt-2 px-4 pt-2 text-xs font-semibold uppercase text-zinc-500 dark:text-white/54">
               {t('footer.locales')}
             </p>
             <div className="grid gap-1">
@@ -151,8 +153,10 @@ export function TopBar({
                   href={`/${item}`}
                   onClick={() => setOpen(false)}
                   className={cn(
-                    'border px-4 py-3 text-sm transition hover:bg-white/[0.06] focus:outline-none focus:ring-2 focus:ring-white',
-                    item === locale ? 'border-white text-white' : 'text-white/68 border-white/10',
+                    'border px-4 py-3 text-sm transition hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] dark:hover:bg-white/[0.06] dark:focus-visible:ring-white',
+                    item === locale
+                      ? 'border-zinc-950 text-zinc-950 dark:border-white dark:text-white'
+                      : 'border-zinc-200 text-zinc-500 dark:border-white/10 dark:text-white/68',
                   )}
                 >
                   {t(`locale.${item}`)}

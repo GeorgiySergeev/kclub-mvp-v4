@@ -1,8 +1,8 @@
-import { ExternalLink, MapPin } from 'lucide-react';
+import { ArrowRight, ExternalLink, MapPin } from 'lucide-react';
 import Link from 'next/link';
 
 import type { PublicBusinessListItemDto } from '@kclub/contracts';
-import { Badge, cn, primaryButtonClasses } from '@kclub/ui';
+import { Badge, cn } from '@kclub/ui';
 
 import { getBusinessLocation, getPrimaryBusinessUrl } from '../public-page-helpers';
 
@@ -26,7 +26,7 @@ export function BusinessCard({
   return (
     <article
       className={cn(
-        'flex h-full flex-col border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-950',
+        'flex h-full flex-col border border-zinc-200 bg-white p-6 text-zinc-950 shadow-[0_24px_60px_-44px_rgba(0,0,0,0.6)] dark:border-white/10 dark:bg-[#141416] dark:text-white',
         compact ? 'gap-5' : 'gap-7',
       )}
     >
@@ -36,31 +36,35 @@ export function BusinessCard({
       </div>
 
       <div>
-        <h3 className="text-2xl font-light tracking-tight text-zinc-950 dark:text-zinc-50">
+        <h3 className="text-2xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
           {business.name}
         </h3>
-        <p className="mt-3 inline-flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+        <p className="dark:text-white/58 mt-3 inline-flex items-center gap-2 text-sm text-zinc-500">
           <MapPin aria-hidden="true" size={16} strokeWidth={1.5} />
           {getBusinessLocation(business)}
         </p>
       </div>
 
       {business.briefDescription ? (
-        <p className="text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+        <p className="dark:text-white/68 text-sm leading-7 text-zinc-600">
           {business.briefDescription}
         </p>
       ) : null}
 
       <div className="mt-auto flex flex-col gap-3 sm:flex-row">
-        <Link href={href} className={cn(primaryButtonClasses, 'w-full sm:w-auto')}>
+        <Link
+          href={href}
+          className="kclub-button-primary w-full rounded-none border-0 px-4 py-3 text-xs tracking-[0.24em] sm:w-auto"
+        >
           {actionLabel}
+          <ArrowRight aria-hidden="true" size={16} strokeWidth={1.7} />
         </Link>
         {externalUrl ? (
           <a
             href={externalUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center justify-center gap-2 rounded-md border border-zinc-300 px-4 py-2.5 text-sm text-zinc-700 transition hover:bg-zinc-50 focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-900 dark:focus:ring-zinc-50"
+            className="kclub-button-secondary w-full rounded-none px-4 py-3 text-xs tracking-[0.24em] sm:w-auto"
           >
             <ExternalLink aria-hidden="true" size={16} strokeWidth={1.5} />
             {externalLabel}

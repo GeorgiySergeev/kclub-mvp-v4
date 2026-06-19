@@ -2,7 +2,7 @@ import { AlertTriangle, CheckCircle2, CreditCard } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { getTranslations } from 'next-intl/server';
 
-import { Badge, Container, EmptyState } from '@kclub/ui';
+import { Badge, EmptyState } from '@kclub/ui';
 import { parseWithValidation } from '@kclub/validation';
 
 import { isPublicCardVerificationPiiSafe } from '@/features/public/public-page-helpers';
@@ -32,34 +32,32 @@ export default async function VerifyCardPage({ params }: Params) {
 
   if (!result) {
     return (
-      <Container className="py-16 sm:py-24">
+      <div className="kclub-shell py-16 sm:py-20">
         <EmptyState
           icon={<AlertTriangle aria-hidden="true" size={44} strokeWidth={1.5} />}
           title={t('invalidTitle')}
           description={t('invalidDescription')}
         />
-      </Container>
+      </div>
     );
   }
 
   const statusIsActive = result.status === 'ACTIVE';
 
   return (
-    <Container className="py-16 sm:py-24">
-      <section className="mx-auto max-w-3xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-800 dark:bg-zinc-950 sm:p-10">
+    <div className="kclub-shell py-16 sm:py-20">
+      <section className="kclub-panel mx-auto max-w-3xl p-6 shadow-[0_24px_70px_-42px_rgba(0,0,0,0.5)] sm:p-10">
         <div className="flex flex-col gap-6 sm:flex-row sm:items-start sm:justify-between">
           <div>
-            <p className="text-xs font-normal uppercase tracking-widest text-zinc-500">
-              {t('eyebrow')}
-            </p>
-            <h1 className="mt-4 text-4xl font-extralight tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-5xl">
+            <p className="kclub-section-label">{t('eyebrow')}</p>
+            <h1 className="mt-4 text-4xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white sm:text-5xl">
               {statusIsActive ? t('activeTitle') : t('inactiveTitle')}
             </h1>
-            <p className="mt-4 text-sm leading-6 text-zinc-600 dark:text-zinc-400">
+            <p className="dark:text-white/66 mt-4 text-sm leading-7 text-zinc-600">
               {t('piiNotice')}
             </p>
           </div>
-          <div className="text-zinc-900 dark:text-zinc-50">
+          <div className="text-zinc-900 dark:text-white">
             {statusIsActive ? (
               <CheckCircle2 aria-hidden="true" size={48} strokeWidth={1.5} />
             ) : (
@@ -90,15 +88,17 @@ export default async function VerifyCardPage({ params }: Params) {
           />
         </dl>
       </section>
-    </Container>
+    </div>
   );
 }
 
 function CardField({ label, value }: { label: string; value: ReactNode }) {
   return (
-    <div className="border border-zinc-200 p-4 dark:border-zinc-800">
-      <dt className="text-xs uppercase tracking-widest text-zinc-500">{label}</dt>
-      <dd className="mt-2 text-sm text-zinc-950 dark:text-zinc-50">{value}</dd>
+    <div className="kclub-panel-soft p-4">
+      <dt className="dark:text-white/48 text-xs uppercase tracking-[0.18em] text-zinc-500">
+        {label}
+      </dt>
+      <dd className="mt-2 text-sm text-zinc-950 dark:text-white">{value}</dd>
     </div>
   );
 }

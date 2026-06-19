@@ -41,7 +41,7 @@ function getStatusBadgeVariant(status: string) {
 
 export function IntroductionsPanel({
   locale: _locale,
-  profile,
+  profile: _profile,
   serverPublicBusinesses,
 }: {
   locale: Locale;
@@ -62,6 +62,11 @@ export function IntroductionsPanel({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  const labelClassName = 'block text-sm font-medium text-zinc-700 dark:text-white/72';
+  const fieldClassName = 'kclub-field mt-1';
+  const buttonClassName =
+    'kclub-button-primary rounded-none border-0 px-5 py-3 text-xs tracking-[0.24em] disabled:cursor-not-allowed disabled:opacity-50';
 
   const publishedOwnBusinesses = ownBusinesses.filter((b) => b.status === 'PUBLISHED');
   const availableTargets = serverPublicBusinesses.filter(
@@ -149,7 +154,6 @@ export function IntroductionsPanel({
       setMessage('');
       setSelectedTargetBusinessId('');
 
-      // Reload introductions
       const introsRes = await fetch(MEMBER_API_ROUTES.INTRODUCTIONS);
       const introsResult = await parseAuthResponse<MemberIntroductionDto[]>(introsRes);
       if (introsResult.success && introsResult.data) {
@@ -176,7 +180,6 @@ export function IntroductionsPanel({
         return;
       }
 
-      // Reload
       const introsRes = await fetch(MEMBER_API_ROUTES.INTRODUCTIONS);
       const introsResult = await parseAuthResponse<MemberIntroductionDto[]>(introsRes);
       if (introsResult.success && introsResult.data) {
@@ -189,59 +192,64 @@ export function IntroductionsPanel({
 
   if (isLoading) {
     return (
-      <Surface className="max-w-none">
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">{tCommon('loading')}</p>
+      <Surface className="kclub-panel max-w-none rounded-none px-6 py-6 shadow-none ring-0">
+        <p className="dark:text-white/66 text-sm text-zinc-600">{tCommon('loading')}</p>
       </Surface>
     );
   }
 
   if (publishedOwnBusinesses.length === 0) {
     return (
-      <Surface className="max-w-none">
-        <h2 className="text-xl font-medium text-zinc-950 dark:text-zinc-50">{t('title')}</h2>
-        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{t('noPublishedBusiness')}</p>
+      <Surface className="kclub-panel max-w-none rounded-none px-6 py-6 shadow-none ring-0">
+        <h2 className="text-xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
+          {t('title')}
+        </h2>
+        <p className="dark:text-white/66 mt-2 text-sm leading-7 text-zinc-600">
+          {t('noPublishedBusiness')}
+        </p>
       </Surface>
     );
   }
 
   return (
-    <Surface className="max-w-none space-y-6">
-      <h2 className="text-xl font-medium text-zinc-950 dark:text-zinc-50">{t('title')}</h2>
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">{t('description')}</p>
+    <Surface className="kclub-panel max-w-none space-y-6 rounded-none px-6 py-6 shadow-none ring-0">
+      <h2 className="text-xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
+        {t('title')}
+      </h2>
+      <p className="dark:text-white/66 text-sm leading-7 text-zinc-600">{t('description')}</p>
 
       {error && (
-        <div className="rounded-md bg-red-50 p-3 text-sm text-red-800 dark:bg-red-950 dark:text-red-200">
+        <div className="border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-500/30 dark:bg-red-950/40 dark:text-red-200">
           {error}
         </div>
       )}
 
-      {/* Submit form */}
       <div className="space-y-4">
-        <h3 className="text-lg font-medium text-zinc-950 dark:text-zinc-50">{t('submitTitle')}</h3>
+        <h3 className="text-lg font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
+          {t('submitTitle')}
+        </h3>
 
         <form onSubmit={handleSubmitIntroduction} className="space-y-4">
           {submitError && (
-            <div className="rounded-md bg-red-50 p-3 text-sm text-red-800 dark:bg-red-950 dark:text-red-200">
+            <div className="border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-500/30 dark:bg-red-950/40 dark:text-red-200">
               {submitError}
             </div>
           )}
 
           {submitSuccess && (
-            <div className="rounded-md bg-green-50 p-3 text-sm text-green-800 dark:bg-green-950 dark:text-green-200">
+            <div className="border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-950/40 dark:text-emerald-200">
               {t('submitSuccess')}
             </div>
           )}
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                {t('requesterBusinessLabel')}
-              </label>
+              <label className={labelClassName}>{t('requesterBusinessLabel')}</label>
               <select
                 value={selectedRequesterBusinessId}
                 onChange={(e) => setSelectedRequesterBusinessId(e.target.value)}
                 required
-                className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 focus:border-zinc-950 focus:outline-none focus:ring-1 focus:ring-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-50 dark:focus:ring-zinc-50"
+                className={fieldClassName}
               >
                 {publishedOwnBusinesses.map((b) => (
                   <option key={b.id} value={b.id}>
@@ -252,19 +260,17 @@ export function IntroductionsPanel({
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                {t('targetBusinessLabel')}
-              </label>
+              <label className={labelClassName}>{t('targetBusinessLabel')}</label>
               <select
                 value={selectedTargetBusinessId}
                 onChange={(e) => setSelectedTargetBusinessId(e.target.value)}
                 required
-                className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 focus:border-zinc-950 focus:outline-none focus:ring-1 focus:ring-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-50 dark:focus:ring-zinc-50"
+                className={fieldClassName}
               >
                 <option value="">{t('selectPlaceholder')}</option>
                 {availableTargets.map((b) => (
                   <option key={b.id} value={b.id}>
-                    {b.name} &middot; {b.countryName}
+                    {b.name} - {b.countryName}
                   </option>
                 ))}
               </select>
@@ -272,56 +278,54 @@ export function IntroductionsPanel({
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
-              {t('messageLabel')}
-            </label>
+            <label className={labelClassName}>{t('messageLabel')}</label>
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               maxLength={500}
               rows={3}
               placeholder={t('messagePlaceholder')}
-              className="mt-1 w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm text-zinc-950 focus:border-zinc-950 focus:outline-none focus:ring-1 focus:ring-zinc-950 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-50 dark:focus:border-zinc-50 dark:focus:ring-zinc-50"
+              className={fieldClassName}
             />
           </div>
 
-          <button
-            type="submit"
-            disabled={isSubmitting}
-            className="rounded-md bg-zinc-950 px-4 py-2 text-sm font-medium text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200"
-          >
+          <button type="submit" disabled={isSubmitting} className={buttonClassName}>
             {isSubmitting ? tCommon('saving') : t('submitCta')}
           </button>
         </form>
       </div>
 
-      {/* Introductions list */}
       <div className="space-y-4">
-        <h3 className="text-lg font-medium text-zinc-950 dark:text-zinc-50">{t('listTitle')}</h3>
+        <h3 className="text-lg font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
+          {t('listTitle')}
+        </h3>
 
         {introductions.length === 0 && (
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">{t('emptyList')}</p>
+          <p className="dark:text-white/62 text-sm text-zinc-600">{t('emptyList')}</p>
         )}
 
         <div className="space-y-3">
           {introductions.map((intro) => (
-            <Surface key={intro.id} className="space-y-3 p-4">
+            <Surface
+              key={intro.id}
+              className="kclub-panel-soft max-w-none space-y-3 rounded-none p-4 shadow-none ring-0"
+            >
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
-                  <p className="text-sm text-zinc-950 dark:text-zinc-50">
+                  <p className="text-sm text-zinc-950 dark:text-white">
                     <span className="font-medium">{intro.requesterBusinessName}</span>
-                    {' → '}
+                    {' -> '}
                     <span className="font-medium">{intro.targetBusinessName}</span>
                   </p>
                   {intro.message && (
-                    <p className="text-sm text-zinc-600 dark:text-zinc-400">{intro.message}</p>
+                    <p className="dark:text-white/64 text-sm text-zinc-600">{intro.message}</p>
                   )}
                   {intro.rejectionReason && (
                     <p className="text-sm text-red-600 dark:text-red-400">
                       {t('rejectionReasonLabel')}: {intro.rejectionReason}
                     </p>
                   )}
-                  <p className="text-xs text-zinc-500 dark:text-zinc-500">
+                  <p className="dark:text-white/42 text-xs text-zinc-500">
                     {new Date(intro.createdAt).toLocaleDateString()}
                   </p>
                 </div>

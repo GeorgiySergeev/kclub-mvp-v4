@@ -10,30 +10,30 @@ export function AboutSection() {
   const facts = t.raw('about.facts') as Fact[];
 
   return (
-    <section className="border-b border-zinc-800 bg-[#202022] py-16 text-white sm:py-24">
+    <section className="border-b kclub-border bg-zinc-100 py-16 text-zinc-950 dark:bg-[#202022] dark:text-white sm:py-24">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[1.25fr_0.75fr] lg:px-10">
         <div>
-          <p className="border-l-4 border-[#ff0030] pl-4 text-xs font-bold uppercase text-white/60">
+          <p className="border-l-4 border-[#ff0030] pl-4 text-xs font-bold uppercase text-zinc-500 dark:text-white/60">
             {t('about.eyebrow')}
           </p>
-          <h2 className="mt-5 max-w-4xl text-4xl font-black uppercase leading-tight text-white sm:text-6xl">
+          <h2 className="mt-5 max-w-4xl text-4xl font-black uppercase leading-tight sm:text-6xl">
             {t('about.title')}
           </h2>
-          <div className="mt-8 grid max-w-2xl gap-5 text-base font-medium leading-8 text-white/70">
+          <div className="mt-8 grid max-w-2xl gap-5 text-base font-medium leading-8 text-zinc-600 dark:text-white/70">
             <p>{t('about.paragraph1')}</p>
             <p>{t('about.paragraph2')}</p>
           </div>
         </div>
-        <aside className="border-white/12 border bg-white/[0.04] p-6 sm:p-8">
-          <h3 className="text-white/58 text-sm font-bold uppercase">{t('about.factsTitle')}</h3>
+        <aside className="border kclub-border bg-white/70 p-6 dark:border-white/12 dark:bg-white/[0.04] sm:p-8">
+          <h3 className="text-sm font-bold uppercase text-zinc-500 dark:text-white/58">{t('about.factsTitle')}</h3>
           <dl className="mt-8 grid gap-6">
             {facts.map((fact) => (
               <div
                 key={fact.label}
-                className="border-white/12 border-b pb-6 last:border-b-0 last:pb-0"
+                className="border-b kclub-border pb-6 last:border-b-0 last:pb-0 dark:border-white/12"
               >
-                <dt className="text-white/54 text-xs font-bold uppercase">{fact.label}</dt>
-                <dd className="mt-2 text-4xl font-black text-white">
+                <dt className="text-xs font-bold uppercase text-zinc-500 dark:text-white/54">{fact.label}</dt>
+                <dd className="mt-2 text-4xl font-black">
                   {fact.value}
                   <span className="text-[#ff0030]">.</span>
                 </dd>

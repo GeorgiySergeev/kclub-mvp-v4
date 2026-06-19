@@ -3,6 +3,10 @@
 @tailwind utilities;
 
 :root {
+  color-scheme: dark;
+}
+
+.light {
   color-scheme: light;
 }
 
@@ -22,6 +26,7 @@ body {
   margin: 0;
   background: #ffffff;
   color: #18181b;
+  overflow-x: clip;
   text-rendering: optimizeLegibility;
 }
 
@@ -50,17 +55,160 @@ a {
   *:focus:not(:focus-visible) {
     outline: none;
     box-shadow: none;
+    --tw-ring-shadow: 0 0 #0000;
+    --tw-ring-offset-shadow: 0 0 #0000;
   }
 }
 
 @layer utilities {
+  .kclub-shell {
+    @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-10;
+  }
+
+  .kclub-page-band {
+    @apply border-b border-zinc-200 dark:border-white/10;
+  }
+
+  .kclub-surface {
+    @apply bg-white dark:bg-[#18181a];
+  }
+
+  .kclub-surface-raised {
+    @apply bg-white dark:bg-[#202022];
+  }
+
+  .kclub-surface-muted {
+    @apply bg-[#f4f4f2] dark:bg-[#111113];
+  }
+
+  .kclub-surface-card {
+    @apply bg-white dark:bg-[#1e1e20];
+  }
+
+  .kclub-border {
+    @apply border-zinc-200 dark:border-white/10;
+  }
+
+  .kclub-border-strong {
+    @apply border-zinc-300 dark:border-white/10;
+  }
+
+  .kclub-text-heading {
+    @apply font-black uppercase text-[#202022] dark:text-white;
+  }
+
+  .kclub-text-body {
+    @apply text-zinc-600 dark:text-white/70;
+  }
+
+  .kclub-text-muted {
+    @apply text-zinc-500 dark:text-white/60;
+  }
+
+  .kclub-text-primary {
+    @apply text-[#202022] dark:text-white;
+  }
+
+  .kclub-accent {
+    @apply text-[#ff0030];
+  }
+
+  .kclub-accent-bg {
+    @apply bg-[#ff0030];
+  }
+
+  .kclub-section-label {
+    @apply text-[11px] font-semibold uppercase tracking-[0.28em] text-[#ff0030];
+  }
+
+  .kclub-panel {
+    @apply border border-zinc-200 bg-white text-zinc-950 dark:border-white/10 dark:bg-[#141416] dark:text-white;
+  }
+
+  .kclub-panel-soft {
+    @apply border border-zinc-200 bg-zinc-50/80 text-zinc-950 dark:border-white/10 dark:bg-[#101012] dark:text-white;
+  }
+
+  .kclub-panel-strong {
+    @apply border border-zinc-300 bg-[#f4f4f2] text-zinc-950 dark:border-white/10 dark:bg-[#0c0c0e] dark:text-white;
+  }
+
+  .kclub-card-grid {
+    @apply grid gap-4 md:grid-cols-2 xl:grid-cols-3;
+  }
+
+  .kclub-display {
+    @apply text-4xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white sm:text-5xl lg:text-6xl;
+  }
+
+  .kclub-title-lg {
+    @apply text-3xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white sm:text-4xl;
+  }
+
+  .kclub-title-md {
+    @apply text-2xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white;
+  }
+
+  .kclub-copy {
+    @apply text-sm leading-7 text-zinc-600 dark:text-white/70 sm:text-base;
+  }
+
+  .kclub-button-primary {
+    @apply inline-flex items-center justify-center gap-2 border border-[#ff0030] bg-[#ff0030] px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-white transition hover:border-[#d40028] hover:bg-[#d40028] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#09090b];
+  }
+
+  .kclub-button-secondary {
+    @apply inline-flex items-center justify-center gap-2 border border-zinc-300 bg-transparent px-5 py-3 text-sm font-semibold uppercase tracking-[0.2em] text-zinc-950 transition hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-white/20 dark:text-white dark:hover:bg-white/5 dark:focus-visible:ring-offset-[#09090b];
+  }
+
+  .kclub-toggle-button {
+    @apply inline-flex h-11 w-11 items-center justify-center border border-zinc-200 bg-white text-zinc-950 transition hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:border-white/10 dark:bg-[#111113] dark:text-white dark:hover:bg-[#18181b] dark:focus-visible:ring-offset-[#09090b];
+  }
+
+  .kclub-field {
+    @apply block w-full border border-zinc-300 bg-white px-4 py-3 text-sm text-zinc-950 placeholder:text-zinc-400 focus:border-[#ff0030] focus:outline-none focus:ring-2 focus:ring-[#ff0030]/20 disabled:cursor-not-allowed disabled:opacity-60 dark:border-white/10 dark:bg-[#101012] dark:text-white dark:placeholder:text-white/35;
+  }
+
+  .kclub-checkbox {
+    @apply h-4 w-4 border-zinc-300 bg-white text-[#ff0030] focus:ring-[#ff0030] dark:border-white/20 dark:bg-[#101012];
+  }
+
+  .kclub-note {
+    @apply text-xs uppercase tracking-[0.18em] text-zinc-500 dark:text-white/45;
+  }
+
   .kclub-outline-text {
     color: transparent;
+    -webkit-text-stroke: 1px rgba(24, 24, 27, 0.86);
+    text-shadow: 0 0 28px rgba(24, 24, 27, 0.08);
+  }
+
+  .dark .kclub-outline-text {
     -webkit-text-stroke: 1px rgba(255, 255, 255, 0.86);
     text-shadow: 0 0 28px rgba(255, 255, 255, 0.08);
   }
 
   .kclub-hero-visual {
+    background:
+      linear-gradient(
+        90deg,
+        rgba(250, 250, 250, 0.96) 0%,
+        rgba(250, 250, 250, 0.72) 46%,
+        rgba(250, 250, 250, 0.4) 100%
+      ),
+      linear-gradient(135deg, rgba(255, 0, 38, 0.14) 0%, rgba(255, 0, 38, 0) 34%),
+      linear-gradient(24deg, rgba(24, 24, 27, 0.06) 0 1px, transparent 1px 52px),
+      linear-gradient(118deg, rgba(24, 24, 27, 0.04) 0 1px, transparent 1px 68px),
+      radial-gradient(
+        circle at 72% 34%,
+        rgba(255, 0, 48, 0.08),
+        transparent 0 8%,
+        transparent 24%
+      ),
+      linear-gradient(110deg, #f4f4f5 0%, #e4e4e7 48%, #fafafa 100%);
+  }
+
+  .dark .kclub-hero-visual {
     background:
       linear-gradient(
         90deg,
@@ -86,4 +234,16 @@ a {
       linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
     background-size: 44px 44px;
   }
+}
+
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible),
+[role='button']:focus:not(:focus-visible),
+input[type='button']:focus:not(:focus-visible),
+input[type='submit']:focus:not(:focus-visible),
+input[type='reset']:focus:not(:focus-visible) {
+  outline: none !important;
+  --tw-ring-shadow: 0 0 #0000 !important;
+  --tw-ring-offset-shadow: 0 0 #0000 !important;
+  box-shadow: none !important;
 }

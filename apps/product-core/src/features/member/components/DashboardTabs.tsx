@@ -31,10 +31,8 @@ export async function DashboardTabs({
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <p className="text-xs font-medium uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">
-            {t('eyebrow')}
-          </p>
-          <h1 className="mt-2 text-3xl font-light tracking-tight text-zinc-950 dark:text-zinc-50">
+          <p className="kclub-section-label">{t('eyebrow')}</p>
+          <h1 className="mt-3 text-3xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white sm:text-4xl">
             {t('title', { name: profile.displayName ?? profile.phone })}
           </h1>
         </div>
@@ -44,16 +42,16 @@ export async function DashboardTabs({
       </div>
 
       <nav aria-label={t('tabsLabel')} className="overflow-x-auto">
-        <div className="flex min-w-max gap-2 border-b border-zinc-200 dark:border-zinc-800">
+        <div className="flex min-w-max gap-2 border-b border-zinc-200 dark:border-white/10">
           {visibleTabs.map((tab) => (
             <Link
               key={tab}
               href={`/${locale}/m/dashboard?tab=${tab}`}
               className={cn(
-                'border-b-2 px-3 py-3 text-sm transition focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:ring-offset-2 focus:ring-offset-zinc-50 dark:focus:ring-zinc-50 dark:focus:ring-offset-zinc-900',
+                'border-b-2 px-3 py-3 text-xs font-semibold uppercase tracking-[0.2em] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#ff0030] focus-visible:ring-offset-2 focus-visible:ring-offset-white dark:focus-visible:ring-offset-[#09090b]',
                 activeTab === tab
-                  ? 'border-zinc-950 text-zinc-950 dark:border-zinc-50 dark:text-zinc-50'
-                  : 'border-transparent text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-50',
+                  ? 'border-[#ff0030] text-zinc-950 dark:text-white'
+                  : 'dark:text-white/48 border-transparent text-zinc-500 hover:text-zinc-950 dark:hover:text-white',
               )}
               aria-current={activeTab === tab ? 'page' : undefined}
             >
@@ -105,10 +103,12 @@ async function SubscriptionPanel({
   const t = await getTranslations({ locale, namespace: 'member.dashboard.subscription' });
 
   return (
-    <Surface className="max-w-none space-y-4">
+    <Surface className="kclub-panel max-w-none space-y-4 rounded-none px-6 py-6 shadow-none ring-0">
       <div>
-        <h2 className="text-xl font-medium text-zinc-950 dark:text-zinc-50">{t('title')}</h2>
-        <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">
+        <h2 className="text-xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
+          {t('title')}
+        </h2>
+        <p className="dark:text-white/66 mt-2 text-sm leading-7 text-zinc-600">
           {profile.membershipTier === 'VIP' ? t('vipDescription') : t('memberDescription')}
         </p>
       </div>
@@ -135,15 +135,17 @@ async function ProfilePanel({
   ];
 
   return (
-    <Surface className="max-w-none">
-      <h2 className="text-xl font-medium text-zinc-950 dark:text-zinc-50">{t('title')}</h2>
+    <Surface className="kclub-panel max-w-none rounded-none px-6 py-6 shadow-none ring-0">
+      <h2 className="text-xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
+        {t('title')}
+      </h2>
       <dl className="mt-6 grid gap-4 sm:grid-cols-2">
         {rows.map(([label, value]) => (
-          <div key={label} className="rounded-md bg-zinc-50 p-4 dark:bg-zinc-900">
-            <dt className="text-xs uppercase tracking-[0.14em] text-zinc-500 dark:text-zinc-400">
+          <div key={label} className="kclub-panel-soft p-4">
+            <dt className="dark:text-white/48 text-xs uppercase tracking-[0.14em] text-zinc-500">
               {label}
             </dt>
-            <dd className="mt-2 text-sm text-zinc-950 dark:text-zinc-50">{value}</dd>
+            <dd className="mt-2 text-sm text-zinc-950 dark:text-white">{value}</dd>
           </div>
         ))}
       </dl>

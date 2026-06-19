@@ -2,7 +2,7 @@ import { CalendarDays, ExternalLink, MapPin, UserRound } from 'lucide-react';
 import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 
-import { Badge, Container, primaryButtonClasses } from '@kclub/ui';
+import { Badge } from '@kclub/ui';
 
 import { getBusinessLocation, getPrimaryBusinessUrl } from '@/features/public/public-page-helpers';
 import { Locale } from '@/i18n/routing';
@@ -43,8 +43,8 @@ export default async function BusinessDetailPage({ params }: Params) {
   const externalUrl = getPrimaryBusinessUrl(business);
 
   return (
-    <article className="border-b border-zinc-200 dark:border-zinc-800">
-      <Container className="py-16 sm:py-24">
+    <article className="kclub-page-band">
+      <div className="kclub-shell py-16 sm:py-20">
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_360px]">
           <div>
             <div className="flex flex-wrap items-center gap-2">
@@ -55,33 +55,33 @@ export default async function BusinessDetailPage({ params }: Params) {
               ) : null}
             </div>
 
-            <h1 className="mt-6 max-w-4xl text-5xl font-extralight tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-7xl">
+            <h1 className="mt-6 max-w-4xl text-5xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white sm:text-7xl">
               {business.name}
             </h1>
 
             {business.briefDescription ? (
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+              <p className="dark:text-white/68 mt-6 max-w-2xl text-lg leading-8 text-zinc-600">
                 {business.briefDescription}
               </p>
             ) : null}
 
             {business.description ? (
-              <div className="mt-12 max-w-3xl border-t border-zinc-200 pt-8 text-base leading-8 text-zinc-700 dark:border-zinc-800 dark:text-zinc-300">
+              <div className="dark:text-white/74 mt-12 max-w-3xl border-t border-zinc-200 pt-8 text-base leading-8 text-zinc-700 dark:border-white/10">
                 {business.description}
               </div>
             ) : null}
           </div>
 
-          <aside className="h-fit border border-zinc-200 bg-white p-6 dark:border-zinc-800 dark:bg-zinc-950">
-            <h2 className="text-lg font-light tracking-tight text-zinc-950 dark:text-zinc-50">
+          <aside className="kclub-panel h-fit p-6">
+            <h2 className="text-lg font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
               {t('profileTitle')}
             </h2>
             <dl className="mt-6 space-y-5 text-sm">
               <div className="flex gap-3">
                 <MapPin aria-hidden="true" size={18} strokeWidth={1.5} className="mt-0.5" />
                 <div>
-                  <dt className="text-zinc-500 dark:text-zinc-400">{t('location')}</dt>
-                  <dd className="mt-1 text-zinc-950 dark:text-zinc-50">
+                  <dt className="dark:text-white/52 text-zinc-500">{t('location')}</dt>
+                  <dd className="mt-1 text-zinc-950 dark:text-white">
                     {getBusinessLocation(business)}
                   </dd>
                 </div>
@@ -90,8 +90,8 @@ export default async function BusinessDetailPage({ params }: Params) {
                 <div className="flex gap-3">
                   <UserRound aria-hidden="true" size={18} strokeWidth={1.5} className="mt-0.5" />
                   <div>
-                    <dt className="text-zinc-500 dark:text-zinc-400">{t('representative')}</dt>
-                    <dd className="mt-1 text-zinc-950 dark:text-zinc-50">
+                    <dt className="dark:text-white/52 text-zinc-500">{t('representative')}</dt>
+                    <dd className="mt-1 text-zinc-950 dark:text-white">
                       {business.representativeName}
                     </dd>
                   </div>
@@ -101,8 +101,8 @@ export default async function BusinessDetailPage({ params }: Params) {
                 <div className="flex gap-3">
                   <CalendarDays aria-hidden="true" size={18} strokeWidth={1.5} className="mt-0.5" />
                   <div>
-                    <dt className="text-zinc-500 dark:text-zinc-400">{t('published')}</dt>
-                    <dd className="mt-1 text-zinc-950 dark:text-zinc-50">
+                    <dt className="dark:text-white/52 text-zinc-500">{t('published')}</dt>
+                    <dd className="mt-1 text-zinc-950 dark:text-white">
                       {new Intl.DateTimeFormat(locale).format(new Date(business.publishedAt))}
                     </dd>
                   </div>
@@ -115,7 +115,7 @@ export default async function BusinessDetailPage({ params }: Params) {
                 href={externalUrl}
                 target="_blank"
                 rel="noreferrer"
-                className={`${primaryButtonClasses} mt-8 w-full gap-2`}
+                className="kclub-button-primary mt-8 w-full rounded-none border-0 px-5 py-3 text-xs tracking-[0.24em]"
               >
                 <ExternalLink aria-hidden="true" size={16} strokeWidth={1.5} />
                 {t('website')}
@@ -123,7 +123,7 @@ export default async function BusinessDetailPage({ params }: Params) {
             ) : null}
           </aside>
         </div>
-      </Container>
+      </div>
     </article>
   );
 }
