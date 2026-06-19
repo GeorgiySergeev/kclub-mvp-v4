@@ -69,9 +69,13 @@ export function StatsSection() {
   }, [visible]);
 
   return (
-    <section ref={sectionRef} id="stats" className="border-y kclub-border bg-white py-8 dark:bg-[#09090b]">
+    <section
+      ref={sectionRef}
+      id="stats"
+      className="kclub-border border-y bg-white py-8 dark:bg-[#09090b]"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
-        <div className="grid auto-rows-fr grid-cols-2 gap-px overflow-hidden border kclub-border-strong bg-zinc-300 dark:bg-white/10 lg:grid-cols-4">
+        <div className="kclub-border-strong grid auto-rows-fr grid-cols-2 gap-px overflow-hidden border bg-zinc-300 dark:bg-white/10 lg:grid-cols-4">
           {stats.map((stat) => (
             <div
               key={stat.key}

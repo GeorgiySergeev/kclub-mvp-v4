@@ -16,9 +16,15 @@
     },
     "nav": {
       "directory": "Directory",
+      "catalog": "Каталог",
       "signIn": "Sign In",
       "join": "Join",
-      "cabinet": "Кабинет"
+      "cabinet": "Кабинет",
+      "account": "Аккаунт",
+      "dashboard": "Кабинет",
+      "signOut": "Выйти",
+      "signingOut": "Выход...",
+      "signOutError": "Не удалось выйти. Попробуйте ещё раз."
     },
     "hero": {
       "eyebrow": "Private Membership Club",
@@ -26,7 +32,7 @@
       "titleLine2": "global professionals",
       "subline": "A curated membership network for verified people, trusted partners, and warm business introductions.",
       "primaryCta": "Join Now",
-      "secondaryCta": "Explore Directory"
+      "secondaryCta": "Explore Catalog"
     },
     "stats": {
       "members": "Members",

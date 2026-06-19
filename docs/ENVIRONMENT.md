@@ -12,7 +12,7 @@ This document defines the environment contract for KCLUB MVP v4. Never commit re
 ## Product-Core
 
 | Variable                             | Required            | Environment | Purpose                                                       |
-| --------------------------------------| ---------------------| -------------| ---------------------------------------------------------------|
+| ------------------------------------ | ------------------- | ----------- | ------------------------------------------------------------- |
 | `NEXT_PUBLIC_APP_URL`                | Yes                 | all         | Public product-core base URL                                  |
 | `NEXT_PUBLIC_SUPABASE_URL`           | Yes                 | all         | Supabase project URL                                          |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY`      | Yes                 | all         | Public Supabase client key                                    |

@@ -266,7 +266,9 @@ async function main(): Promise<void> {
       await seedDemoBusinesses(prisma);
       console.log(`Demo seed complete: ${DEMO_BUSINESSES.length} published businesses`);
     } else {
-      console.log('Demo businesses skipped. Set ALLOW_SEED=1 and CONFIRM_SEED=1 to insert demo data.');
+      console.log(
+        'Demo businesses skipped. Set ALLOW_SEED=1 and CONFIRM_SEED=1 to insert demo data.',
+      );
     }
   } finally {
     await prisma.$disconnect();

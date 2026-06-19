@@ -119,7 +119,9 @@ export async function setupStaffTotpAction(): Promise<{
     },
   });
 
-  const payload = (await response.json().catch(() => null)) as ApiResponse<StaffTotpSetupDto> | null;
+  const payload = (await response
+    .json()
+    .catch(() => null)) as ApiResponse<StaffTotpSetupDto> | null;
 
   if (!response.ok || !payload?.data) {
     return null;
