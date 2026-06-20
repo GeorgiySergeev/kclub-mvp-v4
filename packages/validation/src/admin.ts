@@ -1,8 +1,10 @@
 import { z } from 'zod';
 import {
+  AUDIT_ACTIONS,
   BUSINESS_STATUSES,
   CLUB_CARD_STATUSES,
   MEMBER_TIERS,
+  STAFF_ROLES,
   USER_STATUSES,
 } from '@kclub/contracts';
 import { pageSchema, limitSchema, searchSchema } from './shared';
@@ -107,6 +109,20 @@ export const adminBusinessListSchema = z.object({
   status: z.enum(BUSINESS_STATUSES).optional(),
 });
 
+export const auditLogListSchema = z.object({
+  page: pageSchema,
+  limit: limitSchema,
+  action: z.enum(AUDIT_ACTIONS).optional(),
+  actorRole: z.enum(STAFF_ROLES).optional(),
+  entityType: z.string().max(120).optional(),
+  dateFrom: z.coerce.date().optional(),
+  dateTo: z.coerce.date().optional(),
+});
+
+export const staffDeactivateSchema = z.object({
+  reason: z.string().min(1).max(500).optional(),
+});
+
 export type AdminUserListInput = z.infer<typeof adminUserListSchema>;
 export type AdminCardListInput = z.infer<typeof adminCardListSchema>;
 export type AdminBusinessListInput = z.infer<typeof adminBusinessListSchema>;
@@ -129,3 +145,5 @@ export type CityCreateInput = z.infer<typeof cityCreateSchema>;
 export type CityUpdateInput = z.infer<typeof cityUpdateSchema>;
 export type AdminConfigUpdateInput = z.infer<typeof adminConfigUpdateSchema>;
 export type StaffRoleUpdateInput = z.infer<typeof staffRoleUpdateSchema>;
+export type AuditLogListInput = z.infer<typeof auditLogListSchema>;
+export type StaffDeactivateInput = z.infer<typeof staffDeactivateSchema>;

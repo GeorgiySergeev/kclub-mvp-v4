@@ -11,6 +11,18 @@ describe('route-permissions', () => {
     expect(getRequiredRoles('/dashboard/staff')).toEqual(['OWNER']);
   });
 
+  test('getRequiredRoles for P6.5 surfaces', () => {
+    expect(getRequiredRoles('/dashboard/introductions')).toEqual(['OWNER', 'ADMIN', 'MODERATOR']);
+    expect(getRequiredRoles('/dashboard/categories')).toEqual(['OWNER', 'ADMIN', 'MODERATOR']);
+    expect(getRequiredRoles('/dashboard/countries')).toEqual(['OWNER', 'ADMIN', 'MODERATOR']);
+    expect(getRequiredRoles('/dashboard/cities')).toEqual(['OWNER', 'ADMIN', 'MODERATOR']);
+    expect(getRequiredRoles('/dashboard/subscriptions')).toEqual(['OWNER', 'ADMIN']);
+    expect(getRequiredRoles('/dashboard/memberships')).toEqual(['OWNER', 'ADMIN']);
+    expect(getRequiredRoles('/dashboard/stripe-prices')).toEqual(['OWNER']);
+    expect(getRequiredRoles('/dashboard/audit')).toEqual(['OWNER', 'ADMIN', 'SUPPORT']);
+    expect(getRequiredRoles('/dashboard/settings')).toEqual(['OWNER']);
+  });
+
   test('hasRouteAccess returns true for authorized roles', () => {
     expect(hasRouteAccess('OWNER', '/dashboard')).toBe(true);
     expect(hasRouteAccess('ADMIN', '/dashboard/users')).toBe(true);
@@ -18,11 +30,28 @@ describe('route-permissions', () => {
     expect(hasRouteAccess('MODERATOR', '/dashboard/catalog')).toBe(true);
   });
 
+  test('hasRouteAccess for P6.5 authorized', () => {
+    expect(hasRouteAccess('MODERATOR', '/dashboard/introductions')).toBe(true);
+    expect(hasRouteAccess('MODERATOR', '/dashboard/categories')).toBe(true);
+    expect(hasRouteAccess('OWNER', '/dashboard/stripe-prices')).toBe(true);
+    expect(hasRouteAccess('SUPPORT', '/dashboard/audit')).toBe(true);
+    expect(hasRouteAccess('ADMIN', '/dashboard/subscriptions')).toBe(true);
+  });
+
   test('hasRouteAccess returns false for unauthorized roles', () => {
     expect(hasRouteAccess('MODERATOR', '/dashboard/users')).toBe(false);
     expect(hasRouteAccess('SUPPORT', '/dashboard/staff')).toBe(false);
     expect(hasRouteAccess('SUPPORT', '/dashboard/catalog')).toBe(false);
     expect(hasRouteAccess('MODERATOR', '/dashboard/staff')).toBe(false);
+  });
+
+  test('hasRouteAccess for P6.5 unauthorized', () => {
+    expect(hasRouteAccess('SUPPORT', '/dashboard/introductions')).toBe(false);
+    expect(hasRouteAccess('SUPPORT', '/dashboard/categories')).toBe(false);
+    expect(hasRouteAccess('SUPPORT', '/dashboard/stripe-prices')).toBe(false);
+    expect(hasRouteAccess('MODERATOR', '/dashboard/audit')).toBe(false);
+    expect(hasRouteAccess('SUPPORT', '/dashboard/subscriptions')).toBe(false);
+    expect(hasRouteAccess('MODERATOR', '/dashboard/subscriptions')).toBe(false);
   });
 
   test('hasRouteAccess handles nested routes', () => {
