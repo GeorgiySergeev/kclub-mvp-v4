@@ -310,6 +310,7 @@
         "status": "Status",
         "issuedAt": "Issued",
         "expiresAt": "Expires",
+        "validThru": "Valid thru",
         "noExpiration": "No expiration",
         "verifyLink": "Open public verification",
         "emptyTitle": "No active card yet",

@@ -6,14 +6,21 @@ import { useTranslations } from 'next-intl';
 
 import type { MemberCardDto } from '@kclub/contracts';
 import { MEMBER_API_ROUTES } from '@kclub/contracts';
-import { Badge, EmptyState, Skeleton, Surface, linkClasses } from '@kclub/ui';
+import { EmptyState, Skeleton, Surface, linkClasses } from '@kclub/ui';
 
 import type { Locale } from '@/i18n/routing';
 import { parseAuthResponse } from '@/features/auth/utils/api';
 
-export function CardPanel({ locale }: { locale: Locale }) {
+import { DigitalClubCard } from './DigitalClubCard';
+import { DigitalClubCardSkeleton } from './DigitalClubCardSkeleton';
+
+type CardPanelProps = {
+  locale: Locale;
+  memberName: string;
+};
+
+export function CardPanel({ locale, memberName }: CardPanelProps) {
   const t = useTranslations('member.dashboard.card');
-  const tCommon = useTranslations('member.common');
   const [card, setCard] = useState<MemberCardDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -54,10 +61,8 @@ export function CardPanel({ locale }: { locale: Locale }) {
   if (isLoading) {
     return (
       <Surface className="kclub-panel max-w-none overflow-hidden rounded-none p-0 shadow-none ring-0">
-        <div className="kclub-hero-visual space-y-4 p-6">
-          <Skeleton className="h-3 w-20" />
-          <Skeleton className="h-8 w-48" />
-          <Skeleton className="mt-6 h-3 w-24" />
+        <div className="flex justify-center bg-zinc-950 px-6 py-10">
+          <DigitalClubCardSkeleton />
         </div>
         <div className="grid gap-4 p-6 sm:grid-cols-2">
           <Skeleton className="h-16" />
@@ -94,19 +99,17 @@ export function CardPanel({ locale }: { locale: Locale }) {
 
   return (
     <Surface className="kclub-panel max-w-none overflow-hidden rounded-none p-0 shadow-none ring-0">
-      <div className="kclub-hero-visual p-6 text-white">
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-white/70">{t('eyebrow')}</p>
-            <h2 className="mt-6 text-3xl font-black uppercase tracking-[0.08em]">
-              {card.cardNumber}
-            </h2>
-          </div>
-          <Badge variant="success">{card.status}</Badge>
-        </div>
-        <p className="mt-10 text-sm uppercase tracking-[0.2em] text-white/80">
-          {card.membershipTier}
-        </p>
+      <div className="flex justify-center bg-zinc-950 px-6 py-10">
+        <DigitalClubCard
+          cardNumber={card.cardNumber}
+          memberName={memberName}
+          membershipTier={card.membershipTier}
+          status={card.status}
+          expiresAt={card.expiresAt}
+          locale={locale}
+          validThruLabel={t('validThru')}
+          tierLabel={t('tier')}
+        />
       </div>
 
       <div className="grid gap-4 p-6 sm:grid-cols-2">

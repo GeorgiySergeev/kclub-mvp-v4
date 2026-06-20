@@ -58,6 +58,8 @@ All theme values flow from a single canonical source:
 | `--focus-ring` | `ring-focus` | Focus ring color |
 | `--focus-ring-offset` | `ring-offset-focus` | Focus ring offset color |
 | `--radius-sm/md/lg` | `rounded-sm/md/lg` | Border radius tokens |
+| `--duration-instant/fast/normal/slow` | `duration-instant/fast/normal/slow` | Animation duration tokens (100ms/200ms/300ms/500ms) |
+| `--ease-out/in-out/spring` | `ease-ease-out/ease-in-out/ease-spring` | Animation easing tokens |
 
 **Rule:** Do not add new hardcoded hex values, zinc-scale colors, or rgba values for theme surfaces, borders, or accents in app code. Use the semantic tokens above. The only permitted raw color values are: `brand-*` (teal, for specific brand elements), `green-*`/`red-*`/`yellow-*` (semantic status colors from Section 2.3), and `white`/`black` for shadows and overlays.
 
@@ -202,6 +204,7 @@ All components below are available via `import { ... } from '@kclub/ui'`. **Alwa
 | `EmptyState` | `icon`, `title`, `description`, `action` | Empty list / no results within a page section |
 | `PageState` | `icon`, `title`, `description`, `action` | Full-page loading error / 404 / access denied |
 | `Skeleton` | `className` | Placeholder loading shimmer — use for data fetching states |
+| `Spinner` | `size`, `className` | Inline loading indicator — use inside buttons or next to text |
 | `SkipLink` | — | Accessibility skip-nav — place at top of layout |
 
 ### 5.2 Button Variant Usage

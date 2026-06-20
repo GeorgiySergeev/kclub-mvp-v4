@@ -21,7 +21,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
           staffRole={profile.role}
           staffInitials={profile.initials}
         />
-        <main className="flex-1 p-4 md:p-6">{children}</main>
+        <main id="content" className="flex-1 p-4 md:p-6">{children}</main>
       </div>
     </div>
   );

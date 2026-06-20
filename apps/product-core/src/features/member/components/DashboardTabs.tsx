@@ -61,7 +61,9 @@ export async function DashboardTabs({
         </div>
       </nav>
 
-      {activeTab === 'card' && <CardPanel locale={locale} />}
+      {activeTab === 'card' && (
+        <CardPanel locale={locale} memberName={profile.displayName ?? profile.phone} />
+      )}
       {activeTab === 'catalog' && <CatalogPanel locale={locale} />}
       {activeTab === 'subscription' && <SubscriptionPanel locale={locale} profile={profile} />}
       {activeTab === 'business' && <BusinessPanel locale={locale} profile={profile} />}

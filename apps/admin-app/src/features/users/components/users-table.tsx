@@ -175,61 +175,107 @@ export function UsersTable({ users, total, page, limit, search: initialSearch }:
       </form>
 
       <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Phone</TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Registered</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {users.length === 0 ? (
+        <div className="hidden md:block">
+          <Table>
+            <TableHeader>
               <TableRow>
-                <TableCell colSpan={5} className="py-8 text-center text-muted-foreground">
-                  No users found
-                </TableCell>
+                <TableHead>Phone</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Registered</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
-            ) : (
-              users.map((user) => (
-                <TableRow key={user.id}>
-                  <TableCell className="font-mono text-xs">{user.phone}</TableCell>
-                  <TableCell>{user.displayName ?? '—'}</TableCell>
-                  <TableCell>
-                    <StatusBadge status={user.status} />
-                  </TableCell>
-                  <TableCell className="text-xs text-muted-foreground">
-                    {new Date(user.createdAt).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <Link href={`/dashboard/users/${user.id}`}>
-                        <Button variant="ghost" size="xs">
-                          <ExternalLink className="h-3.5 w-3.5" />
-                        </Button>
-                      </Link>
-                      {user.status === 'ACTIVE' ? (
-                        <BlockConfirmDialog
-                          userId={user.id}
-                          userName={user.displayName ?? user.phone}
-                          onAction={() => router.refresh()}
-                        />
-                      ) : (
-                        <UnblockConfirmDialog
-                          userId={user.id}
-                          userName={user.displayName ?? user.phone}
-                          onAction={() => router.refresh()}
-                        />
-                      )}
-                    </div>
+            </TableHeader>
+            <TableBody>
+              {users.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={5} className="py-8 text-center text-muted-foreground">
+                    No users found
                   </TableCell>
                 </TableRow>
-              ))
-            )}
-          </TableBody>
-        </Table>
+              ) : (
+                users.map((user) => (
+                  <TableRow key={user.id}>
+                    <TableCell className="font-mono text-xs">{user.phone}</TableCell>
+                    <TableCell>{user.displayName ?? '—'}</TableCell>
+                    <TableCell>
+                      <StatusBadge status={user.status} />
+                    </TableCell>
+                    <TableCell className="text-xs text-muted-foreground">
+                      {new Date(user.createdAt).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <Link href={`/dashboard/users/${user.id}`}>
+                          <Button variant="ghost" size="xs">
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </Button>
+                        </Link>
+                        {user.status === 'ACTIVE' ? (
+                          <BlockConfirmDialog
+                            userId={user.id}
+                            userName={user.displayName ?? user.phone}
+                            onAction={() => router.refresh()}
+                          />
+                        ) : (
+                          <UnblockConfirmDialog
+                            userId={user.id}
+                            userName={user.displayName ?? user.phone}
+                            onAction={() => router.refresh()}
+                          />
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
+        <div className="divide-y md:hidden">
+          {users.length === 0 ? (
+            <div className="py-8 text-center text-sm text-muted-foreground">No users found</div>
+          ) : (
+            users.map((user) => (
+              <div key={user.id} className="space-y-3 p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium">{user.displayName ?? '—'}</p>
+                    <p className="font-mono text-xs text-muted-foreground">{user.phone}</p>
+                  </div>
+                  <StatusBadge status={user.status} />
+                </div>
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-muted-foreground">
+                    {new Date(user.createdAt).toLocaleDateString()}
+                  </span>
+                  <div className="flex items-center gap-1">
+                    <Link href={`/dashboard/users/${user.id}`}>
+                      <Button variant="ghost" size="xs">
+                        <ExternalLink className="h-3.5 w-3.5" />
+                        View
+                      </Button>
+                    </Link>
+                    {user.status === 'ACTIVE' ? (
+                      <BlockConfirmDialog
+                        userId={user.id}
+                        userName={user.displayName ?? user.phone}
+                        onAction={() => router.refresh()}
+                      />
+                    ) : (
+                      <UnblockConfirmDialog
+                        userId={user.id}
+                        userName={user.displayName ?? user.phone}
+                        onAction={() => router.refresh()}
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
 
       {totalPages > 1 && (

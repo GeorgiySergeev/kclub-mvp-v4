@@ -52,6 +52,17 @@ export const sharedConfig: Omit<Config, 'content'> = {
       ringOffsetColor: {
         focus: 'var(--focus-ring-offset)',
       },
+      transitionDuration: {
+        instant: 'var(--duration-instant)',
+        fast: 'var(--duration-fast)',
+        normal: 'var(--duration-normal)',
+        slow: 'var(--duration-slow)',
+      },
+      transitionTimingFunction: {
+        'ease-out': 'var(--ease-out)',
+        'ease-in-out': 'var(--ease-in-out)',
+        'ease-spring': 'var(--ease-spring)',
+      },
     },
   },
   plugins: [],
