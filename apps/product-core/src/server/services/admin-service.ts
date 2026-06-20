@@ -1,6 +1,7 @@
 import {
   ERROR_CODES,
   type AdminBusinessDetailDto,
+  type AdminCardListItemDto,
   type AdminUserDetailDto,
   type AdminUserListItemDto,
   type AuditLogDto,
@@ -24,6 +25,8 @@ import {
   FEATURED_TOP_MAX,
 } from '@kclub/domain';
 import type {
+  AdminCardListInput,
+  AdminUserListInput,
   BusinessApproveInput,
   BusinessFeaturedInput,
   BusinessHideInput,
@@ -92,35 +95,60 @@ export async function getDashboardMetrics(): Promise<DashboardMetricsDto> {
 
 // ── Users ──
 
-const userInclude = {
-  _count: { select: { member_cards: true } },
-};
-
-type UserWithCounts = {
-  id: string;
-  phone: string;
-  display_name: string | null;
-  locale_preference: string | null;
-  membership_tier: string;
-  status: string;
-  terms_accepted_at: Date | null;
-  created_at: Date;
-  updated_at: Date;
-};
-
-export async function listUsers(): Promise<AdminUserListItemDto[]> {
+export async function listUsers(
+  params: AdminUserListInput,
+): Promise<{ data: AdminUserListItemDto[]; total: number }> {
   const prisma = getPrismaClient();
-  const users = await prisma.user.findMany({
-    orderBy: { created_at: 'desc' },
-  });
-  return users.map(toAdminUserListItem);
+
+  const where: Record<string, unknown> = {};
+
+  if (params.search) {
+    where.OR = [
+      { phone: { contains: params.search } },
+      { display_name: { contains: params.search, mode: 'insensitive' } },
+    ];
+  }
+
+  if (params.status) {
+    where.status = params.status;
+  }
+
+  if (params.membershipTier) {
+    where.membership_tier = params.membershipTier;
+  }
+
+  const [users, total] = await Promise.all([
+    prisma.user.findMany({
+      where,
+      orderBy: { created_at: 'desc' },
+      skip: (params.page - 1) * params.limit,
+      take: params.limit,
+    }),
+    prisma.user.count({ where }),
+  ]);
+
+  return { data: users.map(toAdminUserListItem), total };
 }
 
 export async function getUserDetail(userId: string): Promise<AdminUserDetailDto> {
   const prisma = getPrismaClient();
-  const user = await prisma.user.findUnique({
-    where: { id: userId },
-  });
+
+  const [user, cards, subscriptions, auditEntries] = await Promise.all([
+    prisma.user.findUnique({ where: { id: userId } }),
+    prisma.memberCard.findMany({
+      where: { user_id: userId },
+      orderBy: { issued_at: 'desc' },
+    }),
+    prisma.vipSubscription.findMany({
+      where: { user_id: userId },
+      orderBy: { created_at: 'desc' },
+    }),
+    prisma.auditLog.findMany({
+      where: { entity_id: userId },
+      orderBy: { created_at: 'desc' },
+      take: 50,
+    }),
+  ]);
 
   if (!user) {
     throw new AppError({
@@ -130,7 +158,7 @@ export async function getUserDetail(userId: string): Promise<AdminUserDetailDto>
     });
   }
 
-  return toAdminUserDetail(user);
+  return toAdminUserDetail(user, cards, subscriptions, auditEntries);
 }
 
 export async function blockUser(
@@ -234,12 +262,42 @@ export async function unblockUser(
 
 // ── Cards ──
 
-export async function listCards(): Promise<MemberCardDto[]> {
+export async function listCards(
+  params: AdminCardListInput,
+): Promise<{ data: AdminCardListItemDto[]; total: number }> {
   const prisma = getPrismaClient();
-  const cards = await prisma.memberCard.findMany({
-    orderBy: { issued_at: 'desc' },
-  });
-  return cards.map(toMemberCardDto);
+
+  const where: Record<string, unknown> = {};
+
+  if (params.status) {
+    where.status = params.status;
+  }
+
+  if (params.membershipTier) {
+    where.membership_tier = params.membershipTier;
+  }
+
+  if (params.search) {
+    where.user = {
+      OR: [
+        { phone: { contains: params.search } },
+        { display_name: { contains: params.search, mode: 'insensitive' } },
+      ],
+    };
+  }
+
+  const [cards, total] = await Promise.all([
+    prisma.memberCard.findMany({
+      where,
+      include: { user: { select: { phone: true, display_name: true } } },
+      orderBy: { issued_at: 'desc' },
+      skip: (params.page - 1) * params.limit,
+      take: params.limit,
+    }),
+    prisma.memberCard.count({ where }),
+  ]);
+
+  return { data: cards.map(toAdminCardListItem), total };
 }
 
 export async function getCardDetail(cardId: string): Promise<MemberCardDto> {
@@ -1186,7 +1244,12 @@ function toAdminUserListItem(user: any): AdminUserListItemDto {
   };
 }
 
-function toAdminUserDetail(user: any): AdminUserDetailDto {
+function toAdminUserDetail(
+  user: any,
+  cards?: any[],
+  subscriptions?: any[],
+  auditEntries?: any[],
+): AdminUserDetailDto {
   return {
     id: user.id,
     phone: user.phone,
@@ -1198,6 +1261,34 @@ function toAdminUserDetail(user: any): AdminUserDetailDto {
     onboardingComplete: !!(user.display_name && user.locale_preference && user.terms_accepted_at),
     termsAcceptedAt: user.terms_accepted_at?.toISOString() ?? null,
     updatedAt: user.updated_at.toISOString(),
+    cards: (cards ?? []).map(toMemberCardDto),
+    subscriptions: (subscriptions ?? []).map(toSubscriptionDto),
+    auditEntries: (auditEntries ?? []).map((log: any) => ({
+      id: log.id,
+      actorStaffId: log.actor_staff_id ?? null,
+      actorRole: log.actor_role as any,
+      action: log.action as any,
+      entityType: log.entity_type,
+      entityId: log.entity_id,
+      before: log.before_data as Record<string, unknown> | null,
+      after: log.after_data as Record<string, unknown> | null,
+      ipAddress: log.ip_address ?? null,
+      createdAt: log.created_at?.toISOString() ?? new Date().toISOString(),
+    })),
+  };
+}
+
+function toAdminCardListItem(card: any): AdminCardListItemDto {
+  return {
+    id: card.id,
+    userId: card.user_id,
+    userPhone: card.user?.phone ?? '',
+    userDisplayName: card.user?.display_name ?? null,
+    cardNumber: card.card_number,
+    status: card.status as ClubCardStatus,
+    membershipTier: card.membership_tier as MemberTier,
+    issuedAt: card.issued_at.toISOString(),
+    expiresAt: card.expires_at?.toISOString() ?? null,
   };
 }
 

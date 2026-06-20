@@ -55,7 +55,12 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
                 required
               />
             </div>
-            <Button className="w-full" variant="outline" type="submit" data-testid="admin-submit-phone">
+            <Button
+              className="w-full"
+              variant="outline"
+              type="submit"
+              data-testid="admin-submit-phone"
+            >
               Send code
             </Button>
           </form>

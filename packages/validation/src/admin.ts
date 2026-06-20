@@ -1,4 +1,6 @@
 import { z } from 'zod';
+import { CLUB_CARD_STATUSES, MEMBER_TIERS, USER_STATUSES } from '@kclub/contracts';
+import { pageSchema, limitSchema, searchSchema } from './shared';
 
 export const blockUserSchema = z.object({
   reason: z.string().min(1).max(500).optional(),
@@ -77,6 +79,25 @@ export const adminConfigUpdateSchema = z.object({
 export const staffRoleUpdateSchema = z.object({
   role: z.enum(['OWNER', 'ADMIN', 'MODERATOR', 'SUPPORT']),
 });
+
+export const adminUserListSchema = z.object({
+  page: pageSchema,
+  limit: limitSchema,
+  search: searchSchema,
+  status: z.enum(USER_STATUSES).optional(),
+  membershipTier: z.enum(MEMBER_TIERS).optional(),
+});
+
+export const adminCardListSchema = z.object({
+  page: pageSchema,
+  limit: limitSchema,
+  search: searchSchema,
+  status: z.enum(CLUB_CARD_STATUSES).optional(),
+  membershipTier: z.enum(MEMBER_TIERS).optional(),
+});
+
+export type AdminUserListInput = z.infer<typeof adminUserListSchema>;
+export type AdminCardListInput = z.infer<typeof adminCardListSchema>;
 
 export type BlockUserInput = z.infer<typeof blockUserSchema>;
 export type UnblockUserInput = z.infer<typeof unblockUserSchema>;

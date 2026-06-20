@@ -15,12 +15,7 @@ const SCAN_DIRS = [
   path.resolve(__dirname, '..', 'apps', 'admin-app', 'src'),
 ];
 
-const EXCLUDE_FILES = new Set([
-  'globals.css',
-  'tokens.css',
-  'theme.ts',
-  'theme-guard.js',
-]);
+const EXCLUDE_FILES = new Set(['globals.css', 'tokens.css', 'theme.ts', 'theme-guard.js']);
 
 const EXTENSIONS = new Set(['.tsx', '.ts']);
 
@@ -52,7 +47,9 @@ for (const dir of SCAN_DIRS) {
       const matches = content.match(pattern);
       if (matches && matches.length > 0) {
         const relPath = path.relative(path.resolve(__dirname, '..'), file);
-        console.error(`  FAIL: ${relPath} (${matches.length} occurrences) — ${pattern.source} → ${label}`);
+        console.error(
+          `  FAIL: ${relPath} (${matches.length} occurrences) — ${pattern.source} → ${label}`,
+        );
         hasErrors = true;
       }
     }

@@ -18,7 +18,7 @@ export function AppSidebar({ className, staffRole }: AppSidebarProps) {
   const visibleItems = dashboardNav.filter((item) => item.roles.includes(staffRole));
 
   return (
-    <aside className={cn('flex min-h-screen w-64 flex-col border-r bg-card', className)}>
+    <aside className={cn('bg-card flex min-h-screen w-64 flex-col border-r', className)}>
       <div className="flex items-center border-b px-4 py-3">
         <p className="text-sm font-semibold">KCLUB Admin</p>
       </div>

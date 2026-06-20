@@ -42,7 +42,7 @@ export async function POST(request: Request): Promise<Response> {
 
   try {
     const result = await seedScenario(scenario, body.webhookEvent);
-    
+
     // Clear the Next.js router cache so tests see the seeded data immediately
     const { revalidatePath } = await import('next/cache');
     revalidatePath('/', 'layout');

@@ -37,9 +37,7 @@ export function ServicesSection({ locale }: { locale: Locale }) {
               key={plan.name}
               className={`bg-white p-6 dark:bg-surface sm:p-9 ${plan.featured ? 'relative overflow-hidden' : ''}`}
             >
-              {plan.featured ? (
-                <div className="absolute inset-x-0 top-0 h-1.5 bg-accent" />
-              ) : null}
+              {plan.featured ? <div className="absolute inset-x-0 top-0 h-1.5 bg-accent" /> : null}
               <div className="flex items-start justify-between gap-6">
                 <div>
                   <h3 className="text-sm font-black uppercase text-zinc-500 dark:text-white/60">

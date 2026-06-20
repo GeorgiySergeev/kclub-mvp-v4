@@ -16,8 +16,7 @@ export function Badge({
         'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium',
         {
           'bg-surface-muted text-foreground': variant === 'default',
-          'border border-border text-muted-foreground':
-            variant === 'outline',
+          'border-border text-muted-foreground border': variant === 'outline',
           'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-100':
             variant === 'success',
         },

@@ -127,7 +127,7 @@ a {
   }
 
   .kclub-button-primary {
-    @apply inline-flex min-h-[50px] min-w-[200px] items-start justify-between border border-accent bg-accent pb-0 pl-2 pr-11 pt-[22px] text-base font-semibold text-accent-foreground transition hover:bg-accent-hover hover:border-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-focus;
+    @apply inline-flex min-h-[50px] min-w-[200px] items-start justify-between border border-accent bg-accent pb-0 pl-2 pr-11 pt-[22px] text-base font-semibold text-accent-foreground transition hover:border-accent-hover hover:bg-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-focus;
   }
 
   .kclub-button-secondary {
@@ -155,7 +155,7 @@ a {
   }
 
   .kclub-hero-card {
-    @apply relative overflow-hidden rounded-lg border border-border bg-surface text-foreground shadow-[rgba(0,0,0,0.15)_0px_8px_16px_0px] sm:p-5 p-4;
+    @apply relative overflow-hidden rounded-lg border border-border bg-surface p-4 text-foreground shadow-[rgba(0,0,0,0.15)_0px_8px_16px_0px] sm:p-5;
   }
 
   .kclub-toggle-button {

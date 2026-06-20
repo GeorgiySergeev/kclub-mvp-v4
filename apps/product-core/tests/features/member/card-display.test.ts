@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'bun:test';
 
-import { formatCardExpiry, formatMaskedCardNumber } from '../../../src/features/member/components/card-display';
+import {
+  formatCardExpiry,
+  formatMaskedCardNumber,
+} from '../../../src/features/member/components/card-display';
 
 describe('formatMaskedCardNumber', () => {
   it('masks MEM card numbers and shows the last four digits', () => {

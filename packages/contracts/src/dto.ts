@@ -116,6 +116,21 @@ export type AdminUserDetailDto = AdminUserListItemDto & {
   onboardingComplete: boolean;
   termsAcceptedAt: IsoDateTime | null;
   updatedAt: IsoDateTime;
+  cards: MemberCardDto[];
+  subscriptions: SubscriptionDto[];
+  auditEntries: AuditLogDto[];
+};
+
+export type AdminCardListItemDto = {
+  id: EntityId;
+  userId: EntityId;
+  userPhone: string;
+  userDisplayName: string | null;
+  cardNumber: string;
+  status: ClubCardStatus;
+  membershipTier: MemberTier;
+  issuedAt: IsoDateTime;
+  expiresAt: IsoDateTime | null;
 };
 
 export type CurrentMemberProfileDto = {

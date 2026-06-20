@@ -20,7 +20,7 @@ test.describe('Business lifecycle', () => {
     await page.goto(`/${locale}/sign-in`);
     await page.locator('[data-testid="auth-phone-input"]').fill(phone);
     await page.locator('[data-testid="auth-submit-phone"]').click();
-    
+
     // Wait for state transition to OTP input
     await page.waitForSelector('[data-testid="auth-otp-input"]');
 

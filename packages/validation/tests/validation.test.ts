@@ -38,6 +38,8 @@ import {
   staffTotpCodeSchema,
   unblockUserSchema,
   adminConfigUpdateSchema,
+  adminUserListSchema,
+  adminCardListSchema,
 } from '../src';
 
 const uuid = '11111111-1111-4111-8111-111111111111';
@@ -360,6 +362,54 @@ describe('admin mutation schemas', () => {
       description: 'Test config',
     });
     expect(adminConfigUpdateSchema.parse({ value: 'simple' })).toEqual({ value: 'simple' });
+  });
+});
+
+describe('admin list schemas', () => {
+  test('validates admin user list query params', () => {
+    expect(adminUserListSchema.parse({})).toEqual({ page: 1, limit: 20 });
+    expect(
+      adminUserListSchema.parse({
+        page: '2',
+        limit: '50',
+        search: 'test',
+        status: 'ACTIVE',
+        membershipTier: 'VIP',
+      }),
+    ).toEqual({
+      page: 2,
+      limit: 50,
+      search: 'test',
+      status: 'ACTIVE',
+      membershipTier: 'VIP',
+    });
+  });
+
+  test('rejects invalid admin user list params', () => {
+    expectInvalidField(adminUserListSchema, { status: 'INVALID' }, 'status');
+    expectInvalidField(adminUserListSchema, { membershipTier: 'GOLD' }, 'membershipTier');
+  });
+
+  test('validates admin card list query params', () => {
+    expect(adminCardListSchema.parse({})).toEqual({ page: 1, limit: 20 });
+    expect(
+      adminCardListSchema.parse({
+        page: '1',
+        limit: '10',
+        status: 'ACTIVE',
+        membershipTier: 'MEMBER',
+      }),
+    ).toEqual({
+      page: 1,
+      limit: 10,
+      status: 'ACTIVE',
+      membershipTier: 'MEMBER',
+    });
+  });
+
+  test('rejects invalid admin card list params', () => {
+    expectInvalidField(adminCardListSchema, { status: 'INVALID' }, 'status');
+    expectInvalidField(adminCardListSchema, { membershipTier: 'PLATINUM' }, 'membershipTier');
   });
 });
 

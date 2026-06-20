@@ -10,8 +10,8 @@ export const SELECTORS = {
   NAV_DASHBOARD: 'a[href$="/dashboard"]',
 
   // Home page
-  HOME_HERO: 'section', 
-  HOME_FEATURED_TOP: 'section', 
+  HOME_HERO: 'section',
+  HOME_FEATURED_TOP: 'section',
   HOME_FEATURED_RECOMMENDED: 'section',
 
   // Directory

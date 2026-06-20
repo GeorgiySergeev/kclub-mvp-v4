@@ -1,9 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { Ban, CheckCircle, ExternalLink, Search } from 'lucide-react';
+import { Search, RotateCcw, ShieldX } from 'lucide-react';
 import { toast } from 'sonner';
 
 import { StatusBadge } from '@/components/status-badge';
@@ -27,14 +26,14 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import type { AdminUserListItemDto, EntityId, StaffRole } from '@kclub/contracts';
+import type { AdminCardListItemDto, StaffRole } from '@kclub/contracts';
 
-function canMutateUsers(role: StaffRole): boolean {
+function canMutateCards(role: StaffRole): boolean {
   return role === 'OWNER' || role === 'ADMIN';
 }
 
-async function blockUser(userId: string, reason?: string) {
-  const res = await fetch(`/api/proxy/users/${userId}/block`, {
+async function revokeCard(cardId: string, reason?: string) {
+  const res = await fetch(`/api/proxy/cards/${cardId}/revoke`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(reason ? { reason } : {}),
@@ -42,8 +41,8 @@ async function blockUser(userId: string, reason?: string) {
   return { ok: res.ok, error: res.ok ? undefined : `Request failed (${res.status})` };
 }
 
-async function unblockUser(userId: string, reason?: string) {
-  const res = await fetch(`/api/proxy/users/${userId}/unblock`, {
+async function reissueCard(cardId: string, reason?: string) {
+  const res = await fetch(`/api/proxy/cards/${cardId}/reissue`, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(reason ? { reason } : {}),
@@ -51,23 +50,14 @@ async function unblockUser(userId: string, reason?: string) {
   return { ok: res.ok, error: res.ok ? undefined : `Request failed (${res.status})` };
 }
 
-type UsersTableProps = {
-  users: AdminUserListItemDto[];
-  total: number;
-  page: number;
-  limit: number;
-  search: string;
-  statusFilter: string;
-  tierFilter: string;
-  staffRole: StaffRole;
-};
-
-function BlockConfirmDialog({
-  userId,
+function RevokeConfirmDialog({
+  cardId,
+  cardNumber,
   userName,
   onAction,
 }: {
-  userId: EntityId;
+  cardId: string;
+  cardNumber: string;
   userName: string;
   onAction: () => void;
 }) {
@@ -78,21 +68,21 @@ function BlockConfirmDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger render={<Button variant="destructive" size="xs" />}>
-        <Ban className="h-3.5 w-3.5" />
-        Block
+        <ShieldX className="h-3.5 w-3.5" />
+        Revoke
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Block user</DialogTitle>
+          <DialogTitle>Revoke card</DialogTitle>
           <DialogDescription>
-            Are you sure you want to block {userName}? They will lose access to their account.
+            Are you sure you want to revoke card <strong>{cardNumber}</strong> for {userName}?
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-2">
-          <Label htmlFor="block-reason">Reason (optional)</Label>
+          <Label htmlFor="reason">Reason (optional)</Label>
           <Input
-            id="block-reason"
-            placeholder="Why is this user being blocked?"
+            id="reason"
+            placeholder="Why is this card being revoked?"
             value={reason}
             onChange={(e) => setReason(e.target.value)}
           />
@@ -106,18 +96,18 @@ function BlockConfirmDialog({
             disabled={loading}
             onClick={async () => {
               setLoading(true);
-              const result = await blockUser(userId, reason || undefined);
+              const result = await revokeCard(cardId, reason || undefined);
               setLoading(false);
               if (!result.ok) {
-                toast.error(result.error ?? 'Failed to block user');
+                toast.error(result.error ?? 'Failed to revoke card');
                 return;
               }
               setOpen(false);
-              toast.success('User blocked');
+              toast.success('Card revoked');
               onAction();
             }}
           >
-            {loading ? 'Blocking...' : 'Block'}
+            {loading ? 'Revoking...' : 'Revoke'}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -125,12 +115,14 @@ function BlockConfirmDialog({
   );
 }
 
-function UnblockConfirmDialog({
-  userId,
+function ReissueConfirmDialog({
+  cardId,
+  cardNumber,
   userName,
   onAction,
 }: {
-  userId: EntityId;
+  cardId: string;
+  cardNumber: string;
   userName: string;
   onAction: () => void;
 }) {
@@ -141,19 +133,22 @@ function UnblockConfirmDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger render={<Button variant="outline" size="xs" />}>
-        <CheckCircle className="h-3.5 w-3.5" />
-        Unblock
+        <RotateCcw className="h-3.5 w-3.5" />
+        Re-issue
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Unblock user</DialogTitle>
-          <DialogDescription>Restore access for {userName}?</DialogDescription>
+          <DialogTitle>Re-issue card</DialogTitle>
+          <DialogDescription>
+            This will revoke the current card <strong>{cardNumber}</strong> for {userName} and issue
+            a new one. Continue?
+          </DialogDescription>
         </DialogHeader>
         <div className="space-y-2">
-          <Label htmlFor="unblock-reason">Reason (optional)</Label>
+          <Label htmlFor="reissue-reason">Reason (optional)</Label>
           <Input
-            id="unblock-reason"
-            placeholder="Why is this user being unblocked?"
+            id="reissue-reason"
+            placeholder="Why is this card being re-issued?"
             value={reason}
             onChange={(e) => setReason(e.target.value)}
           />
@@ -166,18 +161,18 @@ function UnblockConfirmDialog({
             disabled={loading}
             onClick={async () => {
               setLoading(true);
-              const result = await unblockUser(userId, reason || undefined);
+              const result = await reissueCard(cardId, reason || undefined);
               setLoading(false);
               if (!result.ok) {
-                toast.error(result.error ?? 'Failed to unblock user');
+                toast.error(result.error ?? 'Failed to re-issue card');
                 return;
               }
               setOpen(false);
-              toast.success('User unblocked');
+              toast.success('Card re-issued');
               onAction();
             }}
           >
-            {loading ? 'Unblocking...' : 'Unblock'}
+            {loading ? 'Re-issuing...' : 'Re-issue'}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -185,8 +180,19 @@ function UnblockConfirmDialog({
   );
 }
 
-export function UsersTable({
-  users,
+type CardsTableProps = {
+  cards: AdminCardListItemDto[];
+  total: number;
+  page: number;
+  limit: number;
+  search: string;
+  statusFilter: string;
+  tierFilter: string;
+  staffRole: StaffRole;
+};
+
+export function CardsTable({
+  cards,
   total,
   page,
   limit,
@@ -194,13 +200,13 @@ export function UsersTable({
   statusFilter: initialStatus,
   tierFilter: initialTier,
   staffRole,
-}: UsersTableProps) {
+}: CardsTableProps) {
   const router = useRouter();
   const [search, setSearch] = useState(initialSearch);
   const [statusFilter, setStatusFilter] = useState(initialStatus);
   const [tierFilter, setTierFilter] = useState(initialTier);
   const totalPages = Math.ceil(total / limit);
-  const canMutate = canMutateUsers(staffRole);
+  const canMutate = canMutateCards(staffRole);
 
   function navigate(toPage: number) {
     const params = new URLSearchParams();
@@ -209,16 +215,20 @@ export function UsersTable({
     if (search) params.set('search', search);
     if (statusFilter) params.set('status', statusFilter);
     if (tierFilter) params.set('membershipTier', tierFilter);
-    router.push(`/dashboard/users${params.toString() ? `?${params.toString()}` : ''}`);
+    router.push(`/dashboard/cards${params.toString() ? `?${params.toString()}` : ''}`);
   }
 
-  function handleSearch(e: React.FormEvent) {
-    e.preventDefault();
+  function handleFilterChange() {
     const params = new URLSearchParams();
     if (search) params.set('search', search);
     if (statusFilter) params.set('status', statusFilter);
     if (tierFilter) params.set('membershipTier', tierFilter);
-    router.push(`/dashboard/users${params.toString() ? `?${params.toString()}` : ''}`);
+    router.push(`/dashboard/cards${params.toString() ? `?${params.toString()}` : ''}`);
+  }
+
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault();
+    handleFilterChange();
   }
 
   return (
@@ -228,7 +238,7 @@ export function UsersTable({
           <Search className="pointer-events-none absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             className="pl-8"
-            placeholder="Search by phone or name..."
+            placeholder="Search by user phone or name..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -240,7 +250,8 @@ export function UsersTable({
         >
           <option value="all">All statuses</option>
           <option value="ACTIVE">Active</option>
-          <option value="BLOCKED">Blocked</option>
+          <option value="REVOKED">Revoked</option>
+          <option value="EXPIRED">Expired</option>
         </select>
         <select
           className="flex h-9 w-[140px] rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
@@ -261,58 +272,68 @@ export function UsersTable({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Phone</TableHead>
-                <TableHead>Name</TableHead>
+                <TableHead>Card #</TableHead>
+                <TableHead>User</TableHead>
                 <TableHead>Status</TableHead>
                 <TableHead>Tier</TableHead>
-                <TableHead>Registered</TableHead>
+                <TableHead>Issued</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {users.length === 0 ? (
+              {cards.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={6} className="py-8 text-center text-muted-foreground">
-                    No users found
+                    No cards found
                   </TableCell>
                 </TableRow>
               ) : (
-                users.map((user) => (
-                  <TableRow key={user.id}>
-                    <TableCell className="font-mono text-xs">{user.phone}</TableCell>
-                    <TableCell>{user.displayName ?? '—'}</TableCell>
+                cards.map((card) => (
+                  <TableRow key={card.id}>
+                    <TableCell className="font-mono text-xs">{card.cardNumber}</TableCell>
                     <TableCell>
-                      <StatusBadge status={user.status} />
+                      <div>
+                        <span className="text-sm">{card.userDisplayName ?? '—'}</span>
+                        <span className="ml-2 font-mono text-xs text-muted-foreground">
+                          {card.userPhone}
+                        </span>
+                      </div>
                     </TableCell>
                     <TableCell>
-                      <StatusBadge status={user.membershipTier} />
+                      <StatusBadge status={card.status} />
+                    </TableCell>
+                    <TableCell>
+                      <StatusBadge status={card.membershipTier} />
                     </TableCell>
                     <TableCell className="text-xs text-muted-foreground">
-                      {new Date(user.createdAt).toLocaleDateString()}
+                      {new Date(card.issuedAt).toLocaleDateString()}
                     </TableCell>
                     <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <Link href={`/dashboard/users/${user.id}`}>
-                          <Button variant="ghost" size="xs">
-                            <ExternalLink className="h-3.5 w-3.5" />
-                          </Button>
-                        </Link>
-                        {canMutate ? (
-                          user.status === 'ACTIVE' ? (
-                            <BlockConfirmDialog
-                              userId={user.id}
-                              userName={user.displayName ?? user.phone}
-                              onAction={() => router.refresh()}
-                            />
-                          ) : (
-                            <UnblockConfirmDialog
-                              userId={user.id}
-                              userName={user.displayName ?? user.phone}
-                              onAction={() => router.refresh()}
-                            />
-                          )
-                        ) : null}
-                      </div>
+                      {canMutate && card.status === 'ACTIVE' ? (
+                        <div className="flex items-center justify-end gap-1">
+                          <RevokeConfirmDialog
+                            cardId={card.id}
+                            cardNumber={card.cardNumber}
+                            userName={card.userDisplayName ?? card.userPhone}
+                            onAction={() => router.refresh()}
+                          />
+                          <ReissueConfirmDialog
+                            cardId={card.id}
+                            cardNumber={card.cardNumber}
+                            userName={card.userDisplayName ?? card.userPhone}
+                            onAction={() => router.refresh()}
+                          />
+                        </div>
+                      ) : canMutate && card.status === 'REVOKED' ? (
+                        <ReissueConfirmDialog
+                          cardId={card.id}
+                          cardNumber={card.cardNumber}
+                          userName={card.userDisplayName ?? card.userPhone}
+                          onAction={() => router.refresh()}
+                        />
+                      ) : (
+                        <span className="text-xs text-muted-foreground">—</span>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))
@@ -322,43 +343,46 @@ export function UsersTable({
         </div>
 
         <div className="divide-y md:hidden">
-          {users.length === 0 ? (
-            <div className="py-8 text-center text-sm text-muted-foreground">No users found</div>
+          {cards.length === 0 ? (
+            <div className="py-8 text-center text-sm text-muted-foreground">No cards found</div>
           ) : (
-            users.map((user) => (
-              <div key={user.id} className="space-y-3 p-4">
+            cards.map((card) => (
+              <div key={card.id} className="space-y-3 p-4">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-medium">{user.displayName ?? '—'}</p>
-                    <p className="font-mono text-xs text-muted-foreground">{user.phone}</p>
+                    <p className="font-mono text-xs">{card.cardNumber}</p>
+                    <p className="truncate text-sm font-medium">{card.userDisplayName ?? '—'}</p>
+                    <p className="font-mono text-xs text-muted-foreground">{card.userPhone}</p>
                   </div>
-                  <StatusBadge status={user.status} />
+                  <StatusBadge status={card.status} />
                 </div>
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-muted-foreground">
-                    {new Date(user.createdAt).toLocaleDateString()}
+                    {new Date(card.issuedAt).toLocaleDateString()}
                   </span>
                   <div className="flex items-center gap-1">
-                    <Link href={`/dashboard/users/${user.id}`}>
-                      <Button variant="ghost" size="xs">
-                        <ExternalLink className="h-3.5 w-3.5" />
-                        View
-                      </Button>
-                    </Link>
-                    {canMutate ? (
-                      user.status === 'ACTIVE' ? (
-                        <BlockConfirmDialog
-                          userId={user.id}
-                          userName={user.displayName ?? user.phone}
+                    {canMutate && card.status === 'ACTIVE' ? (
+                      <>
+                        <RevokeConfirmDialog
+                          cardId={card.id}
+                          cardNumber={card.cardNumber}
+                          userName={card.userDisplayName ?? card.userPhone}
                           onAction={() => router.refresh()}
                         />
-                      ) : (
-                        <UnblockConfirmDialog
-                          userId={user.id}
-                          userName={user.displayName ?? user.phone}
+                        <ReissueConfirmDialog
+                          cardId={card.id}
+                          cardNumber={card.cardNumber}
+                          userName={card.userDisplayName ?? card.userPhone}
                           onAction={() => router.refresh()}
                         />
-                      )
+                      </>
+                    ) : canMutate && card.status === 'REVOKED' ? (
+                      <ReissueConfirmDialog
+                        cardId={card.id}
+                        cardNumber={card.cardNumber}
+                        userName={card.userDisplayName ?? card.userPhone}
+                        onAction={() => router.refresh()}
+                      />
                     ) : null}
                   </div>
                 </div>

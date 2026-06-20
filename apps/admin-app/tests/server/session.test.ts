@@ -9,9 +9,8 @@ mock.module('next/headers', () => ({
   cookies: () => Promise.resolve(mockCookieStore),
 }));
 
-const { readStaffSession, setStaffSession, clearStaffSession } = await import(
-  '../../src/server/auth/session'
-);
+const { readStaffSession, setStaffSession, clearStaffSession } =
+  await import('../../src/server/auth/session');
 
 describe('session', () => {
   beforeEach(() => {

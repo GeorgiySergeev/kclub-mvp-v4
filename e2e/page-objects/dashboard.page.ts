@@ -16,13 +16,20 @@ export class DashboardPage {
 
   getTab(tabName: string): Locator {
     switch (tabName) {
-      case 'card': return this.page.locator(SELECTORS.DASHBOARD_TAB_CARD).first();
-      case 'catalog': return this.page.locator(SELECTORS.DASHBOARD_TAB_CATALOG).first();
-      case 'subscription': return this.page.locator(SELECTORS.DASHBOARD_TAB_SUBSCRIPTION).first();
-      case 'profile': return this.page.locator(SELECTORS.DASHBOARD_TAB_PROFILE).first();
-      case 'business': return this.page.locator(SELECTORS.DASHBOARD_TAB_BUSINESS).first();
-      case 'introductions': return this.page.locator(SELECTORS.DASHBOARD_TAB_INTRODUCTIONS).first();
-      default: return this.page.locator('body').first();
+      case 'card':
+        return this.page.locator(SELECTORS.DASHBOARD_TAB_CARD).first();
+      case 'catalog':
+        return this.page.locator(SELECTORS.DASHBOARD_TAB_CATALOG).first();
+      case 'subscription':
+        return this.page.locator(SELECTORS.DASHBOARD_TAB_SUBSCRIPTION).first();
+      case 'profile':
+        return this.page.locator(SELECTORS.DASHBOARD_TAB_PROFILE).first();
+      case 'business':
+        return this.page.locator(SELECTORS.DASHBOARD_TAB_BUSINESS).first();
+      case 'introductions':
+        return this.page.locator(SELECTORS.DASHBOARD_TAB_INTRODUCTIONS).first();
+      default:
+        return this.page.locator('body').first();
     }
   }
 

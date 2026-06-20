@@ -160,7 +160,13 @@ export function SignUpForm({ locale }: { locale: Locale }) {
                 {error}
               </p>
             )}
-            <Button type="submit" fullWidth disabled={isLoading} className={buttonClassName} data-testid="auth-submit-phone">
+            <Button
+              type="submit"
+              fullWidth
+              disabled={isLoading}
+              className={buttonClassName}
+              data-testid="auth-submit-phone"
+            >
               {isLoading ? tCommon('loading') : t('submit')}
               <ArrowRight aria-hidden="true" size={16} strokeWidth={1.7} />
             </Button>
@@ -191,7 +197,13 @@ export function SignUpForm({ locale }: { locale: Locale }) {
                 {error}
               </p>
             )}
-            <Button type="submit" fullWidth disabled={isLoading} className={buttonClassName} data-testid="auth-submit-otp">
+            <Button
+              type="submit"
+              fullWidth
+              disabled={isLoading}
+              className={buttonClassName}
+              data-testid="auth-submit-otp"
+            >
               {isLoading ? tCommon('loading') : tCommon('submitOtp')}
               <ArrowRight aria-hidden="true" size={16} strokeWidth={1.7} />
             </Button>

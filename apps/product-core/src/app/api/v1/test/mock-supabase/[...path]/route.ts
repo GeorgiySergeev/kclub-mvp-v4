@@ -18,13 +18,13 @@ export async function POST(request: Request, { params }: { params: Promise<{ pat
   if (endpoint === 'auth/v1/verify') {
     const body = await request.json();
     const phone = body.phone;
-    
+
     if (body.token === '000000') {
       // Look up member by phone to get the correct UUID for seeded tests
       const { createClient } = require('@supabase/supabase-js');
       const supabase = createClient(
         process.env.NEXT_PUBLIC_SUPABASE_URL!.replace('/api/v1/test/mock-supabase', ''), // use dummy URL or anything
-        process.env.SUPABASE_SERVICE_ROLE_KEY!
+        process.env.SUPABASE_SERVICE_ROLE_KEY!,
       );
       // Actually we are IN product-core, we can just use the db!
       let mockUserId = '11111111-2222-3333-4444-555555555555';

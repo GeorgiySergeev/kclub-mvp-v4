@@ -65,9 +65,7 @@ export function DigitalClubCard({
 
       <div className="flex items-end justify-between gap-6">
         <div className="min-w-0 space-y-4">
-          <p className="truncate text-sm font-semibold uppercase tracking-[0.08em]">
-            {memberName}
-          </p>
+          <p className="truncate text-sm font-semibold uppercase tracking-[0.08em]">{memberName}</p>
 
           <div className="flex flex-wrap gap-x-8 gap-y-3">
             <div>

@@ -16,11 +16,11 @@ export function HeroSection({ locale }: { locale: Locale }) {
         aria-hidden="true"
       />
       <div
-        className="absolute inset-y-0 right-[10%] hidden w-px bg-zinc-300/80 lg:block dark:bg-white/10"
+        className="absolute inset-y-0 right-[10%] hidden w-px bg-zinc-300/80 dark:bg-white/10 lg:block"
         aria-hidden="true"
       />
       <div
-        className="absolute left-0 top-[6.625rem] hidden h-px w-full bg-zinc-300/70 lg:block dark:bg-white/10"
+        className="absolute left-0 top-[6.625rem] hidden h-px w-full bg-zinc-300/70 dark:bg-white/10 lg:block"
         aria-hidden="true"
       />
 
@@ -48,7 +48,7 @@ export function HeroSection({ locale }: { locale: Locale }) {
             </Link>
           </div>
 
-          <div className="mt-20 grid gap-8 border-t border-zinc-200 pt-8 sm:grid-cols-3 dark:border-border">
+          <div className="mt-20 grid gap-8 border-t border-zinc-200 pt-8 dark:border-border sm:grid-cols-3">
             <div className="kclub-hero-stat">
               <p className="kclub-hero-stat-label">{t('hero.stats.verified.title')}</p>
               <p className="kclub-hero-stat-copy">{t('hero.stats.verified.copy')}</p>

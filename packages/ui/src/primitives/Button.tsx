@@ -17,14 +17,13 @@ export function Button({
   return (
     <button
       className={cn(
-        'inline-flex items-center justify-center rounded-md border font-normal transition focus:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-focus',
+        'focus-visible:ring-focus focus-visible:ring-offset-focus inline-flex items-center justify-center rounded-md border font-normal transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2',
         {
-          'border-transparent bg-primary text-primary-foreground shadow-sm hover:opacity-90':
+          'bg-primary text-primary-foreground border-transparent shadow-sm hover:opacity-90':
             variant === 'primary',
-          'border-border bg-secondary text-secondary-foreground shadow-sm hover:bg-surface-muted':
+          'border-border bg-secondary text-secondary-foreground hover:bg-surface-muted shadow-sm':
             variant === 'secondary',
-          'border-transparent text-muted-foreground hover:text-foreground':
-            variant === 'ghost',
+          'text-muted-foreground hover:text-foreground border-transparent': variant === 'ghost',
         },
         {
           'px-6 py-2.5 text-sm': size === 'default',

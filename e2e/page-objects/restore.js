@@ -469,7 +469,7 @@ export class SignUpPage {
     await this.page.locator(SELECTORS.AUTH_SUBMIT_OTP).first().click();
   }
 }
-`
+`,
 };
 
 for (const [filename, content] of Object.entries(files)) {
