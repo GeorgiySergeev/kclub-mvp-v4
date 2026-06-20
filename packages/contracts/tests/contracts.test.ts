@@ -129,6 +129,54 @@ describe('route contracts', () => {
   });
 });
 
+describe('admin business DTO fields', () => {
+  test('includes owner summary, placement indicator, and audit entries in detail', () => {
+    const mockOwner = {
+      id: 'o1',
+      phone: '+1',
+      displayName: 'Owner',
+      status: 'ACTIVE' as const,
+      membershipTier: 'VIP' as const,
+    };
+    const mockPlacement = { status: 'ACTIVE' as const, currentPeriodEnd: null };
+
+    const detail = {
+      id: 'b1',
+      slug: 'test',
+      name: 'Test',
+      categoryName: 'Cat',
+      countryName: 'US',
+      cityName: 'NY',
+      briefDescription: null,
+      websiteUrl: null,
+      socialUrl: null,
+      featuredTop: false,
+      featuredRecommended: false,
+      description: null,
+      representativeName: null,
+      publishedAt: null,
+      ownerUserId: 'o1',
+      status: 'UNDER_REVIEW' as const,
+      representativeEmail: 'e@e.com',
+      representativePhone: '+1',
+      rejectionReason: null,
+      internalNotes: null,
+      approvedAt: null,
+      hiddenAt: null,
+      createdAt: '2024-01-01',
+      updatedAt: '2024-01-01',
+      owner: mockOwner,
+      placementSubscription: mockPlacement,
+      auditEntries: [],
+    };
+
+    expect(detail.owner.id).toBe('o1');
+    expect(detail.owner.membershipTier).toBe('VIP');
+    expect(detail.placementSubscription?.status).toBe('ACTIVE');
+    expect(detail.auditEntries).toEqual([]);
+  });
+});
+
 describe('public/admin DTO boundaries', () => {
   test('does not expose admin-only business fields as public DTO keys', () => {
     for (const key of ADMIN_BUSINESS_ONLY_KEYS) {

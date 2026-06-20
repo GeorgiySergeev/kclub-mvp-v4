@@ -9,7 +9,7 @@ export class AdminBusinessesPage {
   }
 
   async goto(): Promise<void> {
-    await this.page.goto('/businesses');
+    await this.page.goto('/dashboard/businesses');
   }
 
   get table(): Locator {
@@ -22,5 +22,17 @@ export class AdminBusinessesPage {
 
   async rejectFirst(): Promise<void> {
     await this.page.locator(SELECTORS.ADMIN_BUSINESS_REJECT_BTN).first().click();
+  }
+
+  async approveBusinessById(businessId: string): Promise<void> {
+    await this.page.goto(`/dashboard/businesses/${businessId}`);
+    await this.page
+      .getByRole('button', { name: /approve/i })
+      .first()
+      .click();
+    await this.page
+      .getByRole('button', { name: /^approve$/i })
+      .last()
+      .click();
   }
 }

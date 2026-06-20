@@ -1,6 +1,9 @@
 import {
   ERROR_CODES,
   type AdminBusinessDetailDto,
+  type AdminBusinessListItemDto,
+  type AdminBusinessOwnerSummaryDto,
+  type AdminBusinessSubscriptionIndicatorDto,
   type AdminCardListItemDto,
   type AdminUserDetailDto,
   type AdminUserListItemDto,
@@ -25,6 +28,7 @@ import {
   FEATURED_TOP_MAX,
 } from '@kclub/domain';
 import type {
+  AdminBusinessListInput,
   AdminCardListInput,
   AdminUserListInput,
   BusinessApproveInput,
@@ -377,20 +381,71 @@ export async function adminReissueCard(
 
 // ── Businesses ──
 
-export async function listBusinesses(): Promise<AdminBusinessDetailDto[]> {
+const BUSINESS_LIST_INCLUDE = {
+  category: true,
+  country: true,
+  city: true,
+  user: { select: { id: true, phone: true, display_name: true, status: true, membership_tier: true } },
+  subscriptions: {
+    where: { kind: 'BUSINESS_PLACEMENT' as const },
+    orderBy: { created_at: 'desc' as const },
+    take: 1,
+  },
+};
+
+export async function listBusinesses(
+  params: AdminBusinessListInput,
+): Promise<{ data: AdminBusinessListItemDto[]; total: number }> {
   const prisma = getPrismaClient();
-  const businesses = await prisma.businessProfile.findMany({
-    include: { category: true, country: true, city: true },
-    orderBy: { created_at: 'desc' },
-  });
-  return businesses.map(toAdminBusinessDetail);
+
+  const where: Record<string, unknown> = {};
+  if (params.status) {
+    where.status = params.status;
+  }
+
+  const [businesses, total] = await Promise.all([
+    prisma.businessProfile.findMany({
+      where,
+      include: BUSINESS_LIST_INCLUDE,
+      orderBy: { created_at: 'desc' },
+      skip: (params.page - 1) * params.limit,
+      take: params.limit,
+    }),
+    prisma.businessProfile.count({ where }),
+  ]);
+
+  return { data: businesses.map(toAdminBusinessListItem), total };
 }
+
+const BUSINESS_MUTATION_INCLUDE = {
+  category: true,
+  country: true,
+  city: true,
+  user: { select: { id: true, phone: true, display_name: true, status: true, membership_tier: true } },
+  subscriptions: {
+    where: { kind: 'BUSINESS_PLACEMENT' as const },
+    orderBy: { created_at: 'desc' as const },
+    take: 1,
+  },
+};
+
+const BUSINESS_DETAIL_INCLUDE = {
+  category: true,
+  country: true,
+  city: true,
+  user: { select: { id: true, phone: true, display_name: true, status: true, membership_tier: true } },
+  subscriptions: {
+    where: { kind: 'BUSINESS_PLACEMENT' as const },
+    orderBy: { created_at: 'desc' as const },
+    take: 1,
+  },
+};
 
 export async function getBusinessDetail(businessId: string): Promise<AdminBusinessDetailDto> {
   const prisma = getPrismaClient();
   const business = await prisma.businessProfile.findUnique({
     where: { id: businessId },
-    include: { category: true, country: true, city: true },
+    include: BUSINESS_DETAIL_INCLUDE,
   });
   if (!business) {
     throw new AppError({
@@ -399,7 +454,14 @@ export async function getBusinessDetail(businessId: string): Promise<AdminBusine
       status: 404,
     });
   }
-  return toAdminBusinessDetail(business);
+
+  const auditEntries = await prisma.auditLog.findMany({
+    where: { entity_type: 'BusinessProfile', entity_id: businessId },
+    orderBy: { created_at: 'desc' },
+    take: 50,
+  });
+
+  return toAdminBusinessDetail(business, auditEntries);
 }
 
 export async function approveBusiness(
@@ -410,7 +472,7 @@ export async function approveBusiness(
   const prisma = getPrismaClient();
   const business = await prisma.businessProfile.findUnique({
     where: { id: businessId },
-    include: { category: true, country: true, city: true },
+    include: BUSINESS_MUTATION_INCLUDE,
   });
 
   if (!business) {
@@ -436,7 +498,7 @@ export async function approveBusiness(
       approved_at: new Date(),
       internal_notes: input.notes ?? business.internal_notes,
     },
-    include: { category: true, country: true, city: true },
+    include: BUSINESS_MUTATION_INCLUDE,
   });
 
   await auditService.log(
@@ -461,7 +523,7 @@ export async function rejectBusiness(
   const prisma = getPrismaClient();
   const business = await prisma.businessProfile.findUnique({
     where: { id: businessId },
-    include: { category: true, country: true, city: true },
+    include: BUSINESS_MUTATION_INCLUDE,
   });
 
   if (!business) {
@@ -487,7 +549,7 @@ export async function rejectBusiness(
       rejection_reason: input.reason,
       rejected_at: new Date(),
     },
-    include: { category: true, country: true, city: true },
+    include: BUSINESS_MUTATION_INCLUDE,
   });
 
   await auditService.log(
@@ -512,7 +574,7 @@ export async function hideBusiness(
   const prisma = getPrismaClient();
   const business = await prisma.businessProfile.findUnique({
     where: { id: businessId },
-    include: { category: true, country: true, city: true },
+    include: BUSINESS_MUTATION_INCLUDE,
   });
 
   if (!business) {
@@ -539,7 +601,7 @@ export async function hideBusiness(
       featured_top: false,
       featured_recommended: false,
     },
-    include: { category: true, country: true, city: true },
+    include: BUSINESS_MUTATION_INCLUDE,
   });
 
   await auditService.log(
@@ -569,7 +631,7 @@ export async function updateBusinessFeatured(
 
   const business = await prisma.businessProfile.findUnique({
     where: { id: businessId },
-    include: { category: true, country: true, city: true },
+    include: BUSINESS_MUTATION_INCLUDE,
   });
 
   if (!business) {
@@ -643,7 +705,17 @@ export async function updateBusinessFeatured(
         featured_recommended:
           setRecommended !== undefined ? setRecommended : business.featured_recommended,
       },
-      include: { category: true, country: true, city: true },
+      include: {
+        category: true,
+        country: true,
+        city: true,
+        user: { select: { id: true, phone: true, display_name: true, status: true, membership_tier: true } },
+        subscriptions: {
+          where: { kind: 'BUSINESS_PLACEMENT' as const },
+          orderBy: { created_at: 'desc' as const },
+          take: 1,
+        },
+      },
     });
 
     return [b];
@@ -1292,7 +1364,28 @@ function toAdminCardListItem(card: any): AdminCardListItemDto {
   };
 }
 
-function toAdminBusinessDetail(business: any): AdminBusinessDetailDto {
+function toAdminBusinessOwnerSummary(user: any): AdminBusinessOwnerSummaryDto {
+  return {
+    id: user.id,
+    phone: user.phone,
+    displayName: user.display_name,
+    status: user.status as UserStatus,
+    membershipTier: user.membership_tier as MemberTier,
+  };
+}
+
+function toAdminBusinessSubscriptionIndicator(
+  sub: any,
+): AdminBusinessSubscriptionIndicatorDto | null {
+  if (!sub) return null;
+  return {
+    status: sub.status as SubscriptionStatus,
+    currentPeriodEnd: sub.current_period_end?.toISOString() ?? null,
+  };
+}
+
+function toAdminBusinessListItem(business: any): AdminBusinessListItemDto {
+  const placementSub = business.subscriptions?.[0] ?? null;
   return {
     id: business.id,
     slug: business.slug,
@@ -1318,6 +1411,26 @@ function toAdminBusinessDetail(business: any): AdminBusinessDetailDto {
     hiddenAt: business.hidden_at?.toISOString() ?? null,
     createdAt: business.created_at.toISOString(),
     updatedAt: business.updated_at.toISOString(),
+    owner: toAdminBusinessOwnerSummary(business.user),
+    placementSubscription: toAdminBusinessSubscriptionIndicator(placementSub),
+  };
+}
+
+function toAdminBusinessDetail(business: any, auditEntries?: any[]): AdminBusinessDetailDto {
+  return {
+    ...toAdminBusinessListItem(business),
+    auditEntries: (auditEntries ?? []).map((log: any) => ({
+      id: log.id,
+      actorStaffId: log.actor_staff_id ?? null,
+      actorRole: log.actor_role as any,
+      action: log.action as any,
+      entityType: log.entity_type,
+      entityId: log.entity_id,
+      before: log.before_data as Record<string, unknown> | null,
+      after: log.after_data as Record<string, unknown> | null,
+      ipAddress: log.ip_address ?? null,
+      createdAt: log.created_at?.toISOString() ?? new Date().toISOString(),
+    })),
   };
 }
 

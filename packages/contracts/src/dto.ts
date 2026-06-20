@@ -197,6 +197,9 @@ export type AdminBusinessDetailDto = PublicBusinessDetailDto & {
   hiddenAt: IsoDateTime | null;
   createdAt: IsoDateTime;
   updatedAt: IsoDateTime;
+  owner: AdminBusinessOwnerSummaryDto;
+  placementSubscription: AdminBusinessSubscriptionIndicatorDto | null;
+  auditEntries: AuditLogDto[];
 };
 
 export type MemberBusinessProfileDto = PublicBusinessDetailDto & {
@@ -238,6 +241,48 @@ export type MemberIntroductionDto = IntroductionDto & {
   requesterBusinessSlug: string;
   targetBusinessName: string;
   targetBusinessSlug: string;
+};
+
+export type AdminBusinessOwnerSummaryDto = {
+  id: EntityId;
+  phone: string;
+  displayName: string | null;
+  status: UserStatus;
+  membershipTier: MemberTier;
+};
+
+export type AdminBusinessSubscriptionIndicatorDto = {
+  status: SubscriptionStatus;
+  currentPeriodEnd: IsoDateTime | null;
+};
+
+export type AdminBusinessListItemDto = {
+  id: EntityId;
+  slug: string;
+  name: string;
+  categoryName: string;
+  countryName: string;
+  cityName: string;
+  briefDescription: string | null;
+  websiteUrl: string | null;
+  socialUrl: string | null;
+  featuredTop: boolean;
+  featuredRecommended: boolean;
+  description: string | null;
+  representativeName: string | null;
+  publishedAt: IsoDateTime | null;
+  ownerUserId: EntityId;
+  status: BusinessStatus;
+  representativeEmail: string;
+  representativePhone: string;
+  rejectionReason: string | null;
+  internalNotes: string | null;
+  approvedAt: IsoDateTime | null;
+  hiddenAt: IsoDateTime | null;
+  createdAt: IsoDateTime;
+  updatedAt: IsoDateTime;
+  owner: AdminBusinessOwnerSummaryDto;
+  placementSubscription: AdminBusinessSubscriptionIndicatorDto | null;
 };
 
 export type AuditLogDto = {

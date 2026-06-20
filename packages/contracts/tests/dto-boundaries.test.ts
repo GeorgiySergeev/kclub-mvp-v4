@@ -21,6 +21,15 @@ type PublicBusinessDoesNotExposeOwner = Assert<
 type AdminBusinessExposesModerationFields = Assert<
   HasKey<AdminBusinessDetailDto, 'representativeEmail'> extends true ? true : false
 >;
+type AdminBusinessExposesOwner = Assert<
+  HasKey<AdminBusinessDetailDto, 'owner'> extends true ? true : false
+>;
+type AdminBusinessExposesPlacementSubscription = Assert<
+  HasKey<AdminBusinessDetailDto, 'placementSubscription'> extends true ? true : false
+>;
+type AdminBusinessExposesAuditEntries = Assert<
+  HasKey<AdminBusinessDetailDto, 'auditEntries'> extends true ? true : false
+>;
 
 type PublicCardVerifyDoesNotExposeUserId = Assert<
   HasKey<PublicCardVerificationDto, 'userId'> extends false ? true : false
@@ -43,7 +52,10 @@ type MemberCardDtoDoesNotExposeUserDisplayName = Assert<
 >;
 
 export type {
+  AdminBusinessExposesAuditEntries,
   AdminBusinessExposesModerationFields,
+  AdminBusinessExposesOwner,
+  AdminBusinessExposesPlacementSubscription,
   AdminCardListItemExposesUserPhone,
   AdminCardListItemExposesUserDisplayName,
   MemberCardDtoDoesNotExposeUserPhone,
