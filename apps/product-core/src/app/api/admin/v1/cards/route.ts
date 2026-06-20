@@ -6,7 +6,7 @@ import { listCards } from '@/server/services/admin-service';
 
 export async function GET(request: NextRequest) {
   try {
-    adminGuard(request, STAFF_PERMISSIONS.CARDS_READ);
+    await adminGuard(request, STAFF_PERMISSIONS.CARDS_READ);
     const result = await listCards();
     return jsonSuccess(result);
   } catch (error) {

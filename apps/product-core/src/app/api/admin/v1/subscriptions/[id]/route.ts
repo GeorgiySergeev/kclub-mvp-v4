@@ -10,7 +10,7 @@ type Params = {
 
 export async function GET(request: NextRequest, { params }: Params) {
   try {
-    adminGuard(request, STAFF_PERMISSIONS.SUBSCRIPTIONS_READ);
+    await adminGuard(request, STAFF_PERMISSIONS.SUBSCRIPTIONS_READ);
     const { id } = await params;
     const result = await getSubscriptionDetail(id);
     return jsonSuccess(result);

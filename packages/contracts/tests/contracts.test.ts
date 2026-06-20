@@ -46,6 +46,7 @@ describe('centralized constants', () => {
   test('exports expected error-code groups', () => {
     expect(ERROR_CODES.AUTH_SESSION_REQUIRED).toBe('AUTH_SESSION_REQUIRED');
     expect(ERROR_CODES.AUTH_SESSION_INVALID).toBe('AUTH_SESSION_INVALID');
+    expect(ERROR_CODES.AUTH_SESSION_REVOKED).toBe('AUTH_SESSION_REVOKED');
     expect(ERROR_CODES.AUTH_STAFF_NOT_ALLOWED).toBe('AUTH_STAFF_NOT_ALLOWED');
     expect(ERROR_CODES.PERMISSION_DENIED).toBe('PERMISSION_DENIED');
     expect(ERROR_CODES.BUSINESS_INVALID_STATUS_TRANSITION).toBe(
@@ -104,6 +105,8 @@ describe('route contracts', () => {
     expect(MEMBER_API_ROUTES.ME).toBe('/api/v1/me');
     expect(ADMIN_API_BASE_PATH).toBe('/api/admin/v1');
     expect(ADMIN_API_ROUTES.STAFF_AUTH_SESSION).toBe('/api/admin/v1/staff-auth/session');
+    expect(ADMIN_API_ROUTES.STAFF_AUTH_TOTP_SETUP).toBe('/api/admin/v1/staff-auth/totp/setup');
+    expect(ADMIN_API_ROUTES.STAFF_AUTH_LOGOUT).toBe('/api/admin/v1/staff-auth/logout');
     expect(ADMIN_API_ROUTES.BUSINESS_APPROVE).toBe('/api/admin/v1/businesses/:id/approve');
   });
 

@@ -6,7 +6,7 @@ import { listUsers } from '@/server/services/admin-service';
 
 export async function GET(request: NextRequest) {
   try {
-    adminGuard(request, STAFF_PERMISSIONS.USERS_READ);
+    await adminGuard(request, STAFF_PERMISSIONS.USERS_READ);
     const result = await listUsers();
     return jsonSuccess(result);
   } catch (error) {
