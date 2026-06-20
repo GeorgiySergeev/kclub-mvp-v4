@@ -11,7 +11,7 @@ type Params = {
 
 export async function POST(request: NextRequest, { params }: Params) {
   try {
-    const { profile, context } = adminGuard(request, STAFF_PERMISSIONS.CARDS_REISSUE);
+    const { profile, context } = await adminGuard(request, STAFF_PERMISSIONS.CARDS_REISSUE);
     const { id } = await params;
     const body = await request.json();
     const input = reissueCardSchema.parse(body);

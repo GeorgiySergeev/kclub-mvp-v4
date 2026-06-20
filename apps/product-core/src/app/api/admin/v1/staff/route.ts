@@ -6,7 +6,7 @@ import { listStaff } from '@/server/services/admin-service';
 
 export async function GET(request: NextRequest) {
   try {
-    const { profile, context } = adminGuard(request, STAFF_PERMISSIONS.STAFF_MANAGE);
+    const { profile, context } = await adminGuard(request, STAFF_PERMISSIONS.STAFF_MANAGE);
     const result = await listStaff(context);
     return jsonSuccess(result);
   } catch (error) {

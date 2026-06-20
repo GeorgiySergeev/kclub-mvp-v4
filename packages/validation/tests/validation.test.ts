@@ -33,6 +33,9 @@ import {
   staffRoleUpdateSchema,
   staffTotpSetupSchema,
   staffTotpVerifySchema,
+  staffPhoneOtpSendSchema,
+  staffPhoneOtpVerifySchema,
+  staffTotpCodeSchema,
   unblockUserSchema,
   adminConfigUpdateSchema,
 } from '../src';
@@ -219,6 +222,30 @@ describe('introduction schemas', () => {
 });
 
 describe('staff auth schemas', () => {
+  test('validates staff phone OTP send and verify payloads', () => {
+    expect(staffPhoneOtpSendSchema.parse({ phone: '+15551234567' })).toEqual({
+      phone: '+15551234567',
+    });
+
+    expect(staffPhoneOtpVerifySchema.parse({ phone: '+15551234567', code: '000000' })).toEqual({
+      phone: '+15551234567',
+      code: '000000',
+    });
+  });
+
+  test('validates TOTP code-only schema', () => {
+    expect(staffTotpCodeSchema.parse({ code: '123456' })).toEqual({ code: '123456' });
+    expectInvalidField(staffTotpCodeSchema, { code: '12345a' }, 'code');
+    expectInvalidField(staffTotpCodeSchema, { code: '12345' }, 'code');
+    expectInvalidField(staffTotpCodeSchema, {}, 'code');
+  });
+
+  test('rejects invalid staff phone OTP fields', () => {
+    expectInvalidField(staffPhoneOtpSendSchema, { phone: '555' }, 'phone');
+    expectInvalidField(staffPhoneOtpSendSchema, {}, 'phone');
+    expectInvalidField(staffPhoneOtpVerifySchema, { phone: '+15551234567', code: 'abc' }, 'code');
+  });
+
   test('validates TOTP setup and verify payloads', () => {
     expect(
       staffTotpSetupSchema.parse({

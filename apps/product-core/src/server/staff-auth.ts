@@ -1,4 +1,4 @@
-import { createHmac, timingSafeEqual } from 'node:crypto';
+import { createHash, createHmac, timingSafeEqual } from 'node:crypto';
 import * as OTPAuth from 'otpauth';
 
 import {
@@ -12,6 +12,12 @@ import {
   type StaffRole,
   type StaffTotpSetupDto,
 } from '@kclub/contracts';
+import {
+  parseWithValidation,
+  staffPhoneOtpSendSchema,
+  staffPhoneOtpVerifySchema,
+  staffTotpCodeSchema,
+} from '@kclub/validation';
 import { getPrismaClient } from '@/server/db';
 import { encryptSecret, decryptSecret } from '@/server/totp-crypto';
 
@@ -63,6 +69,10 @@ function sign(input: string): string {
   return createHmac('sha256', getSessionSecret()).update(input).digest('base64url');
 }
 
+function hashSessionToken(token: string): string {
+  return createHash('sha256').update(token).digest('hex');
+}
+
 function createSessionToken(payload: StaffSessionPayload): string {
   const header = base64UrlEncode(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
   const body = base64UrlEncode(JSON.stringify(payload));
@@ -91,6 +101,67 @@ function readSessionToken(token: string): StaffSessionPayload | null {
     return payload;
   } catch {
     return null;
+  }
+}
+
+async function createDbSession(
+  token: string,
+  adminUserId: string,
+  ipAddress?: string | null,
+  userAgent?: string | null,
+): Promise<void> {
+  try {
+    const prisma = getPrismaClient();
+    await prisma.adminSession.create({
+      data: {
+        admin_user_id: adminUserId,
+        session_token_hash: hashSessionToken(token),
+        ip_address: ipAddress ?? null,
+        user_agent: userAgent ?? null,
+        expires_at: new Date(Date.now() + SESSION_TTL_SECONDS * 1000),
+      },
+    });
+  } catch {
+    // DB unavailable — session will be validated by JWT only
+  }
+}
+
+async function validateDbSession(token: string): Promise<boolean> {
+  try {
+    const prisma = getPrismaClient();
+    const session = await prisma.adminSession.findUnique({
+      where: { session_token_hash: hashSessionToken(token) },
+    });
+
+    if (!session) return true;
+    if (session.revoked_at) return false;
+    if (session.expires_at <= new Date()) return false;
+
+    prisma.adminSession
+      .update({
+        where: { id: session.id },
+        data: { last_seen_at: new Date() },
+      })
+      .catch(() => {});
+
+    return true;
+  } catch {
+    return true;
+  }
+}
+
+async function revokeDbSession(token: string): Promise<void> {
+  try {
+    const prisma = getPrismaClient();
+    await prisma.adminSession.updateMany({
+      where: {
+        session_token_hash: hashSessionToken(token),
+        revoked_at: null,
+      },
+      data: { revoked_at: new Date() },
+    });
+  } catch {
+    // DB unavailable
   }
 }
 
@@ -167,13 +238,21 @@ function isValidDevTotp(code: string): boolean {
   return code === (process.env.ADMIN_STAFF_DEV_TOTP ?? DEFAULT_DEV_TOTP);
 }
 
+function getClientIp(request: Request): string | null {
+  return (
+    request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ??
+    request.headers.get('x-real-ip') ??
+    null
+  );
+}
+
 export function getBearerToken(request: Request): string | null {
   const header = request.headers.get('authorization');
   if (!header?.startsWith('Bearer ')) return null;
   return header.slice('Bearer '.length);
 }
 
-export function getStaffSession(token: string): StaffProfileDto | null {
+export async function getStaffSession(token: string): Promise<StaffProfileDto | null> {
   const payload = readSessionToken(token);
   if (!payload) return null;
 
@@ -182,16 +261,20 @@ export function getStaffSession(token: string): StaffProfileDto | null {
     return null;
   }
 
+  const dbValid = await validateDbSession(token);
+  if (!dbValid) return null;
+
   return staffToProfile(staff, payload.totpVerified);
 }
 
 export async function handleStaffOtpSend(request: Request): Promise<Response> {
-  const body = (await request.json().catch(() => null)) as { phone?: string } | null;
-  if (!body?.phone) {
+  const rawBody = await request.json().catch(() => null);
+  const parsed = parseWithValidation(staffPhoneOtpSendSchema, rawBody);
+  if (!parsed.success) {
     return error(ERROR_CODES.VALIDATION_INVALID_PHONE, 'Phone is required');
   }
 
-  const staff = findStaffByPhone(body.phone);
+  const staff = findStaffByPhone(parsed.data.phone);
   if (!staff) {
     return error(
       ERROR_CODES.AUTH_STAFF_NOT_ALLOWED,
@@ -209,12 +292,15 @@ export async function handleStaffOtpSend(request: Request): Promise<Response> {
 }
 
 export async function handleStaffOtpVerify(request: Request): Promise<Response> {
-  const body = (await request.json().catch(() => null)) as { phone?: string; code?: string } | null;
-  if (!body?.phone || !body.code) {
+  const rawBody = await request.json().catch(() => null);
+  const parsed = parseWithValidation(staffPhoneOtpVerifySchema, rawBody);
+  if (!parsed.success) {
     return error(ERROR_CODES.VALIDATION_INVALID_INPUT, 'Phone and OTP code are required');
   }
 
-  const staff = findStaffByPhone(body.phone);
+  const { phone, code } = parsed.data;
+
+  const staff = findStaffByPhone(phone);
   if (!staff) {
     return error(
       ERROR_CODES.AUTH_STAFF_NOT_ALLOWED,
@@ -225,7 +311,7 @@ export async function handleStaffOtpVerify(request: Request): Promise<Response> 
   if (!staff.isActive) {
     return error(ERROR_CODES.AUTH_STAFF_INACTIVE, 'This staff account is inactive', 403);
   }
-  if (!isValidDevOtp(body.code)) {
+  if (!isValidDevOtp(code)) {
     return error(ERROR_CODES.AUTH_OTP_INVALID, 'Invalid staff OTP code', 401);
   }
 
@@ -238,6 +324,8 @@ export async function handleStaffOtpVerify(request: Request): Promise<Response> 
     totpVerified: false,
     exp: expiresAt,
   });
+
+  await createDbSession(token, staff.id, getClientIp(request), request.headers.get('user-agent'));
 
   return Response.json(
     success<StaffAuthSessionDto>({
@@ -260,10 +348,13 @@ export async function handleStaffTotpVerify(request: Request): Promise<Response>
     return error(ERROR_CODES.AUTH_SESSION_INVALID, 'Staff session is invalid or expired', 401);
   }
 
-  const body = (await request.json().catch(() => null)) as { code?: string } | null;
-  if (!body?.code) {
+  const rawBody = await request.json().catch(() => null);
+  const parsed = parseWithValidation(staffTotpCodeSchema, rawBody);
+  if (!parsed.success) {
     return error(ERROR_CODES.VALIDATION_INVALID_INPUT, 'TOTP code is required');
   }
+
+  const { code } = parsed.data;
 
   const staff = findStaffByPhone(payload.phone);
   if (!staff?.isActive || staff.id !== payload.sub) {
@@ -293,7 +384,7 @@ export async function handleStaffTotpVerify(request: Request): Promise<Response>
         period: 30,
         secret: OTPAuth.Secret.fromBase32(secretFromDb),
       });
-      isValidCode = totp.validate({ token: body.code, window: 1 }) !== null;
+      isValidCode = totp.validate({ token: code, window: 1 }) !== null;
 
       if (isValidCode && !twoFactor.verified_at) {
         await prisma.$transaction([
@@ -309,16 +400,26 @@ export async function handleStaffTotpVerify(request: Request): Promise<Response>
       }
     }
   } catch {
-    // DB unavailable, fall back to dev TOTP
+    // DB unavailable
   }
 
   if (!secretFromDb) {
-    isValidCode = isValidDevTotp(body.code);
+    if (process.env.NODE_ENV !== 'production') {
+      isValidCode = isValidDevTotp(code);
+    } else {
+      return error(
+        ERROR_CODES.SERVER_DEPENDENCY_UNAVAILABLE,
+        'Authenticator verification is temporarily unavailable',
+        503,
+      );
+    }
   }
 
   if (!isValidCode) {
     return error(ERROR_CODES.AUTH_STAFF_2FA_REQUIRED, 'Invalid authenticator code', 401);
   }
+
+  await revokeDbSession(token);
 
   const expiresAt = Math.floor(Date.now() / 1000) + SESSION_TTL_SECONDS;
   const verifiedToken = createSessionToken({
@@ -329,6 +430,13 @@ export async function handleStaffTotpVerify(request: Request): Promise<Response>
     totpVerified: true,
     exp: expiresAt,
   });
+
+  await createDbSession(
+    verifiedToken,
+    staff.id,
+    getClientIp(request),
+    request.headers.get('user-agent'),
+  );
 
   return Response.json(
     success<StaffAuthSessionDto>({
@@ -431,13 +539,13 @@ export async function handleStaffTotpSetup(request: Request): Promise<Response> 
   );
 }
 
-export function handleStaffSession(request: Request): Response {
+export async function handleStaffSession(request: Request): Promise<Response> {
   const token = getBearerToken(request);
   if (!token) {
     return error(ERROR_CODES.AUTH_SESSION_REQUIRED, 'Staff session is required', 401);
   }
 
-  const profile = getStaffSession(token);
+  const profile = await getStaffSession(token);
   if (!profile) {
     return error(ERROR_CODES.AUTH_SESSION_INVALID, 'Staff session is invalid or expired', 401);
   }
@@ -447,4 +555,20 @@ export function handleStaffSession(request: Request): Response {
       ...profile,
     }),
   );
+}
+
+export async function handleStaffLogout(request: Request): Promise<Response> {
+  const token = getBearerToken(request);
+  if (!token) {
+    return error(ERROR_CODES.AUTH_SESSION_REQUIRED, 'Staff session is required', 401);
+  }
+
+  const payload = readSessionToken(token);
+  if (!payload) {
+    return error(ERROR_CODES.AUTH_SESSION_INVALID, 'Staff session is invalid or expired', 401);
+  }
+
+  await revokeDbSession(token);
+
+  return Response.json(success({ loggedOut: true }));
 }

@@ -11,7 +11,7 @@ type Params = {
 
 export async function GET(request: NextRequest, { params }: Params) {
   try {
-    adminGuard(request, STAFF_PERMISSIONS.STRIPE_PRICES_MANAGE);
+    await adminGuard(request, STAFF_PERMISSIONS.STRIPE_PRICES_MANAGE);
     const { key } = await params;
     const result = await getAdminConfig(key);
     return jsonSuccess(result);
@@ -22,7 +22,7 @@ export async function GET(request: NextRequest, { params }: Params) {
 
 export async function PUT(request: NextRequest, { params }: Params) {
   try {
-    const { profile, context } = adminGuard(request, STAFF_PERMISSIONS.STRIPE_PRICES_MANAGE);
+    const { profile, context } = await adminGuard(request, STAFF_PERMISSIONS.STRIPE_PRICES_MANAGE);
     const { key } = await params;
     const body = await request.json();
     const input = adminConfigUpdateSchema.parse(body);

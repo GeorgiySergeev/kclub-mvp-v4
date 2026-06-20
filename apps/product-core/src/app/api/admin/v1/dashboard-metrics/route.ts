@@ -6,7 +6,7 @@ import { getDashboardMetrics } from '@/server/services/admin-service';
 
 export async function GET(request: NextRequest) {
   try {
-    adminGuard(request, STAFF_PERMISSIONS.DASHBOARD_METRICS_READ);
+    await adminGuard(request, STAFF_PERMISSIONS.DASHBOARD_METRICS_READ);
     const result = await getDashboardMetrics();
     return jsonSuccess(result);
   } catch (error) {

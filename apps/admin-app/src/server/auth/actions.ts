@@ -2,6 +2,7 @@
 
 import { redirect } from 'next/navigation';
 
+import { ADMIN_API_ROUTES } from '@kclub/contracts';
 import { clearStaffSession, readStaffSession, setStaffSession } from '@/server/auth/session';
 import type {
   ApiResponse,
@@ -44,7 +45,7 @@ async function postProductCore<T>(path: string, body: Record<string, string>, to
 export async function sendStaffOtpAction(formData: FormData) {
   const phone = formValue(formData, 'phone');
   const { response, payload } = await postProductCore<StaffAuthChallengeDto>(
-    '/api/admin/v1/staff-auth/phone-otp/send',
+    ADMIN_API_ROUTES.STAFF_AUTH_PHONE_OTP_SEND,
     { phone },
   );
 
@@ -59,7 +60,7 @@ export async function verifyStaffOtpAction(formData: FormData) {
   const phone = formValue(formData, 'phone');
   const code = formValue(formData, 'code');
   const { response, payload } = await postProductCore<StaffAuthSessionDto>(
-    '/api/admin/v1/staff-auth/phone-otp/verify',
+    ADMIN_API_ROUTES.STAFF_AUTH_PHONE_OTP_VERIFY,
     { phone, code },
   );
 
@@ -86,7 +87,7 @@ export async function verifyStaffTotpAction(formData: FormData) {
 
   const code = formValue(formData, 'code');
   const { response, payload } = await postProductCore<StaffAuthSessionDto>(
-    '/api/admin/v1/staff-auth/totp/verify',
+    ADMIN_API_ROUTES.STAFF_AUTH_TOTP_VERIFY,
     { code },
     session.token,
   );
@@ -111,13 +112,16 @@ export async function setupStaffTotpAction(): Promise<{
     redirect('/auth/sign-in');
   }
 
-  const response = await fetch(`${getProductCoreBaseUrl()}/api/admin/v1/staff-auth/totp/setup`, {
-    method: 'GET',
-    cache: 'no-store',
-    headers: {
-      authorization: `Bearer ${session.token}`,
+  const response = await fetch(
+    `${getProductCoreBaseUrl()}${ADMIN_API_ROUTES.STAFF_AUTH_TOTP_SETUP}`,
+    {
+      method: 'GET',
+      cache: 'no-store',
+      headers: {
+        authorization: `Bearer ${session.token}`,
+      },
     },
-  });
+  );
 
   const payload = (await response
     .json()
@@ -134,6 +138,18 @@ export async function setupStaffTotpAction(): Promise<{
 }
 
 export async function logoutAction() {
+  const session = await readStaffSession();
+
+  if (session?.token) {
+    await fetch(`${getProductCoreBaseUrl()}${ADMIN_API_ROUTES.STAFF_AUTH_LOGOUT}`, {
+      method: 'POST',
+      cache: 'no-store',
+      headers: {
+        authorization: `Bearer ${session.token}`,
+      },
+    }).catch(() => {});
+  }
+
   await clearStaffSession();
   redirect('/auth/sign-in');
 }

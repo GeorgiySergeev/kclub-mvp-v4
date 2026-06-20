@@ -24,6 +24,7 @@ describe('auth actions', () => {
 
   afterEach(() => {
     globalThis.fetch = originalFetch;
+    mockCookies.mockReset();
     delete process.env.PRODUCT_CORE_API_BASE_URL;
   });
 
@@ -295,6 +296,11 @@ describe('auth actions', () => {
         set: setCookie,
       });
 
+      globalThis.fetch = mock(async () => ({
+        ok: true,
+        json: async () => ({ data: { loggedOut: true }, error: null }),
+      })) as unknown as typeof fetch;
+
       const { logoutAction } = await import('../../src/server/auth/actions');
 
       try {
@@ -309,6 +315,37 @@ describe('auth actions', () => {
         expect.objectContaining({ maxAge: 0 }),
       );
       expect(mockRedirect).toHaveBeenCalledWith('/auth/sign-in');
+    });
+
+    test('calls product-core logout endpoint before clearing cookie', async () => {
+      const setCookie = mock();
+      mockCookies.mockResolvedValue({
+        get: (name: string) =>
+          name === 'kclub_staff_session' ? { value: 'test-token' } : undefined,
+        set: setCookie,
+      });
+
+      const fetchMock = mock(async () => ({
+        ok: true,
+        json: async () => ({ data: { loggedOut: true }, error: null }),
+      }));
+      globalThis.fetch = fetchMock as unknown as typeof fetch;
+
+      const { logoutAction } = await import('../../src/server/auth/actions');
+
+      try {
+        await logoutAction();
+      } catch {
+        // redirect throws
+      }
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringContaining('/api/admin/v1/staff-auth/logout'),
+        expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({ authorization: 'Bearer test-token' }),
+        }),
+      );
     });
   });
 });

@@ -179,6 +179,8 @@ describe('ADMIN_API_ROUTES contract stability', () => {
     expect(ADMIN_API_ROUTES.ADMIN_CONFIG).toBe('/api/admin/v1/admin-config/:key');
     expect(ADMIN_API_ROUTES.STAFF).toBe('/api/admin/v1/staff');
     expect(ADMIN_API_ROUTES.AUDIT).toBe('/api/admin/v1/audit');
+    expect(ADMIN_API_ROUTES.STAFF_AUTH_TOTP_SETUP).toBe('/api/admin/v1/staff-auth/totp/setup');
+    expect(ADMIN_API_ROUTES.STAFF_AUTH_LOGOUT).toBe('/api/admin/v1/staff-auth/logout');
   });
 });
 
