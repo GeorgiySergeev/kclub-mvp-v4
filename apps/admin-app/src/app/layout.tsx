@@ -1,10 +1,11 @@
+import '@kclub/ui/styles/tokens.css';
 import './globals.css';
 
 import type { Metadata } from 'next';
 import { ReactNode } from 'react';
 import { AppProviders } from '@/components/app-providers';
 import { Geist } from 'next/font/google';
-import { cn } from '@/lib/utils';
+import { SkipLink, cn } from '@kclub/ui';
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -21,6 +22,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning className={cn('font-sans', geist.variable)}>
       <body className="min-h-screen bg-background text-foreground antialiased">
+        <SkipLink />
         <AppProviders>{children}</AppProviders>
       </body>
     </html>

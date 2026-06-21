@@ -11,7 +11,7 @@ import {
 
 export async function GET(request: NextRequest) {
   try {
-    adminGuard(request, STAFF_PERMISSIONS.STRIPE_PRICES_MANAGE);
+    await adminGuard(request, STAFF_PERMISSIONS.STRIPE_PRICES_MANAGE);
     const result = await getStripePrices();
     return jsonSuccess(result);
   } catch (error) {
@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
 
 export async function PUT(request: NextRequest) {
   try {
-    const { profile, context } = adminGuard(request, STAFF_PERMISSIONS.STRIPE_PRICES_MANAGE);
+    const { context } = await adminGuard(request, STAFF_PERMISSIONS.STRIPE_PRICES_MANAGE);
     const body = (await request.json()) as Record<string, unknown>;
 
     const validKeys = STRIPE_PRICE_KEYS as readonly string[];

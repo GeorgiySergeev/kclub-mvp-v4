@@ -13,34 +13,35 @@ export function FeaturesSection() {
   const items = t.raw('features.items') as FeatureItem[];
 
   return (
-    <section className="border-b border-border py-16 dark:border-kclub-navy-700 sm:py-24">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl">
-          <p className="kclub-overline text-muted-foreground">{t('features.eyebrow')}</p>
-          <h2 className="mt-4 font-display text-4xl font-medium tracking-tight text-foreground sm:text-5xl">
+    <section className="kclub-border border-b bg-surface-muted py-16 dark:bg-surface-muted sm:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
+        <div className="grid gap-8 lg:grid-cols-[0.72fr_1fr] lg:items-end">
+          <p className="border-l-4 border-accent pl-4 text-xs font-bold uppercase text-zinc-500 dark:text-white/60">
+            {t('features.eyebrow')}
+          </p>
+          <h2 className="max-w-3xl text-4xl font-black uppercase leading-tight text-zinc-950 dark:text-white sm:text-6xl">
             {t('features.title')}
           </h2>
         </div>
-        <div className="mt-12 grid gap-px border border-border bg-border dark:border-kclub-navy-700 dark:bg-kclub-navy-700 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="kclub-border-strong mt-12 grid gap-px border bg-zinc-300 dark:bg-white/10 sm:grid-cols-2 lg:grid-cols-3">
           {items.map((item, index) => {
             const Icon = icons[index];
 
             return (
               <article
                 key={item.title}
-                className="bg-card p-6 transition duration-200 hover:bg-secondary/50 dark:bg-kclub-navy-950 dark:hover:bg-kclub-navy-900"
+                className="group bg-white p-6 transition hover:bg-zinc-950 dark:bg-surface dark:hover:bg-surface-raised sm:p-8"
               >
-                <Icon
-                  aria-hidden="true"
-                  size={20}
-                  strokeWidth={1.25}
-                  className="text-kclub-gold-500"
-                />
-                <div className="my-5 h-px w-10 bg-kclub-gold-500/40" />
-                <h3 className="font-display text-lg font-medium tracking-tight text-foreground">
+                <div className="kclub-border flex h-12 w-12 items-center justify-center border text-accent transition group-hover:border-white/20 group-hover:text-white">
+                  <Icon aria-hidden="true" size={22} strokeWidth={1.6} />
+                </div>
+                <div className="my-7 h-px w-12 bg-accent" />
+                <h3 className="text-xl font-black uppercase text-zinc-950 transition group-hover:text-white dark:text-white">
                   {item.title}
                 </h3>
-                <p className="mt-3 text-sm leading-6 text-muted-foreground">{item.description}</p>
+                <p className="group-hover:text-white/72 mt-4 text-sm font-medium leading-7 text-zinc-600 transition dark:text-white/70">
+                  {item.description}
+                </p>
               </article>
             );
           })}

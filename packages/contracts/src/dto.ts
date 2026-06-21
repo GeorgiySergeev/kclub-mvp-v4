@@ -22,6 +22,9 @@ export type BusinessStatus = (typeof BUSINESS_STATUSES)[number];
 export const SUBSCRIPTION_STATUSES = ['NONE', 'ACTIVE', 'PAST_DUE', 'CANCELED', 'EXPIRED'] as const;
 export type SubscriptionStatus = (typeof SUBSCRIPTION_STATUSES)[number];
 
+export const SUBSCRIPTION_KINDS = ['VIP_MEMBERSHIP', 'BUSINESS_PLACEMENT'] as const;
+export type SubscriptionKind = (typeof SUBSCRIPTION_KINDS)[number];
+
 export const INTRODUCTION_STATUSES = [
   'SUBMITTED',
   'IN_REVIEW',
@@ -119,6 +122,21 @@ export type AdminUserDetailDto = AdminUserListItemDto & {
   onboardingComplete: boolean;
   termsAcceptedAt: IsoDateTime | null;
   updatedAt: IsoDateTime;
+  cards: MemberCardDto[];
+  subscriptions: SubscriptionDto[];
+  auditEntries: AuditLogDto[];
+};
+
+export type AdminCardListItemDto = {
+  id: EntityId;
+  userId: EntityId;
+  userPhone: string;
+  userDisplayName: string | null;
+  cardNumber: string;
+  status: ClubCardStatus;
+  membershipTier: MemberTier;
+  issuedAt: IsoDateTime;
+  expiresAt: IsoDateTime | null;
 };
 
 export type CurrentMemberProfileDto = {
@@ -185,6 +203,9 @@ export type AdminBusinessDetailDto = PublicBusinessDetailDto & {
   hiddenAt: IsoDateTime | null;
   createdAt: IsoDateTime;
   updatedAt: IsoDateTime;
+  owner: AdminBusinessOwnerSummaryDto;
+  placementSubscription: AdminBusinessSubscriptionIndicatorDto | null;
+  auditEntries: AuditLogDto[];
 };
 
 export type MemberBusinessProfileDto = PublicBusinessDetailDto & {
@@ -232,6 +253,48 @@ export type CheckoutSessionDto = {
   checkoutUrl: string;
 };
 
+export type AdminBusinessOwnerSummaryDto = {
+  id: EntityId;
+  phone: string;
+  displayName: string | null;
+  status: UserStatus;
+  membershipTier: MemberTier;
+};
+
+export type AdminBusinessSubscriptionIndicatorDto = {
+  status: SubscriptionStatus;
+  currentPeriodEnd: IsoDateTime | null;
+};
+
+export type AdminBusinessListItemDto = {
+  id: EntityId;
+  slug: string;
+  name: string;
+  categoryName: string;
+  countryName: string;
+  cityName: string;
+  briefDescription: string | null;
+  websiteUrl: string | null;
+  socialUrl: string | null;
+  featuredTop: boolean;
+  featuredRecommended: boolean;
+  description: string | null;
+  representativeName: string | null;
+  publishedAt: IsoDateTime | null;
+  ownerUserId: EntityId;
+  status: BusinessStatus;
+  representativeEmail: string;
+  representativePhone: string;
+  rejectionReason: string | null;
+  internalNotes: string | null;
+  approvedAt: IsoDateTime | null;
+  hiddenAt: IsoDateTime | null;
+  createdAt: IsoDateTime;
+  updatedAt: IsoDateTime;
+  owner: AdminBusinessOwnerSummaryDto;
+  placementSubscription: AdminBusinessSubscriptionIndicatorDto | null;
+};
+
 export type AuditLogDto = {
   id: EntityId;
   actorStaffId: EntityId | null;
@@ -243,6 +306,112 @@ export type AuditLogDto = {
   after: Record<string, unknown> | null;
   ipAddress: string | null;
   createdAt: IsoDateTime;
+};
+
+export type AdminIntroductionListItemDto = {
+  id: EntityId;
+  requesterUserId: EntityId;
+  requesterBusinessId: EntityId;
+  targetBusinessId: EntityId;
+  status: IntroductionStatus;
+  message: string | null;
+  rejectionReason: string | null;
+  createdAt: IsoDateTime;
+  updatedAt: IsoDateTime;
+  requesterUser: {
+    id: EntityId;
+    phone: string;
+    displayName: string | null;
+  };
+  requesterBusiness: {
+    id: EntityId;
+    name: string;
+    slug: string;
+  };
+  targetBusiness: {
+    id: EntityId;
+    name: string;
+    slug: string;
+  };
+};
+
+export type CategoryDto = {
+  id: EntityId;
+  name: string;
+  slug: string;
+  isHighRisk: boolean;
+  isActive: boolean;
+  createdAt: IsoDateTime;
+  updatedAt: IsoDateTime;
+};
+
+export type CountryDto = {
+  id: EntityId;
+  code2: string;
+  code3: string | null;
+  name: string;
+  slug: string;
+  isActive: boolean;
+  createdAt: IsoDateTime;
+  updatedAt: IsoDateTime;
+};
+
+export type CityDto = {
+  id: EntityId;
+  countryId: EntityId;
+  countryName: string;
+  name: string;
+  slug: string;
+  isActive: boolean;
+  createdAt: IsoDateTime;
+  updatedAt: IsoDateTime;
+};
+
+export type AdminSubscriptionListItemDto = {
+  id: EntityId;
+  userId: EntityId | null;
+  kind: SubscriptionKind;
+  status: SubscriptionStatus;
+  stripeCustomerId: string | null;
+  stripeSubscriptionId: string | null;
+  stripePriceId: string | null;
+  currentPeriodStart: IsoDateTime | null;
+  currentPeriodEnd: IsoDateTime | null;
+  cancelAtPeriodEnd: boolean;
+  createdAt: IsoDateTime;
+  updatedAt: IsoDateTime;
+  user: {
+    id: EntityId;
+    phone: string;
+    displayName: string | null;
+    membershipTier: MemberTier;
+  } | null;
+  businessName: string | null;
+};
+
+export type AdminStaffListItemDto = {
+  id: EntityId;
+  phone: string;
+  displayName: string | null;
+  role: StaffRole;
+  isActive: boolean;
+  totpVerified: boolean;
+  createdAt: IsoDateTime;
+  updatedAt: IsoDateTime;
+};
+
+export type AdminConfigEntryDto = {
+  id: EntityId;
+  key: string;
+  value: unknown;
+  description: string | null;
+  updatedAt: IsoDateTime;
+};
+
+export type MembershipPlanDto = {
+  key: string;
+  value: unknown;
+  description: string | null;
 };
 
 import type { StaffRole } from './permissions';

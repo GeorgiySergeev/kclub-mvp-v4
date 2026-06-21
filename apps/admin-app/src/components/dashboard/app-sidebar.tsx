@@ -18,7 +18,7 @@ export function AppSidebar({ className, staffRole }: AppSidebarProps) {
   const visibleItems = dashboardNav.filter((item) => item.roles.includes(staffRole));
 
   return (
-    <aside className={cn('flex min-h-screen w-64 flex-col border-r bg-card', className)}>
+    <aside className={cn('bg-card flex min-h-screen w-64 flex-col border-r', className)}>
       <div className="flex items-center border-b px-4 py-3">
         <p className="text-sm font-semibold">KCLUB Admin</p>
       </div>
@@ -31,7 +31,7 @@ export function AppSidebar({ className, staffRole }: AppSidebarProps) {
               key={item.href}
               href={item.href}
               className={cn(
-                'flex items-center gap-2 rounded-md px-3 py-1.5 text-sm transition-colors',
+                'flex min-h-[44px] items-center gap-2 rounded-md px-3 py-2.5 text-sm transition-colors',
                 active
                   ? 'bg-primary font-medium text-primary-foreground'
                   : 'text-muted-foreground hover:bg-muted hover:text-foreground',

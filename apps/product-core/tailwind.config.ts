@@ -6,7 +6,19 @@ const config: Config = {
   presets: [sharedConfig],
   darkMode: 'class',
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: [
+          'var(--font-titillium)',
+          'Titillium Web',
+          'ui-sans-serif',
+          'system-ui',
+          'sans-serif',
+          'Apple Color Emoji',
+          'Segoe UI Emoji',
+        ],
+      },
+    },
   },
   plugins: [],
 };

@@ -4,6 +4,7 @@
   "private": true,
   "exports": {
     ".": "./src/index.ts",
+    "./styles/tokens.css": "./src/styles/tokens.css",
     "./package.json": "./package.json"
   },
   "dependencies": {

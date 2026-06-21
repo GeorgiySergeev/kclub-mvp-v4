@@ -29,6 +29,9 @@ export function OnboardingForm({ locale, profile }: OnboardingFormProps) {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const inputClassName = 'kclub-field';
+  const buttonClassName =
+    'kclub-button-primary w-full rounded-none border-0 px-5 py-3.5 text-xs tracking-[0.24em]';
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -75,7 +78,15 @@ export function OnboardingForm({ locale, profile }: OnboardingFormProps) {
     <form className="space-y-6" onSubmit={handleSubmit}>
       <Field>
         <Label htmlFor="phone">{t('phoneLabel')}</Label>
-        <Input id="phone" name="phone" type="tel" value={profile.phone} disabled readOnly />
+        <Input
+          id="phone"
+          name="phone"
+          type="tel"
+          value={profile.phone}
+          disabled
+          readOnly
+          className={inputClassName}
+        />
       </Field>
 
       <Field>
@@ -94,6 +105,7 @@ export function OnboardingForm({ locale, profile }: OnboardingFormProps) {
           disabled={isLoading}
           aria-invalid={!!error}
           aria-describedby={error ? errorId : undefined}
+          className={inputClassName}
         />
       </Field>
 
@@ -105,7 +117,7 @@ export function OnboardingForm({ locale, profile }: OnboardingFormProps) {
           value={localePreference}
           onChange={(event) => setLocalePreference(event.target.value as Locale)}
           disabled={isLoading}
-          className="block w-full rounded-md border-0 px-3 py-2.5 text-zinc-900 shadow-sm ring-1 ring-inset ring-zinc-300 focus:ring-2 focus:ring-inset focus:ring-zinc-900 dark:bg-zinc-900 dark:text-zinc-50 dark:ring-zinc-700 dark:focus:ring-zinc-50 sm:text-sm sm:leading-6"
+          className={inputClassName}
         >
           {locales.map((item) => (
             <option key={item} value={item}>
@@ -115,14 +127,14 @@ export function OnboardingForm({ locale, profile }: OnboardingFormProps) {
         </select>
       </Field>
 
-      <label className="flex gap-3 text-sm text-zinc-700 dark:text-zinc-300">
+      <label className="dark:text-white/72 flex gap-3 text-sm text-zinc-700">
         <input
           type="checkbox"
           checked={termsAccepted}
           onChange={(event) => setTermsAccepted(event.target.checked)}
           disabled={isLoading}
           required
-          className="mt-1 h-4 w-4 rounded border-zinc-300 text-zinc-900 focus:ring-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:focus:ring-zinc-50"
+          className="kclub-checkbox mt-1"
         />
         <span>{t('termsLabel')}</span>
       </label>
@@ -131,7 +143,7 @@ export function OnboardingForm({ locale, profile }: OnboardingFormProps) {
         {error}
       </FieldError>
 
-      <Button type="submit" fullWidth disabled={isLoading}>
+      <Button type="submit" fullWidth disabled={isLoading} className={buttonClassName}>
         {isLoading ? tCommon('saving') : t('submit')}
       </Button>
     </form>

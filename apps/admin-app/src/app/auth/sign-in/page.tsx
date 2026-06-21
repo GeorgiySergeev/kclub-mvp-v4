@@ -48,13 +48,19 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
               <Input
                 id="phone-send"
                 name="phone"
+                data-testid="admin-phone-input"
                 placeholder="+1 (___) ___-____"
                 defaultValue={params.phone ?? ''}
                 autoComplete="tel"
                 required
               />
             </div>
-            <Button className="w-full" variant="outline" type="submit">
+            <Button
+              className="w-full"
+              variant="outline"
+              type="submit"
+              data-testid="admin-submit-phone"
+            >
               Send code
             </Button>
           </form>
@@ -78,6 +84,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
               <Input
                 id="code"
                 name="code"
+                data-testid="admin-otp-input"
                 placeholder="000000"
                 inputMode="numeric"
                 autoComplete="one-time-code"
@@ -85,7 +92,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
               />
             </div>
             <CardFooter className="-mx-4 -mb-4 mt-4">
-              <Button className="w-full" type="submit">
+              <Button className="w-full" type="submit" data-testid="admin-submit-otp">
                 Continue
               </Button>
             </CardFooter>

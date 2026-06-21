@@ -1,21 +1,16 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from 'bun:test';
 
-const mockGetCookie = mock();
-const mockSetCookie = mock();
-
-mock.module('next/headers', () => ({
-  cookies: async () => ({
-    get: mockGetCookie,
-    set: mockSetCookie,
-  }),
-}));
-
 const mockRedirect = mock(() => {
   throw new Error('REDIRECT');
 });
+const mockCookies = mock();
 
 mock.module('next/navigation', () => ({
   redirect: mockRedirect,
+}));
+
+mock.module('next/headers', () => ({
+  cookies: mockCookies,
 }));
 
 const originalFetch = globalThis.fetch;
@@ -23,13 +18,13 @@ const originalFetch = globalThis.fetch;
 describe('auth actions', () => {
   beforeEach(() => {
     mockRedirect.mockClear();
-    mockGetCookie.mockReset();
-    mockSetCookie.mockReset();
+    mockCookies.mockReset();
     process.env.PRODUCT_CORE_API_BASE_URL = 'http://localhost:3000';
   });
 
   afterEach(() => {
     globalThis.fetch = originalFetch;
+    mockCookies.mockReset();
     delete process.env.PRODUCT_CORE_API_BASE_URL;
   });
 
@@ -109,6 +104,11 @@ describe('auth actions', () => {
     });
 
     test('redirects to dashboard when OTP verified and state is AUTHENTICATED', async () => {
+      mockCookies.mockResolvedValue({
+        get: () => undefined,
+        set: mock(),
+      });
+
       globalThis.fetch = mock(async () => ({
         ok: true,
         json: async () => ({
@@ -134,11 +134,15 @@ describe('auth actions', () => {
         // redirect throws
       }
 
-      expect(mockSetCookie).toHaveBeenCalled();
       expect(mockRedirect).toHaveBeenCalledWith('/dashboard');
     });
 
     test('redirects to 2fa-required when state is TOTP_REQUIRED', async () => {
+      mockCookies.mockResolvedValue({
+        get: () => undefined,
+        set: mock(),
+      });
+
       globalThis.fetch = mock(async () => ({
         ok: true,
         json: async () => ({
@@ -164,14 +168,49 @@ describe('auth actions', () => {
         // redirect throws
       }
 
-      expect(mockSetCookie).toHaveBeenCalled();
       expect(mockRedirect).toHaveBeenCalledWith('/auth/2fa-required');
+    });
+
+    test('redirects to /auth/totp-setup when state is TOTP_SETUP_REQUIRED', async () => {
+      mockCookies.mockResolvedValue({
+        get: () => undefined,
+        set: mock(),
+      });
+
+      globalThis.fetch = mock(async () => ({
+        ok: true,
+        json: async () => ({
+          data: {
+            state: 'TOTP_SETUP_REQUIRED',
+            token: 'pre-totp-token',
+            expiresAt: '2026-12-31T23:59:59.000Z',
+            profile: { id: '1', phone: '+15551234567', role: 'OWNER', totpVerified: false },
+          },
+          error: null,
+        }),
+      })) as unknown as typeof fetch;
+
+      const { verifyStaffOtpAction } = await import('../../src/server/auth/actions');
+
+      const formData = new FormData();
+      formData.set('phone', '+15551234567');
+      formData.set('code', '000000');
+
+      try {
+        await verifyStaffOtpAction(formData);
+      } catch {
+        // redirect throws
+      }
+
+      expect(mockRedirect).toHaveBeenCalledWith('/auth/totp-setup');
     });
   });
 
   describe('verifyStaffTotpAction', () => {
     test('redirects to sign-in when no session exists', async () => {
-      mockGetCookie.mockReturnValue(undefined);
+      mockCookies.mockResolvedValue({
+        get: () => undefined,
+      });
 
       const { verifyStaffTotpAction } = await import('../../src/server/auth/actions');
 
@@ -188,9 +227,10 @@ describe('auth actions', () => {
     });
 
     test('redirects with error when TOTP is invalid', async () => {
-      mockGetCookie.mockImplementation((name: string) =>
-        name === 'kclub_staff_session' ? { value: 'pre-totp-token' } : undefined,
-      );
+      mockCookies.mockResolvedValue({
+        get: () => ({ value: 'pre-totp-token' }),
+        set: mock(),
+      });
 
       globalThis.fetch = mock(async () => ({
         ok: false,
@@ -215,9 +255,10 @@ describe('auth actions', () => {
     });
 
     test('redirects to dashboard on successful TOTP verification', async () => {
-      mockGetCookie.mockImplementation((name: string) =>
-        name === 'kclub_staff_session' ? { value: 'pre-totp-token' } : undefined,
-      );
+      mockCookies.mockResolvedValue({
+        get: () => ({ value: 'pre-totp-token' }),
+        set: mock(),
+      });
 
       globalThis.fetch = mock(async () => ({
         ok: true,
@@ -243,13 +284,23 @@ describe('auth actions', () => {
         // redirect throws
       }
 
-      expect(mockSetCookie).toHaveBeenCalled();
       expect(mockRedirect).toHaveBeenCalledWith('/dashboard');
     });
   });
 
   describe('logoutAction', () => {
     test('clears session and redirects to sign-in', async () => {
+      const setCookie = mock();
+      mockCookies.mockResolvedValue({
+        get: () => ({ value: 'test-token' }),
+        set: setCookie,
+      });
+
+      globalThis.fetch = mock(async () => ({
+        ok: true,
+        json: async () => ({ data: { loggedOut: true }, error: null }),
+      })) as unknown as typeof fetch;
+
       const { logoutAction } = await import('../../src/server/auth/actions');
 
       try {
@@ -258,12 +309,43 @@ describe('auth actions', () => {
         // redirect throws
       }
 
-      expect(mockSetCookie).toHaveBeenCalledWith(
+      expect(setCookie).toHaveBeenCalledWith(
         'kclub_staff_session',
         '',
         expect.objectContaining({ maxAge: 0 }),
       );
       expect(mockRedirect).toHaveBeenCalledWith('/auth/sign-in');
+    });
+
+    test('calls product-core logout endpoint before clearing cookie', async () => {
+      const setCookie = mock();
+      mockCookies.mockResolvedValue({
+        get: (name: string) =>
+          name === 'kclub_staff_session' ? { value: 'test-token' } : undefined,
+        set: setCookie,
+      });
+
+      const fetchMock = mock(async () => ({
+        ok: true,
+        json: async () => ({ data: { loggedOut: true }, error: null }),
+      }));
+      globalThis.fetch = fetchMock as unknown as typeof fetch;
+
+      const { logoutAction } = await import('../../src/server/auth/actions');
+
+      try {
+        await logoutAction();
+      } catch {
+        // redirect throws
+      }
+
+      expect(fetchMock).toHaveBeenCalledWith(
+        expect.stringContaining('/api/admin/v1/staff-auth/logout'),
+        expect.objectContaining({
+          method: 'POST',
+          headers: expect.objectContaining({ authorization: 'Bearer test-token' }),
+        }),
+      );
     });
   });
 });

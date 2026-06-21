@@ -46,6 +46,7 @@ describe('centralized constants', () => {
   test('exports expected error-code groups', () => {
     expect(ERROR_CODES.AUTH_SESSION_REQUIRED).toBe('AUTH_SESSION_REQUIRED');
     expect(ERROR_CODES.AUTH_SESSION_INVALID).toBe('AUTH_SESSION_INVALID');
+    expect(ERROR_CODES.AUTH_SESSION_REVOKED).toBe('AUTH_SESSION_REVOKED');
     expect(ERROR_CODES.AUTH_STAFF_NOT_ALLOWED).toBe('AUTH_STAFF_NOT_ALLOWED');
     expect(ERROR_CODES.PERMISSION_DENIED).toBe('PERMISSION_DENIED');
     expect(ERROR_CODES.BUSINESS_INVALID_STATUS_TRANSITION).toBe(
@@ -104,6 +105,8 @@ describe('route contracts', () => {
     expect(MEMBER_API_ROUTES.ME).toBe('/api/v1/me');
     expect(ADMIN_API_BASE_PATH).toBe('/api/admin/v1');
     expect(ADMIN_API_ROUTES.STAFF_AUTH_SESSION).toBe('/api/admin/v1/staff-auth/session');
+    expect(ADMIN_API_ROUTES.STAFF_AUTH_TOTP_SETUP).toBe('/api/admin/v1/staff-auth/totp/setup');
+    expect(ADMIN_API_ROUTES.STAFF_AUTH_LOGOUT).toBe('/api/admin/v1/staff-auth/logout');
     expect(ADMIN_API_ROUTES.BUSINESS_APPROVE).toBe('/api/admin/v1/businesses/:id/approve');
   });
 
@@ -123,6 +126,54 @@ describe('route contracts', () => {
     expect(buildApiRoute(ADMIN_API_ROUTES.WEBHOOK_REPLAY, { eventId: 'evt 1' })).toBe(
       '/api/admin/v1/webhooks/evt%201/replay',
     );
+  });
+});
+
+describe('admin business DTO fields', () => {
+  test('includes owner summary, placement indicator, and audit entries in detail', () => {
+    const mockOwner = {
+      id: 'o1',
+      phone: '+1',
+      displayName: 'Owner',
+      status: 'ACTIVE' as const,
+      membershipTier: 'VIP' as const,
+    };
+    const mockPlacement = { status: 'ACTIVE' as const, currentPeriodEnd: null };
+
+    const detail = {
+      id: 'b1',
+      slug: 'test',
+      name: 'Test',
+      categoryName: 'Cat',
+      countryName: 'US',
+      cityName: 'NY',
+      briefDescription: null,
+      websiteUrl: null,
+      socialUrl: null,
+      featuredTop: false,
+      featuredRecommended: false,
+      description: null,
+      representativeName: null,
+      publishedAt: null,
+      ownerUserId: 'o1',
+      status: 'UNDER_REVIEW' as const,
+      representativeEmail: 'e@e.com',
+      representativePhone: '+1',
+      rejectionReason: null,
+      internalNotes: null,
+      approvedAt: null,
+      hiddenAt: null,
+      createdAt: '2024-01-01',
+      updatedAt: '2024-01-01',
+      owner: mockOwner,
+      placementSubscription: mockPlacement,
+      auditEntries: [],
+    };
+
+    expect(detail.owner.id).toBe('o1');
+    expect(detail.owner.membershipTier).toBe('VIP');
+    expect(detail.placementSubscription?.status).toBe('ACTIVE');
+    expect(detail.auditEntries).toEqual([]);
   });
 });
 

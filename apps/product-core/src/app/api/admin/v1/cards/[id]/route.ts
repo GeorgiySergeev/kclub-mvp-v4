@@ -10,7 +10,7 @@ type Params = {
 
 export async function GET(request: NextRequest, { params }: Params) {
   try {
-    adminGuard(request, STAFF_PERMISSIONS.CARDS_READ);
+    await adminGuard(request, STAFF_PERMISSIONS.CARDS_READ);
     const { id } = await params;
     const result = await getCardDetail(id);
     return jsonSuccess(result);

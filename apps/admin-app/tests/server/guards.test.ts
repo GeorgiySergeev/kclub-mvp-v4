@@ -1,12 +1,9 @@
-import { beforeEach, describe, expect, mock, test } from 'bun:test';
+import { beforeEach, afterEach, describe, expect, mock, test } from 'bun:test';
 
-const mockGetCookie = mock();
+const mockReadStaffSession = mock();
 
-mock.module('next/headers', () => ({
-  cookies: async () => ({
-    get: mockGetCookie,
-    set: mock(),
-  }),
+mock.module('../../src/server/auth/session', () => ({
+  readStaffSession: mockReadStaffSession,
 }));
 
 const mockRedirect = mock(() => {
@@ -17,16 +14,20 @@ mock.module('next/navigation', () => ({
   redirect: mockRedirect,
 }));
 
-import { requireStaffSession } from '../../src/server/auth/guards';
-
-describe('requireStaffSession', () => {
+describe('guards', () => {
   beforeEach(() => {
     mockRedirect.mockClear();
-    mockGetCookie.mockReset();
+    mockReadStaffSession.mockReset();
   });
 
-  test('redirects to sign-in when no session cookie exists', async () => {
-    mockGetCookie.mockReturnValue(undefined);
+  afterEach(() => {
+    mockRedirect.mockClear();
+    mockReadStaffSession.mockClear();
+  });
+
+  test('requireStaffSession redirects when no session exists', async () => {
+    mockReadStaffSession.mockResolvedValue(null);
+    const { requireStaffSession } = await import('../../src/server/auth/guards');
 
     try {
       await requireStaffSession();
@@ -37,15 +38,16 @@ describe('requireStaffSession', () => {
     expect(mockRedirect).toHaveBeenCalledWith('/auth/sign-in');
   });
 
-  test('returns session when valid cookie exists', async () => {
-    mockGetCookie.mockImplementation((name: string) =>
-      name === 'kclub_staff_session' ? { value: 'valid-token' } : undefined,
-    );
+  test('requireStaffSession returns session when it exists', async () => {
+    mockReadStaffSession.mockResolvedValue({
+      token: 'test-token',
+      expiresAtIso: '2024-12-31T23:59:59.000Z',
+    });
+    const { requireStaffSession } = await import('../../src/server/auth/guards');
 
     const session = await requireStaffSession();
 
-    expect(session).not.toBeNull();
-    expect(session?.token).toBe('valid-token');
+    expect(session?.token).toBe('test-token');
     expect(mockRedirect).not.toHaveBeenCalled();
   });
 });

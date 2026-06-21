@@ -1,8 +1,8 @@
-import { Building2 } from 'lucide-react';
+import { ArrowRight, Building2 } from 'lucide-react';
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
 
-import { Container, EmptyState, primaryButtonClasses } from '@kclub/ui';
+import { EmptyState } from '@kclub/ui';
 
 import { BusinessCard } from '@/features/public/components/BusinessCard';
 import { getFeaturedBusinessGroups } from '@/features/public/public-page-helpers';
@@ -26,38 +26,42 @@ export default async function DirectoryPage({ params }: { params: Promise<{ loca
   const { top, recommended } = getFeaturedBusinessGroups(businesses);
 
   return (
-    <div className="border-b border-border dark:border-kclub-navy-700">
-      <section className="border-b border-border py-16 dark:border-kclub-navy-700 sm:py-24">
-        <Container>
-          <p className="kclub-overline text-muted-foreground">{t('eyebrow')}</p>
-          <div className="mt-5 grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end">
+    <div className="kclub-page-band">
+      <section className="kclub-page-band bg-white dark:bg-[#09090b]">
+        <div className="kclub-shell py-16 sm:py-20">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-end">
             <div>
-              <h1 className="max-w-4xl font-display text-5xl font-medium tracking-tight text-foreground sm:text-7xl">
+              <p className="kclub-section-label">{t('eyebrow')}</p>
+              <h1 className="mt-5 max-w-5xl text-5xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white sm:text-7xl">
                 {t('title')}
               </h1>
-              <p className="mt-6 max-w-2xl text-base leading-7 text-muted-foreground">
+              <p className="dark:text-white/68 mt-6 max-w-2xl text-base leading-8 text-zinc-600">
                 {t('description')}
               </p>
             </div>
-            <div className="rounded-xl border border-border bg-card p-5 dark:border-kclub-navy-700 dark:bg-kclub-navy-900">
-              <p className="text-sm text-muted-foreground">{t('publishedOnly')}</p>
-              <p className="mt-3 font-display text-4xl font-medium text-foreground">
+            <div className="kclub-panel p-6">
+              <p className="kclub-note">{t('publishedOnly')}</p>
+              <p className="mt-3 text-4xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
                 {businesses.length}
               </p>
             </div>
           </div>
-        </Container>
+        </div>
       </section>
 
-      <Container className="py-14 sm:py-20">
+      <div className="kclub-shell py-14 sm:py-20">
         {businesses.length === 0 ? (
           <EmptyState
             icon={<Building2 aria-hidden="true" size={44} strokeWidth={1.5} />}
             title={t('emptyTitle')}
             description={t('emptyDescription')}
             action={
-              <Link href={`/${locale}/sign-up`} className={primaryButtonClasses}>
+              <Link
+                href={`/${locale}/sign-up`}
+                className="kclub-button-primary rounded-none border-0 px-5 py-3 text-xs tracking-[0.24em]"
+              >
                 {t('emptyAction')}
+                <ArrowRight aria-hidden="true" size={16} strokeWidth={1.7} />
               </Link>
             }
           />
@@ -71,7 +75,6 @@ export default async function DirectoryPage({ params }: { params: Promise<{ loca
                 actionLabel={t('viewDetails')}
                 externalLabel={t('website')}
                 featuredLabel={t('featuredTopLabel')}
-                verifiedLabel={t('verifiedPartner')}
               />
             ) : null}
 
@@ -83,7 +86,6 @@ export default async function DirectoryPage({ params }: { params: Promise<{ loca
                 actionLabel={t('viewDetails')}
                 externalLabel={t('website')}
                 featuredLabel={t('recommendedLabel')}
-                verifiedLabel={t('verifiedPartner')}
               />
             ) : null}
 
@@ -93,11 +95,10 @@ export default async function DirectoryPage({ params }: { params: Promise<{ loca
               locale={locale}
               actionLabel={t('viewDetails')}
               externalLabel={t('website')}
-              verifiedLabel={t('verifiedPartner')}
             />
           </div>
         )}
-      </Container>
+      </div>
     </div>
   );
 }
@@ -109,7 +110,6 @@ function DirectorySection({
   actionLabel,
   externalLabel,
   featuredLabel,
-  verifiedLabel,
 }: {
   title: string;
   businesses: Awaited<ReturnType<typeof getPublicBusinesses>>;
@@ -117,12 +117,15 @@ function DirectorySection({
   actionLabel: string;
   externalLabel: string;
   featuredLabel?: string;
-  verifiedLabel: string;
 }) {
   return (
     <section>
-      <h2 className="font-display text-2xl font-medium tracking-tight text-foreground">{title}</h2>
-      <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+      <div className="flex items-end justify-between gap-4">
+        <h2 className="text-2xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
+          {title}
+        </h2>
+      </div>
+      <div className="kclub-card-grid mt-6">
         {businesses.map((business) => (
           <BusinessCard
             key={business.id}
@@ -131,7 +134,6 @@ function DirectorySection({
             actionLabel={actionLabel}
             externalLabel={externalLabel}
             featuredLabel={featuredLabel}
-            verifiedLabel={verifiedLabel}
           />
         ))}
       </div>

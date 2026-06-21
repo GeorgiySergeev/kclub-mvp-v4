@@ -28,23 +28,30 @@ export function Footer({ locale }: { locale: Locale }) {
   ];
 
   return (
-    <footer className="border-t border-border bg-secondary/40 dark:border-kclub-navy-700 dark:bg-kclub-navy-900/50">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-8">
+    <footer className="kclub-border border-t bg-zinc-100 text-zinc-950 dark:bg-surface dark:text-white">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-4 lg:px-10">
         <div>
-          <h2 className="font-display text-sm font-medium uppercase tracking-[0.18em] text-foreground">
+          <h2 className="inline-flex items-center gap-3 text-sm font-bold uppercase">
+            <span className="flex h-10 w-10 items-center justify-center bg-accent text-white">
+              K
+            </span>
             {t('brand')}
           </h2>
-          <p className="mt-5 text-sm leading-6 text-muted-foreground">{t('footer.aboutText')}</p>
+          <p className="dark:text-white/64 mt-5 text-sm font-medium leading-7 text-zinc-600">
+            {t('footer.aboutText')}
+          </p>
         </div>
         {linkGroups.map((group) => (
           <div key={group.title}>
-            <h3 className="kclub-overline text-muted-foreground">{group.title}</h3>
+            <h3 className="text-xs font-bold uppercase text-zinc-500 dark:text-white/50">
+              {group.title}
+            </h3>
             <ul className="mt-5 grid gap-3">
               {group.links.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
-                    className="text-sm text-muted-foreground transition duration-200 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-kclub-gold-500"
+                    className="dark:text-white/68 text-sm font-medium text-zinc-600 transition hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent dark:hover:text-white dark:focus-visible:ring-white"
                   >
                     {link.label}
                   </Link>
@@ -54,13 +61,15 @@ export function Footer({ locale }: { locale: Locale }) {
           </div>
         ))}
         <div>
-          <h3 className="kclub-overline text-muted-foreground">{t('footer.locales')}</h3>
+          <h3 className="text-xs font-bold uppercase text-zinc-500 dark:text-white/50">
+            {t('footer.locales')}
+          </h3>
           <ul className="mt-5 grid gap-3">
             {locales.map((item) => (
               <li key={item}>
                 <Link
                   href={`/${item}`}
-                  className="text-sm text-muted-foreground transition duration-200 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-kclub-gold-500"
+                  className="dark:text-white/68 text-sm font-medium text-zinc-600 transition hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent dark:hover:text-white dark:focus-visible:ring-white"
                 >
                   {t(`locale.${item}`)}
                 </Link>
@@ -69,8 +78,8 @@ export function Footer({ locale }: { locale: Locale }) {
           </ul>
         </div>
       </div>
-      <div className="border-t border-border dark:border-kclub-navy-700">
-        <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-5 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8">
+      <div className="kclub-border border-t">
+        <div className="dark:text-white/54 mx-auto flex max-w-7xl flex-col gap-4 px-4 py-5 text-sm text-zinc-500 sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-10">
           <p>
             {year} {t('brand')}. {t('footer.copyright')}
           </p>

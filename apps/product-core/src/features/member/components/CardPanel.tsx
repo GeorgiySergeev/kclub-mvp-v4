@@ -6,17 +6,21 @@ import { useTranslations } from 'next-intl';
 
 import type { MemberCardDto } from '@kclub/contracts';
 import { MEMBER_API_ROUTES } from '@kclub/contracts';
-import { Badge } from '@kclub/ui';
+import { EmptyState, Skeleton, Surface, linkClasses } from '@kclub/ui';
 
-import { ClubCardVisual } from '@/components/premium';
 import type { Locale } from '@/i18n/routing';
 import { parseAuthResponse } from '@/features/auth/utils/api';
-import { MemberInfoTile, MemberPanel, MemberPanelHeader } from './cabinet/MemberPanel';
-import { memberSecondaryButtonClasses } from './cabinet/styles';
 
-export function CardPanel({ locale }: { locale: Locale }) {
+import { DigitalClubCard } from './DigitalClubCard';
+import { DigitalClubCardSkeleton } from './DigitalClubCardSkeleton';
+
+type CardPanelProps = {
+  locale: Locale;
+  memberName: string;
+};
+
+export function CardPanel({ locale, memberName }: CardPanelProps) {
   const t = useTranslations('member.dashboard.card');
-  const tCommon = useTranslations('member.common');
   const [card, setCard] = useState<MemberCardDto | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -56,26 +60,29 @@ export function CardPanel({ locale }: { locale: Locale }) {
 
   if (isLoading) {
     return (
-      <MemberPanel>
-        <p className="text-sm text-muted-foreground">{tCommon('loading')}</p>
-      </MemberPanel>
+      <Surface className="kclub-panel max-w-none overflow-hidden rounded-none p-0 shadow-none ring-0">
+        <div className="flex justify-center bg-zinc-950 px-6 py-10">
+          <DigitalClubCardSkeleton />
+        </div>
+        <div className="grid gap-4 p-6 sm:grid-cols-2">
+          <Skeleton className="h-16" />
+          <Skeleton className="h-16" />
+          <Skeleton className="h-16" />
+          <Skeleton className="h-16" />
+        </div>
+        <div className="border-t border-zinc-200 px-6 py-4 dark:border-white/10">
+          <Skeleton className="h-4 w-32" />
+        </div>
+      </Surface>
     );
   }
 
   if (error) {
-    return (
-      <MemberPanel>
-        <MemberPanelHeader title={t('errorTitle')} description={error} />
-      </MemberPanel>
-    );
+    return <EmptyState title={t('errorTitle')} description={error} />;
   }
 
   if (!card) {
-    return (
-      <MemberPanel>
-        <MemberPanelHeader title={t('emptyTitle')} description={t('emptyDescription')} />
-      </MemberPanel>
-    );
+    return <EmptyState title={t('emptyTitle')} description={t('emptyDescription')} />;
   }
 
   const verifyHref = `/${locale}/verify-card/${encodeURIComponent(card.cardNumber)}`;
@@ -88,39 +95,39 @@ export function CardPanel({ locale }: { locale: Locale }) {
       t('expiresAt'),
       card.expiresAt ? new Date(card.expiresAt).toLocaleDateString(locale) : t('noExpiration'),
     ],
-  ] as const;
-
-  const isVip = card.membershipTier === 'VIP';
+  ];
 
   return (
-    <MemberPanel noPadding className="overflow-hidden">
-      <div className="border-b border-border bg-kclub-navy-950 p-6 dark:border-kclub-navy-700 sm:p-8">
-        <ClubCardVisual
+    <Surface className="kclub-panel max-w-none overflow-hidden rounded-none p-0 shadow-none ring-0">
+      <div className="flex justify-center bg-zinc-950 px-6 py-10">
+        <DigitalClubCard
           cardNumber={card.cardNumber}
+          memberName={memberName}
           membershipTier={card.membershipTier}
           status={card.status}
-          brandLabel={t('eyebrow')}
-          tierLabel={card.membershipTier}
-          statusLabel={card.status}
+          expiresAt={card.expiresAt}
+          locale={locale}
+          validThruLabel={t('validThru')}
+          tierLabel={t('tier')}
         />
-        <div className="mt-4 flex justify-end">
-          <Badge variant={isVip ? 'vip' : 'member'} className="text-[0.65rem] uppercase tracking-[0.1em]">
-            {card.membershipTier}
-          </Badge>
-        </div>
       </div>
 
-      <div className="grid gap-3 p-6 sm:grid-cols-2 sm:p-8">
+      <div className="grid gap-4 p-6 sm:grid-cols-2">
         {rows.map(([label, value]) => (
-          <MemberInfoTile key={label} label={label} value={value} />
+          <div key={label} className="kclub-panel-soft p-4">
+            <dt className="dark:text-white/48 text-xs uppercase tracking-[0.14em] text-zinc-500">
+              {label}
+            </dt>
+            <dd className="mt-2 text-sm text-zinc-950 dark:text-white">{value}</dd>
+          </div>
         ))}
       </div>
 
-      <div className="border-t border-border px-6 py-4 dark:border-kclub-navy-700 sm:px-8">
-        <Link href={verifyHref} className={memberSecondaryButtonClasses}>
+      <div className="border-t border-zinc-200 px-6 py-4 dark:border-white/10">
+        <Link href={verifyHref} className={linkClasses}>
           {t('verifyLink')}
         </Link>
       </div>
-    </MemberPanel>
+    </Surface>
   );
 }

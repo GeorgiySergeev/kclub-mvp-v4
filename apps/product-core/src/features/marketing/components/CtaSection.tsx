@@ -1,27 +1,33 @@
+import { ArrowUpRight } from 'lucide-react';
+import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
-import { ShimmerButton } from '@/components/premium';
 import { Locale } from '@/i18n/routing';
 
 export function CtaSection({ locale }: { locale: Locale }) {
   const t = useTranslations('home');
 
   return (
-    <section className="relative overflow-hidden border-y border-border py-16 dark:border-kclub-navy-700 sm:py-24">
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-0 bg-gradient-to-r from-kclub-navy-950 via-kclub-navy-900 to-kclub-navy-950 dark:opacity-100"
-      />
-      <div className="relative mx-auto flex max-w-4xl flex-col items-center px-4 text-center sm:px-6 lg:px-8">
-        <h2 className="font-display text-4xl font-medium tracking-tight text-kclub-canvas sm:text-5xl">
-          {t('cta.title')}
-        </h2>
-        <p className="mt-5 max-w-2xl text-base leading-7 text-kclub-canvas/70">{t('cta.subline')}</p>
-        <div className="mt-8">
-          <ShimmerButton href={`/${locale}/sign-up`} variant="gold">
-            {t('cta.button')}
-          </ShimmerButton>
+    <section className="kclub-border border-y bg-zinc-100 py-16 text-zinc-950 dark:bg-surface-raised dark:text-white sm:py-24">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[1fr_auto] lg:items-end lg:px-10">
+        <div>
+          <p className="mb-5 border-l-4 border-accent pl-4 text-xs font-bold uppercase text-zinc-500 dark:text-white/60">
+            KCLUB
+          </p>
+          <h2 className="max-w-4xl text-4xl font-black uppercase leading-tight sm:text-6xl">
+            {t('cta.title')}
+          </h2>
+          <p className="mt-5 max-w-2xl text-base font-medium leading-8 text-zinc-600 dark:text-white/70">
+            {t('cta.subline')}
+          </p>
         </div>
+        <Link
+          href={`/${locale}/sign-up`}
+          className="inline-flex h-14 min-w-56 items-center justify-between gap-8 border border-accent bg-accent px-5 text-sm font-bold text-white transition hover:bg-accent-hover focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-focus dark:focus-visible:ring-white dark:focus-visible:ring-offset-focus"
+        >
+          {t('cta.button')}
+          <ArrowUpRight aria-hidden="true" size={20} />
+        </Link>
       </div>
     </section>
   );

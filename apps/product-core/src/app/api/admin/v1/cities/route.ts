@@ -7,7 +7,7 @@ import { listCities, createCity } from '@/server/services/admin-service';
 
 export async function GET(request: NextRequest) {
   try {
-    adminGuard(request, STAFF_PERMISSIONS.TAXONOMY_MANAGE);
+    await adminGuard(request, STAFF_PERMISSIONS.TAXONOMY_MANAGE);
     const result = await listCities();
     return jsonSuccess(result);
   } catch (error) {
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { profile, context } = adminGuard(request, STAFF_PERMISSIONS.TAXONOMY_MANAGE);
+    const { profile, context } = await adminGuard(request, STAFF_PERMISSIONS.TAXONOMY_MANAGE);
     const body = await request.json();
     const input = cityCreateSchema.parse(body);
     const result = await createCity(input);

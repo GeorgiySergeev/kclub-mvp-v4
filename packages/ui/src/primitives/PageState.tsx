@@ -21,10 +21,8 @@ export function PageState({
         className,
       )}
     >
-      {icon && <div className="mb-6 text-zinc-300 dark:text-zinc-600">{icon}</div>}
-      <h1 className="text-3xl font-light tracking-tight text-zinc-900 dark:text-zinc-50">
-        {title}
-      </h1>
+      {icon && <div className="text-muted mb-6">{icon}</div>}
+      <h1 className="text-foreground text-3xl font-light tracking-tight">{title}</h1>
       {description && <p className={cn('mt-3 max-w-md', textMuted)}>{description}</p>}
       {action && <div className="mt-8">{action}</div>}
     </div>

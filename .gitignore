@@ -20,3 +20,10 @@ package-lock.json
 pnpm-lock.yaml
 yarn.lock
 bun.lockb
+temp/
+
+# Playwright
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/

@@ -4,7 +4,11 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  transpilePackages: ['@kclub/ui'],
+  serverExternalPackages: ['@kclub/database'],
+  experimental: {
+    optimizePackageImports: ['lucide-react'],
+  },
 };
 
 export default withNextIntl(nextConfig);

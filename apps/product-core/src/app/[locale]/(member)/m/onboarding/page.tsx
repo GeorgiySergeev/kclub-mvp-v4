@@ -22,13 +22,11 @@ export default async function OnboardingPage({ params }: { params: Promise<{ loc
   const t = await getTranslations({ locale, namespace: 'member.onboarding' });
 
   return (
-    <div className="mx-auto w-full max-w-xl">
-      <Surface className="max-w-none">
+    <div className="mx-auto w-full max-w-3xl">
+      <Surface className="kclub-panel max-w-none rounded-none px-6 py-8 shadow-none ring-0 sm:px-8">
         <div className="mb-8">
-          <p className="text-xs font-medium uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">
-            {t('eyebrow')}
-          </p>
-          <h1 className="mt-2 text-3xl font-light tracking-tight text-zinc-950 dark:text-zinc-50">
+          <p className="kclub-section-label">{t('eyebrow')}</p>
+          <h1 className="mt-3 text-3xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
             {t('title')}
           </h1>
           <p className={`mt-3 ${textMuted}`}>{t('description')}</p>

@@ -1,9 +1,21 @@
 'use client';
 
-import { Globe, Menu, X } from 'lucide-react';
+import {
+  ArrowUpRight,
+  ChevronDown,
+  Globe,
+  LayoutDashboard,
+  LogIn,
+  LogOut,
+  Menu,
+  UserRound,
+  X,
+} from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
-import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import type { ReactElement, ReactNode } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { IconButton, cn } from '@kclub/ui';
 import { Locale, locales } from '@/i18n/routing';
@@ -11,52 +23,119 @@ import { Locale, locales } from '@/i18n/routing';
 import { ThemeToggle } from './ThemeToggle';
 
 type NavItem = {
-  key: 'directory' | 'signIn' | 'join' | 'cabinet';
+  key: 'catalog';
   href: string;
 };
 
-export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; isAuthenticated?: boolean }) {
+export function TopBar({
+  locale,
+  isAuthenticated = false,
+}: {
+  locale: Locale;
+  isAuthenticated?: boolean;
+}): ReactElement {
   const t = useTranslations('home');
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [localeOpen, setLocaleOpen] = useState(false);
-  const navItems: NavItem[] = isAuthenticated
-    ? [
-        { key: 'directory', href: `/${locale}/directory` },
-        { key: 'cabinet', href: `/${locale}/m/dashboard` },
-      ]
-    : [
-        { key: 'directory', href: `/${locale}/directory` },
-        { key: 'signIn', href: `/${locale}/sign-in` },
-        { key: 'join', href: `/${locale}/sign-up` },
-      ];
+  const [accountOpen, setAccountOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+  const [signOutError, setSignOutError] = useState<string | null>(null);
+  const accountRef = useRef<HTMLDivElement>(null);
+  const localeRef = useRef<HTMLDivElement>(null);
+  const navItems: NavItem[] = [{ key: 'catalog', href: `/${locale}/directory` }];
+
+  useEffect(() => {
+    const handlePointerDown = (event: PointerEvent): void => {
+      const target = event.target;
+      if (!(target instanceof Node)) return;
+
+      if (!accountRef.current?.contains(target)) {
+        setAccountOpen(false);
+      }
+
+      if (!localeRef.current?.contains(target)) {
+        setLocaleOpen(false);
+      }
+    };
+
+    const handleKeyDown = (event: KeyboardEvent): void => {
+      if (event.key === 'Escape') {
+        setAccountOpen(false);
+        setLocaleOpen(false);
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener('pointerdown', handlePointerDown);
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown);
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  const handleSignOut = async (): Promise<void> => {
+    setIsSigningOut(true);
+    setSignOutError(null);
+
+    try {
+      const response = await fetch('/api/v1/auth/logout', { method: 'POST' });
+
+      if (!response.ok) {
+        setSignOutError(t('nav.signOutError'));
+        return;
+      }
+
+      setAccountOpen(false);
+      setOpen(false);
+      router.replace(`/${locale}/sign-in`);
+      router.refresh();
+    } catch {
+      setSignOutError(t('nav.signOutError'));
+    } finally {
+      setIsSigningOut(false);
+    }
+  };
 
   return (
-    <header className="sticky top-0 z-50 h-14 border-b border-border bg-background/90 backdrop-blur-md dark:border-kclub-navy-700 dark:bg-kclub-navy-950/90">
-      <div className="mx-auto flex h-full max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header className="kclub-premium-header sticky top-0 z-50 h-[72px] border-b shadow-[0_14px_42px_rgba(15,15,16,0.06)] backdrop-blur-xl">
+      <div className="kclub-shell flex h-full items-center justify-between">
         <Link
           href={`/${locale}`}
-          className="font-display text-sm font-medium uppercase tracking-[0.18em] text-foreground outline-none transition duration-200 hover:text-kclub-gold-600 focus:ring-2 focus:ring-kclub-gold-500 focus:ring-offset-2 focus:ring-offset-background dark:hover:text-kclub-gold-300"
+          className="group inline-flex items-center gap-3 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-focus dark:focus-visible:ring-white dark:focus-visible:ring-offset-focus"
         >
-          {t('brand')}
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent text-base font-black uppercase text-white shadow-[0_10px_30px_rgba(255,0,48,0.28)]">
+            K
+          </span>
+          <span className="grid text-sm font-semibold leading-none text-zinc-950 dark:text-white">
+            <span>KYLYVNYK</span>
+            <span className="dark:text-white/72 font-normal text-zinc-500">CLUB</span>
+          </span>
         </Link>
 
-        <nav className="hidden items-center gap-6 text-sm text-muted-foreground md:flex">
+        <nav className="hidden h-full items-center gap-4 text-sm font-semibold text-zinc-950 dark:text-white md:flex">
           {navItems.map((item) => (
             <Link
               key={item.key}
               href={item.href}
-              className="transition duration-200 hover:text-foreground focus:outline-none focus:ring-2 focus:ring-kclub-gold-500 focus:ring-offset-2 focus:ring-offset-background"
+              className="kclub-topbar-link group inline-flex h-11 items-center px-1 uppercase tracking-[0.08em] transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
             >
               {t(`nav.${item.key}`)}
             </Link>
           ))}
 
-          <div className="relative">
+          <div ref={localeRef} className="relative flex h-full items-center pl-4">
             <IconButton
               aria-label={t('footer.locales')}
               aria-expanded={localeOpen}
               aria-controls="locale-switcher"
-              onClick={() => setLocaleOpen((v) => !v)}
+              onClick={() => {
+                setLocaleOpen((value) => !value);
+                setAccountOpen(false);
+              }}
+              className="kclub-topbar-control h-10 w-10 focus-visible:ring-accent"
             >
               <Globe aria-hidden="true" size={16} strokeWidth={1.5} />
             </IconButton>
@@ -64,8 +143,7 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
             {localeOpen && (
               <div
                 id="locale-switcher"
-                className="absolute right-0 top-full z-50 mt-1 w-32 rounded-md border border-border bg-card py-1 shadow-panel dark:border-kclub-navy-700 dark:bg-kclub-navy-900"
-                onMouseLeave={() => setLocaleOpen(false)}
+                className="kclub-topbar-menu absolute right-0 top-full z-50 mt-3 w-40 rounded-md border p-1"
               >
                 {locales.map((item) => (
                   <Link
@@ -73,8 +151,10 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
                     href={`/${item}`}
                     onClick={() => setLocaleOpen(false)}
                     className={cn(
-                      'block px-4 py-2 text-sm transition duration-200 hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-inset focus:ring-kclub-gold-500 dark:hover:bg-kclub-navy-800',
-                      item === locale ? 'font-medium text-foreground' : 'text-muted-foreground',
+                      'block px-4 py-3 text-sm normal-case transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset dark:focus-visible:ring-accent',
+                      item === locale
+                        ? 'font-semibold text-zinc-950 dark:text-white'
+                        : 'dark:text-white/68 text-zinc-500',
                     )}
                   >
                     {t(`locale.${item}`)}
@@ -84,18 +164,81 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
             )}
           </div>
 
-          <ThemeToggle className="h-10 w-10" />
+          <div className="flex h-full items-center pl-1">
+            <ThemeToggle className="h-10 w-10" />
+          </div>
+
+          <div ref={accountRef} className="relative flex h-full items-center pl-1">
+            <button
+              type="button"
+              aria-label={t('nav.account')}
+              aria-expanded={accountOpen}
+              aria-controls="account-menu"
+              onClick={() => {
+                setAccountOpen((value) => !value);
+                setLocaleOpen(false);
+              }}
+              className="kclub-topbar-control inline-flex h-10 items-center gap-2 px-3 transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
+            >
+              <UserRound aria-hidden="true" size={17} strokeWidth={1.6} />
+              <ChevronDown
+                aria-hidden="true"
+                size={14}
+                strokeWidth={1.6}
+                className={cn('transition', accountOpen && 'rotate-180')}
+              />
+            </button>
+
+            {accountOpen && (
+              <div
+                id="account-menu"
+                className="kclub-topbar-menu absolute right-0 top-full z-50 mt-3 w-52 rounded-md border p-1 shadow-2xl backdrop-blur-xl"
+              >
+                {isAuthenticated ? (
+                  <>
+                    <AccountLink
+                      href={`/${locale}/m/dashboard`}
+                      onClick={() => setAccountOpen(false)}
+                    >
+                      <LayoutDashboard aria-hidden="true" size={16} strokeWidth={1.6} />
+                      {t('nav.dashboard')}
+                    </AccountLink>
+                    <AccountButton onClick={handleSignOut} disabled={isSigningOut}>
+                      <LogOut aria-hidden="true" size={16} strokeWidth={1.6} />
+                      {isSigningOut ? t('nav.signingOut') : t('nav.signOut')}
+                    </AccountButton>
+                  </>
+                ) : (
+                  <>
+                    <AccountLink href={`/${locale}/sign-in`} onClick={() => setAccountOpen(false)}>
+                      <LogIn aria-hidden="true" size={16} strokeWidth={1.6} />
+                      {t('nav.signIn')}
+                    </AccountLink>
+                    <AccountLink href={`/${locale}/sign-up`} onClick={() => setAccountOpen(false)}>
+                      <ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.6} />
+                      {t('nav.join')}
+                    </AccountLink>
+                  </>
+                )}
+                {signOutError ? (
+                  <p role="alert" className="px-3 py-2 text-xs text-red-600 dark:text-red-300">
+                    {signOutError}
+                  </p>
+                ) : null}
+              </div>
+            )}
+          </div>
         </nav>
 
         <div className="flex items-center gap-2 md:hidden">
-          <ThemeToggle />
+          <ThemeToggle className="h-10 w-10" />
           <button
             type="button"
             aria-label={open ? t('common.close') : t('common.menu')}
             aria-expanded={open}
             aria-controls="mobile-navigation"
             onClick={() => setOpen((value) => !value)}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-border bg-card text-foreground transition duration-200 hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-kclub-gold-500 focus:ring-offset-2 focus:ring-offset-background dark:border-kclub-navy-700 dark:bg-kclub-navy-900 dark:hover:bg-kclub-navy-800"
+            className="kclub-topbar-control inline-flex h-11 w-11 items-center justify-center border shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
           >
             {open ? (
               <X aria-hidden="true" size={20} strokeWidth={1.5} />
@@ -109,20 +252,56 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
       {open ? (
         <div
           id="mobile-navigation"
-          className="fixed inset-x-0 top-14 z-50 border-b border-border bg-background dark:border-kclub-navy-700 dark:bg-kclub-navy-950 md:hidden"
+          className="kclub-mobile-nav-panel fixed inset-x-0 top-[72px] z-50 border-b shadow-2xl backdrop-blur-xl md:hidden"
         >
-          <nav className="mx-auto grid max-w-6xl gap-1 px-4 py-4">
+          <nav className="kclub-shell grid gap-2 py-4">
             {navItems.map((item) => (
               <Link
                 key={item.key}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="rounded-md border border-border px-4 py-3 text-sm text-foreground transition duration-200 hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-kclub-gold-500 dark:border-kclub-navy-700 dark:hover:bg-kclub-navy-800"
+                className="flex items-center justify-between rounded-md border border-zinc-200/80 bg-white/70 px-4 py-3 text-sm font-semibold uppercase tracking-[0.08em] text-zinc-950 transition hover:bg-zinc-950 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-accent dark:border-white/10 dark:bg-white/[0.04] dark:text-white dark:hover:bg-white dark:hover:text-zinc-950 dark:focus-visible:ring-white"
               >
                 {t(`nav.${item.key}`)}
+                <ArrowUpRight aria-hidden="true" size={16} className="text-accent" />
               </Link>
             ))}
-            <p className="kclub-overline mt-2 px-4 pt-2 text-muted-foreground">{t('footer.locales')}</p>
+            <p className="dark:text-white/54 mt-2 px-4 pt-2 text-xs font-semibold uppercase tracking-[0.08em] text-zinc-500">
+              {t('nav.account')}
+            </p>
+            <div className="grid gap-1">
+              {isAuthenticated ? (
+                <>
+                  <MobileLink href={`/${locale}/m/dashboard`} onClick={() => setOpen(false)}>
+                    <LayoutDashboard aria-hidden="true" size={16} strokeWidth={1.6} />
+                    {t('nav.dashboard')}
+                  </MobileLink>
+                  <MobileButton onClick={handleSignOut} disabled={isSigningOut}>
+                    <LogOut aria-hidden="true" size={16} strokeWidth={1.6} />
+                    {isSigningOut ? t('nav.signingOut') : t('nav.signOut')}
+                  </MobileButton>
+                </>
+              ) : (
+                <>
+                  <MobileLink href={`/${locale}/sign-in`} onClick={() => setOpen(false)}>
+                    <LogIn aria-hidden="true" size={16} strokeWidth={1.6} />
+                    {t('nav.signIn')}
+                  </MobileLink>
+                  <MobileLink href={`/${locale}/sign-up`} onClick={() => setOpen(false)}>
+                    <ArrowUpRight aria-hidden="true" size={16} strokeWidth={1.6} />
+                    {t('nav.join')}
+                  </MobileLink>
+                </>
+              )}
+              {signOutError ? (
+                <p role="alert" className="px-4 py-2 text-xs text-red-600 dark:text-red-300">
+                  {signOutError}
+                </p>
+              ) : null}
+            </div>
+            <p className="dark:text-white/54 mt-2 px-4 pt-2 text-xs font-semibold uppercase text-zinc-500">
+              {t('footer.locales')}
+            </p>
             <div className="grid gap-1">
               {locales.map((item) => (
                 <Link
@@ -130,10 +309,10 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
                   href={`/${item}`}
                   onClick={() => setOpen(false)}
                   className={cn(
-                    'rounded-md border px-4 py-3 text-sm transition duration-200 hover:bg-secondary focus:outline-none focus:ring-2 focus:ring-kclub-gold-500 dark:hover:bg-kclub-navy-800',
+                    'border px-4 py-3 text-sm transition hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent dark:hover:bg-white/[0.06] dark:focus-visible:ring-white',
                     item === locale
-                      ? 'border-kclub-gold-500/40 text-foreground'
-                      : 'border-border text-muted-foreground dark:border-kclub-navy-700',
+                      ? 'border-zinc-950 text-zinc-950 dark:border-white dark:text-white'
+                      : 'dark:text-white/68 border-zinc-200 text-zinc-500 dark:border-white/10',
                   )}
                 >
                   {t(`locale.${item}`)}
@@ -144,5 +323,87 @@ export function TopBar({ locale, isAuthenticated = false }: { locale: Locale; is
         </div>
       ) : null}
     </header>
+  );
+}
+
+function AccountLink({
+  href,
+  onClick,
+  children,
+}: {
+  href: string;
+  onClick: () => void;
+  children: ReactNode;
+}): ReactElement {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className="dark:text-white/72 flex items-center gap-3 rounded px-3 py-2.5 text-sm text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent dark:hover:bg-white/[0.08] dark:hover:text-white dark:focus-visible:ring-white"
+    >
+      {children}
+    </Link>
+  );
+}
+
+function AccountButton({
+  onClick,
+  disabled,
+  children,
+}: {
+  onClick: () => void;
+  disabled?: boolean;
+  children: ReactNode;
+}): ReactElement {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className="dark:text-white/72 flex w-full items-center gap-3 rounded px-3 py-2.5 text-left text-sm text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent disabled:cursor-wait disabled:opacity-60 dark:hover:bg-white/[0.08] dark:hover:text-white dark:focus-visible:ring-white"
+    >
+      {children}
+    </button>
+  );
+}
+
+function MobileLink({
+  href,
+  onClick,
+  children,
+}: {
+  href: string;
+  onClick: () => void;
+  children: ReactNode;
+}): ReactElement {
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className="dark:text-white/72 flex items-center gap-3 rounded-md border border-zinc-200 px-4 py-3 text-sm text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent dark:border-white/10 dark:hover:bg-white/[0.08] dark:hover:text-white dark:focus-visible:ring-white"
+    >
+      {children}
+    </Link>
+  );
+}
+
+function MobileButton({
+  onClick,
+  disabled,
+  children,
+}: {
+  onClick: () => void;
+  disabled?: boolean;
+  children: ReactNode;
+}): ReactElement {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className="dark:text-white/72 flex items-center gap-3 rounded-md border border-zinc-200 px-4 py-3 text-left text-sm text-zinc-700 transition hover:bg-zinc-100 hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent disabled:cursor-wait disabled:opacity-60 dark:border-white/10 dark:hover:bg-white/[0.08] dark:hover:text-white dark:focus-visible:ring-white"
+    >
+      {children}
+    </button>
   );
 }

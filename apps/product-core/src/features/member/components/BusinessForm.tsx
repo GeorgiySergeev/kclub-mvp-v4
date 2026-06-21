@@ -8,13 +8,6 @@ import { MEMBER_API_ROUTES, type MemberBusinessProfileDto } from '@kclub/contrac
 import type { Locale } from '@/i18n/routing';
 import { parseAuthResponse } from '@/features/auth/utils/api';
 import type { TaxonomyOption } from './BusinessPanel';
-import {
-  memberActionButtonClasses,
-  memberAlertErrorClasses,
-  memberAlertSuccessClasses,
-  memberFormInputClasses,
-  memberFormLabelClasses,
-} from './cabinet/styles';
 
 type BusinessFormProps = {
   locale: Locale;
@@ -57,6 +50,10 @@ export function BusinessForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const labelClassName = 'block text-sm font-medium text-zinc-700 dark:text-white/72';
+  const fieldClassName = 'kclub-field mt-1';
+  const buttonClassName =
+    'kclub-button-primary rounded-none border-0 px-5 py-3 text-xs tracking-[0.24em] disabled:cursor-not-allowed disabled:opacity-50';
 
   const isEdit = business !== null;
 
@@ -136,22 +133,20 @@ export function BusinessForm({
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       {error && (
-        <div className={memberAlertErrorClasses}>
+        <div className="border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-500/30 dark:bg-red-950/40 dark:text-red-200">
           {error}
         </div>
       )}
 
       {success && (
-        <div className={memberAlertSuccessClasses}>
+        <div className="border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-950/40 dark:text-emerald-200">
           {isEdit ? t('editSuccess') : t('submitSuccess')}
         </div>
       )}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className={memberFormLabelClasses}>
-            {t('nameLabel')}
-          </label>
+          <label className={labelClassName}>{t('nameLabel')}</label>
           <input
             type="text"
             value={name}
@@ -159,14 +154,12 @@ export function BusinessForm({
             required
             minLength={2}
             maxLength={100}
-            className={memberFormInputClasses}
+            className={fieldClassName}
           />
         </div>
 
         <div>
-          <label className={memberFormLabelClasses}>
-            {t('representativeNameLabel')}
-          </label>
+          <label className={labelClassName}>{t('representativeNameLabel')}</label>
           <input
             type="text"
             value={representativeName}
@@ -174,33 +167,29 @@ export function BusinessForm({
             required
             minLength={2}
             maxLength={100}
-            className={memberFormInputClasses}
+            className={fieldClassName}
           />
         </div>
 
         <div>
-          <label className={memberFormLabelClasses}>
-            {t('representativeEmailLabel')}
-          </label>
+          <label className={labelClassName}>{t('representativeEmailLabel')}</label>
           <input
             type="email"
             value={representativeEmail}
             onChange={(e) => setRepresentativeEmail(e.target.value)}
             required
-            className={memberFormInputClasses}
+            className={fieldClassName}
           />
         </div>
 
         <div>
-          <label className={memberFormLabelClasses}>
-            {t('representativePhoneLabel')}
-          </label>
+          <label className={labelClassName}>{t('representativePhoneLabel')}</label>
           <input
             type="tel"
             value={representativePhone}
             onChange={(e) => setRepresentativePhone(e.target.value)}
             required
-            className={memberFormInputClasses}
+            className={fieldClassName}
           />
         </div>
       </div>
@@ -208,14 +197,12 @@ export function BusinessForm({
       {!isEdit && (
         <div className="grid gap-4 sm:grid-cols-3">
           <div>
-            <label className={memberFormLabelClasses}>
-              {t('countryLabel')}
-            </label>
+            <label className={labelClassName}>{t('countryLabel')}</label>
             <select
               value={countryId}
               onChange={(e) => setCountryId(e.target.value)}
               required
-              className={memberFormInputClasses}
+              className={fieldClassName}
             >
               <option value="">{t('selectPlaceholder')}</option>
               {countryOptions.map((c) => (
@@ -227,15 +214,13 @@ export function BusinessForm({
           </div>
 
           <div>
-            <label className={memberFormLabelClasses}>
-              {t('cityLabel')}
-            </label>
+            <label className={labelClassName}>{t('cityLabel')}</label>
             <select
               value={cityId}
               onChange={(e) => setCityId(e.target.value)}
               required
               disabled={!countryId}
-              className={memberFormInputClasses}
+              className={`${fieldClassName} disabled:cursor-not-allowed disabled:opacity-50`}
             >
               <option value="">{t('selectPlaceholder')}</option>
               {cityOptions.map((c) => (
@@ -247,14 +232,12 @@ export function BusinessForm({
           </div>
 
           <div>
-            <label className={memberFormLabelClasses}>
-              {t('categoryLabel')}
-            </label>
+            <label className={labelClassName}>{t('categoryLabel')}</label>
             <select
               value={categoryId}
               onChange={(e) => setCategoryId(e.target.value)}
               required
-              className={memberFormInputClasses}
+              className={fieldClassName}
             >
               <option value="">{t('selectPlaceholder')}</option>
               {categoryOptions.map((c) => (
@@ -269,44 +252,38 @@ export function BusinessForm({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label className={memberFormLabelClasses}>
-            {t('websiteUrlLabel')}
-          </label>
+          <label className={labelClassName}>{t('websiteUrlLabel')}</label>
           <input
             type="url"
             value={websiteUrl}
             onChange={(e) => setWebsiteUrl(e.target.value)}
-            className={memberFormInputClasses}
+            className={fieldClassName}
           />
         </div>
 
         <div>
-          <label className={memberFormLabelClasses}>
-            {t('socialUrlLabel')}
-          </label>
+          <label className={labelClassName}>{t('socialUrlLabel')}</label>
           <input
             type="url"
             value={socialUrl}
             onChange={(e) => setSocialUrl(e.target.value)}
-            className={memberFormInputClasses}
+            className={fieldClassName}
           />
         </div>
       </div>
 
       <div>
-        <label className={memberFormLabelClasses}>
-          {t('briefDescriptionLabel')}
-        </label>
+        <label className={labelClassName}>{t('briefDescriptionLabel')}</label>
         <textarea
           value={briefDescription ?? ''}
           onChange={(e) => setBriefDescription(e.target.value)}
           maxLength={500}
           rows={3}
-          className={memberFormInputClasses}
+          className={fieldClassName}
         />
       </div>
 
-      <button type="submit" disabled={isSubmitting} className={memberActionButtonClasses}>
+      <button type="submit" disabled={isSubmitting} className={buttonClassName}>
         {isSubmitting ? tCommon('saving') : isEdit ? t('editSubmit') : t('submitCta')}
       </button>
     </form>

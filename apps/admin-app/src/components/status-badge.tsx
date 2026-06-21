@@ -17,6 +17,8 @@ const variantMap: Record<string, BadgeVariant> = {
   CANCELED: 'outline',
   PAST_DUE: 'outline',
   HIDDEN: 'outline',
+  MEMBER: 'outline',
+  VIP: 'default',
 };
 
 type StatusBadgeProps = {

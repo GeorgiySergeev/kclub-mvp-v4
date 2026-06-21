@@ -12,7 +12,7 @@ function Card({
       data-slot="card"
       data-size={size}
       className={cn(
-        'flex flex-col overflow-hidden rounded-lg border bg-card py-4 text-sm text-card-foreground shadow-sm data-[size=sm]:py-3',
+        'bg-card text-card-foreground flex flex-col overflow-hidden rounded-lg border py-4 text-sm shadow-sm data-[size=sm]:py-3',
         className,
       )}
       {...props}

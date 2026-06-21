@@ -1,4 +1,8 @@
-import type { AdminBusinessDetailDto, BusinessStatus } from '@kclub/contracts';
+import type {
+  AdminBusinessDetailDto,
+  AdminBusinessOwnerSummaryDto,
+  BusinessStatus,
+} from '@kclub/contracts';
 
 import {
   makeEntityId,
@@ -29,10 +33,19 @@ function createBusinessProfileBase(
   const hiddenAt = status === 'HIDDEN' ? makeIsoDate(sequence, 10) : null;
   const rejectionReason = status === 'REJECTED' ? 'Missing verification details' : null;
 
+  const ownerId = makeEntityId('member', sequence);
+  const owner: AdminBusinessOwnerSummaryDto = {
+    id: ownerId,
+    phone: `+1555000${sequence.toString().padStart(4, '0')}`,
+    displayName: `Member ${sequence}`,
+    status: 'ACTIVE',
+    membershipTier: 'VIP',
+  };
+
   return withOverrides(
     {
       id: makeEntityId('business', sequence),
-      ownerUserId: makeEntityId('member', sequence),
+      ownerUserId: ownerId,
       slug: `business-${sequence}`,
       name: `Business ${sequence}`,
       status,
@@ -58,6 +71,9 @@ function createBusinessProfileBase(
       publishedAt,
       createdAt,
       updatedAt: createdAt,
+      owner,
+      placementSubscription: null,
+      auditEntries: [],
     },
     overrides,
   );

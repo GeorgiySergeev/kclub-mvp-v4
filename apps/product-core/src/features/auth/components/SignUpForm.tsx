@@ -1,23 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
-import { KeyRound, Smartphone } from 'lucide-react';
 
-import { Button, Field, Input, Label, cn, linkClasses } from '@kclub/ui';
+import { Button, Field, Input, Label, linkClasses, textMuted } from '@kclub/ui';
 import { Locale } from '@/i18n/routing';
 import { parseAuthResponse } from '../utils/api';
-
-const authInputClasses =
-  'h-10 rounded-xl border border-white/15 bg-[#161616] pl-10 pr-3 text-[15px] text-zinc-100 shadow-none ring-0 placeholder:text-zinc-500 focus:border-white/35 focus:ring-2 focus:ring-white/20 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-[#161616] dark:text-zinc-100 dark:ring-0 dark:placeholder:text-zinc-500 dark:focus:ring-white/20';
-
-const authButtonClasses =
-  'h-9 rounded-lg border-white/90 bg-zinc-100 px-4 py-0 text-sm font-semibold text-black shadow-none hover:bg-white focus:ring-white focus:ring-offset-[#050505] disabled:opacity-60 dark:bg-zinc-100 dark:text-black dark:hover:bg-white dark:focus:ring-white dark:focus:ring-offset-[#050505]';
-
-const subtleLinkClasses =
-  'font-medium text-zinc-100 underline decoration-zinc-500 underline-offset-4 outline-none hover:text-white focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#050505]';
 
 export function SignUpForm({ locale }: { locale: Locale }) {
   const t = useTranslations('auth.signUp');
@@ -29,6 +20,9 @@ export function SignUpForm({ locale }: { locale: Locale }) {
   const [otp, setOtp] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const inputClassName = 'kclub-field';
+  const buttonClassName =
+    'kclub-button-primary w-full rounded-none border-0 px-5 py-3.5 text-xs tracking-[0.26em]';
 
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,115 +98,116 @@ export function SignUpForm({ locale }: { locale: Locale }) {
   };
 
   return (
-    <section className="w-full max-w-[480px] overflow-hidden border-x border-white/10 bg-[#070707]/95 shadow-[0_24px_90px_rgba(0,0,0,0.45)]">
-      <div className="border-b border-white/10 px-8 py-14 sm:px-10">
-        <Link
-          href={`/${locale}`}
-          className="inline-flex items-center gap-2 text-[26px] font-black tracking-[-0.02em] text-white outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#050505]"
-          aria-label="KCLUB home"
-        >
-          <span className="grid grid-cols-3 gap-1" aria-hidden="true">
-            <span className="h-2 w-2 bg-white" />
-            <span className="h-2 w-2 bg-white" />
-            <span className="h-2 w-2 bg-white" />
-            <span className="h-2 w-2 bg-white" />
-            <span className="h-2 w-2" />
-            <span className="h-2 w-2 bg-white" />
-          </span>
-          <span>KCLUB</span>
-        </Link>
-        <div className="mt-8">
-          <h1 className="text-[26px] font-bold leading-tight text-white sm:text-[28px]">
-            {t('title')}
-          </h1>
-          <p className="mt-3 text-[19px] leading-7 text-zinc-300">{t('description')}</p>
-        </div>
-      </div>
+    <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_440px] lg:items-center">
+      <section className="hidden lg:block">
+        <h1 className="mt-5 text-5xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
+          {t('title')}
+        </h1>
+        <p className="dark:text-white/68 mt-5 max-w-xl text-base leading-8 text-zinc-600">
+          {t('description')}
+        </p>
+      </section>
 
-      <div className="border-b border-white/10 px-8 py-10 sm:px-10">
-        <div className="mb-6 flex items-center gap-3">
-          <div className="h-px flex-1 bg-white/10" />
-          <p className="text-xs font-medium uppercase text-zinc-400">
-            {tCommon('continueWithPhone')}
+      <div className="relative mx-auto w-full max-w-[440px] overflow-hidden border border-zinc-200 bg-white p-6 shadow-[0_24px_80px_-40px_rgba(0,0,0,0.45)] dark:border-white/10 dark:bg-surface sm:p-8">
+        <div className="absolute inset-x-0 top-0 h-1 bg-accent" />
+
+        <div className="mb-10 text-center">
+          <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center border border-zinc-200 bg-zinc-100 dark:border-white/10 dark:bg-surface-muted">
+            <svg
+              className="h-6 w-6 text-zinc-700 dark:text-white/80"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+              />
+            </svg>
+          </div>
+          <h2 className="mt-3 text-3xl font-black uppercase tracking-[0.01em] text-zinc-900 dark:text-white">
+            {t('title')}
+          </h2>
+          <p className="dark:text-white/62 mt-3 text-sm leading-7 text-zinc-600">
+            {t('description')}
           </p>
-          <div className="h-px flex-1 bg-white/10" />
         </div>
 
         {step === 'phone' ? (
-          <form className="space-y-3" onSubmit={handlePhoneSubmit}>
-            <Field className="space-y-0">
-              <Label htmlFor="phone" className="sr-only">
-                {t('phoneLabel')}
-              </Label>
-              <div className="relative">
-                <Smartphone
-                  aria-hidden="true"
-                  className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400"
-                  strokeWidth={1.75}
-                />
-                <Input
-                  id="phone"
-                  name="phone"
-                  type="tel"
-                  autoComplete="tel"
-                  required
-                  aria-invalid={!!error ? 'true' : 'false'}
-                  aria-describedby={error ? 'phone-error' : undefined}
-                  placeholder={t('phonePlaceholder')}
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                  disabled={isLoading}
-                  className={authInputClasses}
-                />
-              </div>
+          <form className="space-y-6" onSubmit={handlePhoneSubmit}>
+            <Field>
+              <Label htmlFor="phone">{t('phoneLabel')}</Label>
+              <Input
+                id="phone"
+                name="phone"
+                data-testid="auth-phone-input"
+                type="tel"
+                autoComplete="tel"
+                required
+                aria-invalid={!!error ? 'true' : 'false'}
+                aria-describedby={error ? 'phone-error' : undefined}
+                placeholder={t('phonePlaceholder')}
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                disabled={isLoading}
+                className={inputClassName}
+              />
             </Field>
             {error && (
-              <p id="phone-error" role="alert" className="text-sm text-red-300">
+              <p id="phone-error" role="alert" className="text-sm text-red-600 dark:text-red-400">
                 {error}
               </p>
             )}
-            <Button type="submit" fullWidth disabled={isLoading} className={authButtonClasses}>
+            <Button
+              type="submit"
+              fullWidth
+              disabled={isLoading}
+              className={buttonClassName}
+              data-testid="auth-submit-phone"
+            >
               {isLoading ? tCommon('loading') : t('submit')}
+              <ArrowRight aria-hidden="true" size={16} strokeWidth={1.7} />
             </Button>
           </form>
         ) : (
-          <form className="space-y-3" onSubmit={handleOtpSubmit}>
-            <Field className="space-y-0">
-              <Label htmlFor="otp" className="sr-only">
-                {tCommon('otpLabel')}
-              </Label>
-              <div className="relative">
-                <KeyRound
-                  aria-hidden="true"
-                  className="pointer-events-none absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400"
-                  strokeWidth={1.75}
-                />
-                <Input
-                  id="otp"
-                  name="otp"
-                  type="text"
-                  inputMode="numeric"
-                  autoComplete="one-time-code"
-                  required
-                  aria-invalid={!!error ? 'true' : 'false'}
-                  aria-describedby={error ? 'otp-error' : undefined}
-                  placeholder={tCommon('otpPlaceholder')}
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value)}
-                  disabled={isLoading}
-                  className={authInputClasses}
-                />
-              </div>
+          <form className="space-y-6" onSubmit={handleOtpSubmit}>
+            <Field>
+              <Label htmlFor="otp">{tCommon('otpLabel')}</Label>
+              <Input
+                id="otp"
+                name="otp"
+                data-testid="auth-otp-input"
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                required
+                aria-invalid={!!error ? 'true' : 'false'}
+                aria-describedby={error ? 'otp-error' : undefined}
+                placeholder={tCommon('otpPlaceholder')}
+                value={otp}
+                onChange={(e) => setOtp(e.target.value)}
+                disabled={isLoading}
+                className={inputClassName}
+              />
             </Field>
             {error && (
-              <p id="otp-error" role="alert" className="text-sm text-red-300">
+              <p id="otp-error" role="alert" className="text-sm text-red-600 dark:text-red-400">
                 {error}
               </p>
             )}
-            <Button type="submit" fullWidth disabled={isLoading} className={authButtonClasses}>
+            <Button
+              type="submit"
+              fullWidth
+              disabled={isLoading}
+              className={buttonClassName}
+              data-testid="auth-submit-otp"
+            >
               {isLoading ? tCommon('loading') : tCommon('submitOtp')}
+              <ArrowRight aria-hidden="true" size={16} strokeWidth={1.7} />
             </Button>
-            <div className="pt-2 text-center">
+            <div className="mt-4 text-center">
               <button
                 type="button"
                 onClick={() => {
@@ -220,7 +215,7 @@ export function SignUpForm({ locale }: { locale: Locale }) {
                   setError(null);
                   setOtp('');
                 }}
-                className={cn(linkClasses, 'text-zinc-300 hover:text-white')}
+                className={linkClasses}
                 disabled={isLoading}
               >
                 {tCommon('backToPhone')}
@@ -230,18 +225,14 @@ export function SignUpForm({ locale }: { locale: Locale }) {
         )}
 
         {step === 'phone' && (
-          <p className="mt-6 text-center text-sm text-zinc-400">
+          <p className={`mt-6 text-center ${textMuted}`}>
             {t('switchPrompt')}{' '}
-            <Link href={`/${locale}/sign-in`} className={subtleLinkClasses}>
+            <Link href={`/${locale}/sign-in`} className={linkClasses}>
               {t('switchAction')}
             </Link>
           </p>
         )}
       </div>
-
-      <p className="px-8 py-8 text-center text-base leading-6 text-zinc-300 sm:px-10">
-        {tCommon('privacyNote')}
-      </p>
-    </section>
+    </div>
   );
 }

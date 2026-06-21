@@ -14,7 +14,7 @@ export type AuthenticatedStaff = {
   token: string;
 };
 
-export function authenticateStaff(request: Request): AuthenticatedStaff {
+export async function authenticateStaff(request: Request): Promise<AuthenticatedStaff> {
   const token = getBearerToken(request);
   if (!token) {
     throw new AppError({
@@ -24,7 +24,7 @@ export function authenticateStaff(request: Request): AuthenticatedStaff {
     });
   }
 
-  const profile = getStaffSession(token);
+  const profile = await getStaffSession(token);
   if (!profile) {
     throw new AppError({
       code: ERROR_CODES.AUTH_SESSION_INVALID,
@@ -78,11 +78,11 @@ export function enforceSupportReadOnly(profile: StaffProfileDto, method: string)
   }
 }
 
-export function adminGuard(
+export async function adminGuard(
   request: Request,
   permission: StaffPermission,
-): { profile: StaffProfileDto; context: RequestContext } {
-  const { profile } = authenticateStaff(request);
+): Promise<{ profile: StaffProfileDto; context: RequestContext }> {
+  const { profile } = await authenticateStaff(request);
   enforceSupportReadOnly(profile, request.method);
   requireStaffPermission(profile, permission);
   const context = enrichStaffContext(profile, request);

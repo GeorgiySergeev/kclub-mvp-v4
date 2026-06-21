@@ -16,17 +16,39 @@
     },
     "nav": {
       "directory": "Directory",
+      "catalog": "Каталог",
       "signIn": "Sign In",
       "join": "Join",
-      "cabinet": "Кабінет"
+      "cabinet": "Кабінет",
+      "account": "Акаунт",
+      "dashboard": "Кабінет",
+      "signOut": "Вийти",
+      "signingOut": "Вихід...",
+      "signOutError": "Не вдалося вийти. Спробуйте ще раз."
     },
     "hero": {
       "eyebrow": "Private Membership Club",
       "titleLine1": "Private access for",
       "titleLine2": "global professionals",
       "subline": "A curated membership network for verified people, trusted partners, and warm business introductions.",
+      "cardEyebrow": "Private member card",
+      "cardCaption": "Verified access",
       "primaryCta": "Join Now",
-      "secondaryCta": "Explore Directory"
+      "secondaryCta": "Explore Directory",
+      "stats": {
+        "verified": {
+          "title": "Verified members",
+          "copy": "Private onboarding and QR-backed identity."
+        },
+        "access": {
+          "title": "Trusted access",
+          "copy": "A quieter network for premium business context."
+        },
+        "reach": {
+          "title": "Global reach",
+          "copy": "Members, partners, and warm introductions."
+        }
+      }
     },
     "stats": {
       "members": "Members",
@@ -84,7 +106,18 @@
         "items": [
           "Everything in MEMBER",
           "VIP subscription management",
+          "Priority partner directory access",
+          "Private member benefits and offers"
+        ]
+      },
+      "business": {
+        "name": "BUSINESS",
+        "price": "Placement",
+        "cta": "Start Business Profile",
+        "items": [
+          "Everything in VIP",
           "Submit and manage a business profile",
+          "Paid partner placement after moderation",
           "Business introductions after publication"
         ]
       }
@@ -279,6 +312,7 @@
         "status": "Status",
         "issuedAt": "Issued",
         "expiresAt": "Expires",
+        "validThru": "Valid thru",
         "noExpiration": "No expiration",
         "verifyLink": "Open public verification",
         "emptyTitle": "No active card yet",

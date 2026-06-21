@@ -47,6 +47,7 @@ export default async function TwoFactorRequiredPage({ searchParams }: TwoFactorR
               <Input
                 id="totp"
                 name="code"
+                data-testid="admin-totp-input"
                 placeholder="123456"
                 inputMode="numeric"
                 autoComplete="one-time-code"
@@ -55,7 +56,7 @@ export default async function TwoFactorRequiredPage({ searchParams }: TwoFactorR
             </div>
           </CardContent>
           <CardFooter>
-            <Button className="w-full" type="submit">
+            <Button className="w-full" type="submit" data-testid="admin-submit-totp">
               Verify code
             </Button>
           </CardFooter>

@@ -10,35 +10,36 @@ export function AboutSection() {
   const facts = t.raw('about.facts') as Fact[];
 
   return (
-    <section className="border-b border-zinc-200 py-16 dark:border-zinc-800 sm:py-24">
-      <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 lg:grid-cols-[1.3fr_0.7fr] lg:px-8">
+    <section className="kclub-border border-b bg-zinc-100 py-16 text-zinc-950 dark:bg-surface-raised dark:text-white sm:py-24">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[1.25fr_0.75fr] lg:px-10">
         <div>
-          <p className="text-xs font-normal uppercase tracking-widest text-zinc-500">
+          <p className="border-l-4 border-accent pl-4 text-xs font-bold uppercase text-zinc-500 dark:text-white/60">
             {t('about.eyebrow')}
           </p>
-          <h2 className="mt-4 max-w-3xl text-4xl font-extralight tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-5xl">
+          <h2 className="mt-5 max-w-4xl text-4xl font-black uppercase leading-tight sm:text-6xl">
             {t('about.title')}
           </h2>
-          <div className="mt-8 grid max-w-2xl gap-5 text-base leading-7 text-zinc-600 dark:text-zinc-400">
+          <div className="mt-8 grid max-w-2xl gap-5 text-base font-medium leading-8 text-zinc-600 dark:text-white/70">
             <p>{t('about.paragraph1')}</p>
             <p>{t('about.paragraph2')}</p>
           </div>
         </div>
-        <aside className="border border-zinc-200 p-6 dark:border-zinc-800">
-          <h3 className="text-sm font-normal uppercase tracking-widest text-zinc-500">
+        <aside className="kclub-border dark:border-white/12 border bg-white/70 p-6 dark:bg-white/[0.04] sm:p-8">
+          <h3 className="dark:text-white/58 text-sm font-bold uppercase text-zinc-500">
             {t('about.factsTitle')}
           </h3>
           <dl className="mt-8 grid gap-6">
             {facts.map((fact) => (
               <div
                 key={fact.label}
-                className="border-b border-zinc-200 pb-6 last:border-b-0 last:pb-0 dark:border-zinc-800"
+                className="kclub-border dark:border-white/12 border-b pb-6 last:border-b-0 last:pb-0"
               >
-                <dt className="text-xs font-normal uppercase tracking-widest text-zinc-500">
+                <dt className="dark:text-white/54 text-xs font-bold uppercase text-zinc-500">
                   {fact.label}
                 </dt>
-                <dd className="mt-2 text-3xl font-light tracking-tight text-zinc-950 dark:text-zinc-50">
+                <dd className="mt-2 text-4xl font-black">
                   {fact.value}
+                  <span className="text-accent">.</span>
                 </dd>
               </div>
             ))}

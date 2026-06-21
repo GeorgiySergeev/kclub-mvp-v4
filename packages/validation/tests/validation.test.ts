@@ -33,8 +33,13 @@ import {
   staffRoleUpdateSchema,
   staffTotpSetupSchema,
   staffTotpVerifySchema,
+  staffPhoneOtpSendSchema,
+  staffPhoneOtpVerifySchema,
+  staffTotpCodeSchema,
   unblockUserSchema,
   adminConfigUpdateSchema,
+  adminUserListSchema,
+  adminCardListSchema,
 } from '../src';
 
 const uuid = '11111111-1111-4111-8111-111111111111';
@@ -219,6 +224,30 @@ describe('introduction schemas', () => {
 });
 
 describe('staff auth schemas', () => {
+  test('validates staff phone OTP send and verify payloads', () => {
+    expect(staffPhoneOtpSendSchema.parse({ phone: '+15551234567' })).toEqual({
+      phone: '+15551234567',
+    });
+
+    expect(staffPhoneOtpVerifySchema.parse({ phone: '+15551234567', code: '000000' })).toEqual({
+      phone: '+15551234567',
+      code: '000000',
+    });
+  });
+
+  test('validates TOTP code-only schema', () => {
+    expect(staffTotpCodeSchema.parse({ code: '123456' })).toEqual({ code: '123456' });
+    expectInvalidField(staffTotpCodeSchema, { code: '12345a' }, 'code');
+    expectInvalidField(staffTotpCodeSchema, { code: '12345' }, 'code');
+    expectInvalidField(staffTotpCodeSchema, {}, 'code');
+  });
+
+  test('rejects invalid staff phone OTP fields', () => {
+    expectInvalidField(staffPhoneOtpSendSchema, { phone: '555' }, 'phone');
+    expectInvalidField(staffPhoneOtpSendSchema, {}, 'phone');
+    expectInvalidField(staffPhoneOtpVerifySchema, { phone: '+15551234567', code: 'abc' }, 'code');
+  });
+
   test('validates TOTP setup and verify payloads', () => {
     expect(
       staffTotpSetupSchema.parse({
@@ -333,6 +362,54 @@ describe('admin mutation schemas', () => {
       description: 'Test config',
     });
     expect(adminConfigUpdateSchema.parse({ value: 'simple' })).toEqual({ value: 'simple' });
+  });
+});
+
+describe('admin list schemas', () => {
+  test('validates admin user list query params', () => {
+    expect(adminUserListSchema.parse({})).toEqual({ page: 1, limit: 20 });
+    expect(
+      adminUserListSchema.parse({
+        page: '2',
+        limit: '50',
+        search: 'test',
+        status: 'ACTIVE',
+        membershipTier: 'VIP',
+      }),
+    ).toEqual({
+      page: 2,
+      limit: 50,
+      search: 'test',
+      status: 'ACTIVE',
+      membershipTier: 'VIP',
+    });
+  });
+
+  test('rejects invalid admin user list params', () => {
+    expectInvalidField(adminUserListSchema, { status: 'INVALID' }, 'status');
+    expectInvalidField(adminUserListSchema, { membershipTier: 'GOLD' }, 'membershipTier');
+  });
+
+  test('validates admin card list query params', () => {
+    expect(adminCardListSchema.parse({})).toEqual({ page: 1, limit: 20 });
+    expect(
+      adminCardListSchema.parse({
+        page: '1',
+        limit: '10',
+        status: 'ACTIVE',
+        membershipTier: 'MEMBER',
+      }),
+    ).toEqual({
+      page: 1,
+      limit: 10,
+      status: 'ACTIVE',
+      membershipTier: 'MEMBER',
+    });
+  });
+
+  test('rejects invalid admin card list params', () => {
+    expectInvalidField(adminCardListSchema, { status: 'INVALID' }, 'status');
+    expectInvalidField(adminCardListSchema, { membershipTier: 'PLATINUM' }, 'membershipTier');
   });
 });
 

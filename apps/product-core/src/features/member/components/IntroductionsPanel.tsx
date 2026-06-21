@@ -10,19 +10,10 @@ import {
   type MemberIntroductionDto,
   type PublicBusinessListItemDto,
 } from '@kclub/contracts';
-import { Badge } from '@kclub/ui';
+import { Badge, Skeleton, Surface } from '@kclub/ui';
 
 import type { Locale } from '@/i18n/routing';
 import { parseAuthResponse } from '@/features/auth/utils/api';
-import { MemberPanel, MemberPanelHeader } from './cabinet/MemberPanel';
-import {
-  memberActionButtonClasses,
-  memberAlertErrorClasses,
-  memberAlertSuccessClasses,
-  memberFormInputClasses,
-  memberFormLabelClasses,
-  memberInfoTileClasses,
-} from './cabinet/styles';
 
 const STATUS_LABEL_KEYS: Record<string, string> = {
   SUBMITTED: 'statusSubmitted',
@@ -50,7 +41,7 @@ function getStatusBadgeVariant(status: string) {
 
 export function IntroductionsPanel({
   locale: _locale,
-  profile,
+  profile: _profile,
   serverPublicBusinesses,
 }: {
   locale: Locale;
@@ -71,6 +62,11 @@ export function IntroductionsPanel({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
+
+  const labelClassName = 'block text-sm font-medium text-zinc-700 dark:text-white/72';
+  const fieldClassName = 'kclub-field mt-1';
+  const buttonClassName =
+    'kclub-button-primary rounded-none border-0 px-5 py-3 text-xs tracking-[0.24em] disabled:cursor-not-allowed disabled:opacity-50';
 
   const publishedOwnBusinesses = ownBusinesses.filter((b) => b.status === 'PUBLISHED');
   const availableTargets = serverPublicBusinesses.filter(
@@ -158,7 +154,6 @@ export function IntroductionsPanel({
       setMessage('');
       setSelectedTargetBusinessId('');
 
-      // Reload introductions
       const introsRes = await fetch(MEMBER_API_ROUTES.INTRODUCTIONS);
       const introsResult = await parseAuthResponse<MemberIntroductionDto[]>(introsRes);
       if (introsResult.success && introsResult.data) {
@@ -185,7 +180,6 @@ export function IntroductionsPanel({
         return;
       }
 
-      // Reload
       const introsRes = await fetch(MEMBER_API_ROUTES.INTRODUCTIONS);
       const introsResult = await parseAuthResponse<MemberIntroductionDto[]>(introsRes);
       if (introsResult.success && introsResult.data) {
@@ -198,42 +192,80 @@ export function IntroductionsPanel({
 
   if (isLoading) {
     return (
-      <MemberPanel>
-        <p className="text-sm text-zinc-600 dark:text-zinc-400">{tCommon('loading')}</p>
-      </MemberPanel>
+      <Surface className="kclub-panel max-w-none space-y-6 rounded-none px-6 py-6 shadow-none ring-0">
+        <Skeleton className="h-7 w-48" />
+        <Skeleton className="h-4 w-full" />
+        <Skeleton className="h-4 w-3/4" />
+        <div className="space-y-4">
+          <Skeleton className="h-6 w-40" />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <Skeleton className="h-20" />
+            <Skeleton className="h-20" />
+          </div>
+          <Skeleton className="h-20" />
+          <Skeleton className="h-10 w-32" />
+        </div>
+        <div className="space-y-4">
+          <Skeleton className="h-6 w-36" />
+          <Skeleton className="h-24" />
+          <Skeleton className="h-24" />
+        </div>
+      </Surface>
     );
   }
 
   if (publishedOwnBusinesses.length === 0) {
     return (
-      <MemberPanel>
-        <MemberPanelHeader title={t('title')} description={t('noPublishedBusiness')} />
-      </MemberPanel>
+      <Surface className="kclub-panel max-w-none rounded-none px-6 py-6 shadow-none ring-0">
+        <h2 className="text-xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
+          {t('title')}
+        </h2>
+        <p className="dark:text-white/66 mt-2 text-sm leading-7 text-zinc-600">
+          {t('noPublishedBusiness')}
+        </p>
+      </Surface>
     );
   }
 
   return (
-    <MemberPanel>
-      <MemberPanelHeader title={t('title')} description={t('description')} />
+    <Surface className="kclub-panel max-w-none space-y-6 rounded-none px-6 py-6 shadow-none ring-0">
+      <h2 className="text-xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
+        {t('title')}
+      </h2>
+      <p className="dark:text-white/66 text-sm leading-7 text-zinc-600">{t('description')}</p>
 
-      {error && <div className={memberAlertErrorClasses}>{error}</div>}
+      {error && (
+        <div className="border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-500/30 dark:bg-red-950/40 dark:text-red-200">
+          {error}
+        </div>
+      )}
 
-      <div className="space-y-4 border-t border-zinc-200 pt-8 dark:border-zinc-800">
-        <h3 className="text-base font-medium text-zinc-950 dark:text-zinc-50">{t('submitTitle')}</h3>
+      <div className="space-y-4">
+        <h3 className="text-lg font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
+          {t('submitTitle')}
+        </h3>
 
         <form onSubmit={handleSubmitIntroduction} className="space-y-4">
-          {submitError && <div className={memberAlertErrorClasses}>{submitError}</div>}
+          {submitError && (
+            <div className="border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-500/30 dark:bg-red-950/40 dark:text-red-200">
+              {submitError}
+            </div>
+          )}
 
-          {submitSuccess && <div className={memberAlertSuccessClasses}>{t('submitSuccess')}</div>}
+          {submitSuccess && (
+            <div className="border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800 dark:border-emerald-500/30 dark:bg-emerald-950/40 dark:text-emerald-200">
+              {t('submitSuccess')}
+            </div>
+          )}
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className={memberFormLabelClasses}>{t('requesterBusinessLabel')}</label>
+              <label className={labelClassName}>{t('requesterBusinessLabel')}</label>
               <select
                 value={selectedRequesterBusinessId}
                 onChange={(e) => setSelectedRequesterBusinessId(e.target.value)}
                 required
-                className={memberFormInputClasses}
+                className={fieldClassName}
               >
                 {publishedOwnBusinesses.map((b) => (
                   <option key={b.id} value={b.id}>
@@ -244,17 +276,17 @@ export function IntroductionsPanel({
             </div>
 
             <div>
-              <label className={memberFormLabelClasses}>{t('targetBusinessLabel')}</label>
+              <label className={labelClassName}>{t('targetBusinessLabel')}</label>
               <select
                 value={selectedTargetBusinessId}
                 onChange={(e) => setSelectedTargetBusinessId(e.target.value)}
                 required
-                className={memberFormInputClasses}
+                className={fieldClassName}
               >
                 <option value="">{t('selectPlaceholder')}</option>
                 {availableTargets.map((b) => (
                   <option key={b.id} value={b.id}>
-                    {b.name} &middot; {b.countryName}
+                    {b.name} - {b.countryName}
                   </option>
                 ))}
               </select>
@@ -262,49 +294,54 @@ export function IntroductionsPanel({
           </div>
 
           <div>
-            <label className={memberFormLabelClasses}>{t('messageLabel')}</label>
+            <label className={labelClassName}>{t('messageLabel')}</label>
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               maxLength={500}
               rows={3}
               placeholder={t('messagePlaceholder')}
-              className={memberFormInputClasses}
+              className={fieldClassName}
             />
           </div>
 
-          <button type="submit" disabled={isSubmitting} className={memberActionButtonClasses}>
+          <button type="submit" disabled={isSubmitting} className={buttonClassName}>
             {isSubmitting ? tCommon('saving') : t('submitCta')}
           </button>
         </form>
       </div>
 
-      <div className="space-y-4 border-t border-zinc-200 pt-8 dark:border-zinc-800">
-        <h3 className="text-base font-medium text-zinc-950 dark:text-zinc-50">{t('listTitle')}</h3>
+      <div className="space-y-4">
+        <h3 className="text-lg font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
+          {t('listTitle')}
+        </h3>
 
         {introductions.length === 0 && (
-          <p className="text-sm text-zinc-600 dark:text-zinc-400">{t('emptyList')}</p>
+          <p className="dark:text-white/62 text-sm text-zinc-600">{t('emptyList')}</p>
         )}
 
         <div className="space-y-3">
           {introductions.map((intro) => (
-            <div key={intro.id} className={memberInfoTileClasses}>
+            <Surface
+              key={intro.id}
+              className="kclub-panel-soft max-w-none space-y-3 rounded-none p-4 shadow-none ring-0"
+            >
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
-                  <p className="text-sm text-zinc-950 dark:text-zinc-50">
+                  <p className="text-sm text-zinc-950 dark:text-white">
                     <span className="font-medium">{intro.requesterBusinessName}</span>
-                    {' → '}
+                    {' -> '}
                     <span className="font-medium">{intro.targetBusinessName}</span>
                   </p>
                   {intro.message && (
-                    <p className="text-sm text-zinc-600 dark:text-zinc-400">{intro.message}</p>
+                    <p className="dark:text-white/64 text-sm text-zinc-600">{intro.message}</p>
                   )}
                   {intro.rejectionReason && (
                     <p className="text-sm text-red-600 dark:text-red-400">
                       {t('rejectionReasonLabel')}: {intro.rejectionReason}
                     </p>
                   )}
-                  <p className="text-xs text-zinc-500">
+                  <p className="dark:text-white/42 text-xs text-zinc-500">
                     {new Date(intro.createdAt).toLocaleDateString()}
                   </p>
                 </div>
@@ -323,10 +360,10 @@ export function IntroductionsPanel({
                   )}
                 </div>
               </div>
-            </div>
+            </Surface>
           ))}
         </div>
       </div>
-    </MemberPanel>
+    </Surface>
   );
 }

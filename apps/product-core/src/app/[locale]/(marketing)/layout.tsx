@@ -14,10 +14,10 @@ export default async function MarketingLayout(props: {
   const isAuthenticated = profile !== null;
 
   return (
-    <>
+    <div className="min-h-screen bg-white text-zinc-950 dark:bg-[#121212] dark:text-white">
       <TopBar locale={locale} isAuthenticated={isAuthenticated} />
       <main id="content">{props.children}</main>
       <Footer locale={locale} />
-    </>
+    </div>
   );
 }

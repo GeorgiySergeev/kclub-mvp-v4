@@ -4,14 +4,10 @@ export {
   inputBaseClasses,
   labelClasses,
   primaryButtonClasses,
-  goldButtonClasses,
   ghostButtonClasses,
   surfaceClasses,
   linkClasses,
   textMuted,
-  displayHeadingClasses,
-  panelClasses,
-  marketingSectionClasses,
 } from './tokens';
 
 export { Container } from './primitives/Container';
@@ -24,3 +20,5 @@ export { Surface } from './primitives/Surface';
 export { Badge } from './primitives/Badge';
 export { EmptyState } from './primitives/EmptyState';
 export { PageState } from './primitives/PageState';
+export { Skeleton } from './primitives/Skeleton';
+export { Spinner } from './primitives/Spinner';
