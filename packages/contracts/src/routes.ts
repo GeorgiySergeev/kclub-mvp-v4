@@ -15,6 +15,7 @@ export const MEMBER_API_ROUTES = {
   INTRODUCTIONS: `${API_BASE_PATH}/introductions`,
   INTRODUCTION_CANCEL: `${API_BASE_PATH}/introductions/:id/cancel`,
   SUBSCRIPTIONS: `${API_BASE_PATH}/subscriptions`,
+  SUBSCRIPTION_CHECKOUT: `${API_BASE_PATH}/subscriptions/checkout`,
   SUBSCRIPTION_DETAIL: `${API_BASE_PATH}/subscriptions/:id`,
   SUBSCRIPTION_CANCEL: `${API_BASE_PATH}/subscriptions/:id/cancel`,
 } as const;

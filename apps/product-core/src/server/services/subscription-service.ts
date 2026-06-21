@@ -1,0 +1,276 @@
+import {
+  ERROR_CODES,
+  type CheckoutSessionDto,
+  type Locale,
+  type SubscriptionDto,
+  type SubscriptionStatus,
+} from '@kclub/contracts';
+import { hasActiveVipAccess } from '@kclub/domain';
+
+import { AppError } from '@/server/errors';
+import { getPrismaClient } from '@/server/db';
+import { getStripeClient } from '@/server/stripe/client';
+import type { RequestContext } from '@/server/context';
+import { createDbAuditService } from '@/server/audit';
+
+const auditService = createDbAuditService();
+
+function buildVipMetadata(userId: string): Record<string, string> {
+  return {
+    type: 'vip',
+    userId,
+  };
+}
+
+function buildPlacementMetadata(userId: string, businessId: string): Record<string, string> {
+  return {
+    type: 'business_placement',
+    userId,
+    businessId,
+  };
+}
+
+function buildSuccessUrl(appUrl: string, locale: Locale): string {
+  return `${appUrl}/${locale}/m/checkout/success?session_id={CHECKOUT_SESSION_ID}`;
+}
+
+function buildCancelUrl(appUrl: string, locale: Locale): string {
+  return `${appUrl}/${locale}/m/checkout/cancel`;
+}
+
+async function getPriceIdForKey(key: string): Promise<string> {
+  const prisma = getPrismaClient();
+  const config = await prisma.adminConfig.findUnique({ where: { key } });
+
+  if (!config) {
+    throw new AppError({
+      code: ERROR_CODES.STRIPE_CONFIG_MISSING,
+      message: `Stripe price not configured: ${key}`,
+      status: 500,
+    });
+  }
+
+  const priceId = (config.value as { priceId?: string })?.priceId;
+  if (!priceId) {
+    throw new AppError({
+      code: ERROR_CODES.STRIPE_CONFIG_MISSING,
+      message: `Stripe price ID is empty for: ${key}`,
+      status: 500,
+    });
+  }
+
+  return priceId;
+}
+
+export async function startVipCheckout(
+  userId: string,
+  context: RequestContext,
+  locale: Locale,
+): Promise<CheckoutSessionDto> {
+  const prisma = getPrismaClient();
+  const stripe = getStripeClient();
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+  if (!appUrl) {
+    throw new AppError({
+      code: ERROR_CODES.STRIPE_CONFIG_MISSING,
+      message: 'APP_URL is not configured',
+      status: 500,
+    });
+  }
+
+  const subscription = await prisma.vipSubscription.findFirst({
+    where: { user_id: userId },
+    orderBy: { created_at: 'desc' },
+  });
+  if (subscription && hasActiveVipAccess(subscription.status)) {
+    throw new AppError({
+      code: ERROR_CODES.VIP_SUBSCRIPTION_INACTIVE,
+      message: 'User already has an active VIP subscription',
+      status: 409,
+    });
+  }
+
+  const priceId = await getPriceIdForKey('stripe_price_vip_membership_monthly');
+
+  const session = await stripe.checkout.sessions.create({
+    mode: 'subscription',
+    line_items: [{ price: priceId, quantity: 1 }],
+    metadata: buildVipMetadata(userId),
+    client_reference_id: userId,
+    success_url: buildSuccessUrl(appUrl, locale),
+    cancel_url: buildCancelUrl(appUrl, locale),
+  });
+
+  if (!session.url) {
+    throw new AppError({
+      code: ERROR_CODES.CHECKOUT_CREATION_FAILED,
+      message: 'Stripe did not return a checkout URL',
+      status: 500,
+    });
+  }
+
+  return { checkoutUrl: session.url };
+}
+
+export async function startPlacementCheckout(
+  businessId: string,
+  userId: string,
+  context: RequestContext,
+  locale: Locale,
+): Promise<CheckoutSessionDto> {
+  const prisma = getPrismaClient();
+  const stripe = getStripeClient();
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL;
+  if (!appUrl) {
+    throw new AppError({
+      code: ERROR_CODES.STRIPE_CONFIG_MISSING,
+      message: 'APP_URL is not configured',
+      status: 500,
+    });
+  }
+
+  const business = await prisma.businessProfile.findUnique({ where: { id: businessId } });
+  if (!business) {
+    throw new AppError({
+      code: ERROR_CODES.RESOURCE_NOT_FOUND,
+      message: 'Business not found',
+      status: 404,
+    });
+  }
+
+  if (business.user_id !== userId) {
+    throw new AppError({
+      code: ERROR_CODES.PERMISSION_DENIED,
+      message: 'You do not own this business profile',
+      status: 403,
+    });
+  }
+
+  if (business.status !== 'APPROVED') {
+    throw new AppError({
+      code: ERROR_CODES.BUSINESS_NOT_APPROVED,
+      message: 'Business must be in APPROVED status to start placement checkout',
+      status: 403,
+    });
+  }
+
+  const priceId = await getPriceIdForKey('stripe_price_business_placement_monthly');
+
+  const session = await stripe.checkout.sessions.create({
+    mode: 'subscription',
+    line_items: [{ price: priceId, quantity: 1 }],
+    metadata: buildPlacementMetadata(userId, businessId),
+    client_reference_id: userId,
+    success_url: buildSuccessUrl(appUrl, locale),
+    cancel_url: buildCancelUrl(appUrl, locale),
+  });
+
+  if (!session.url) {
+    throw new AppError({
+      code: ERROR_CODES.CHECKOUT_CREATION_FAILED,
+      message: 'Stripe did not return a checkout URL',
+      status: 500,
+    });
+  }
+
+  return { checkoutUrl: session.url };
+}
+
+export function toSubscriptionDto(sub: any): SubscriptionDto {
+  return {
+    id: sub.id,
+    userId: sub.user_id,
+    status: sub.status as SubscriptionStatus,
+    stripeCustomerId: sub.stripe_customer_id,
+    stripeSubscriptionId: sub.stripe_subscription_id,
+    currentPeriodStart: sub.current_period_start?.toISOString() ?? null,
+    currentPeriodEnd: sub.current_period_end?.toISOString() ?? null,
+    cancelAtPeriodEnd: sub.cancel_at_period_end,
+    createdAt: sub.created_at.toISOString(),
+    updatedAt: sub.updated_at.toISOString(),
+  };
+}
+
+export async function getOwnSubscriptions(userId: string): Promise<SubscriptionDto[]> {
+  const prisma = getPrismaClient();
+  const subs = await prisma.vipSubscription.findMany({
+    where: { user_id: userId },
+    orderBy: { created_at: 'desc' },
+  });
+  return subs.map(toSubscriptionDto);
+}
+
+export async function getOwnSubscriptionDetail(
+  userId: string,
+  subscriptionId: string,
+): Promise<SubscriptionDto> {
+  const prisma = getPrismaClient();
+  const sub = await prisma.vipSubscription.findUnique({ where: { id: subscriptionId } });
+  if (!sub) {
+    throw new AppError({
+      code: ERROR_CODES.RESOURCE_NOT_FOUND,
+      message: 'Subscription not found',
+      status: 404,
+    });
+  }
+  if (sub.user_id !== userId) {
+    throw new AppError({
+      code: ERROR_CODES.PERMISSION_DENIED,
+      message: 'You do not own this subscription',
+      status: 403,
+    });
+  }
+  return toSubscriptionDto(sub);
+}
+
+export async function cancelOwnSubscription(
+  userId: string,
+  subscriptionId: string,
+  context: RequestContext,
+): Promise<SubscriptionDto> {
+  const prisma = getPrismaClient();
+  const sub = await prisma.vipSubscription.findUnique({ where: { id: subscriptionId } });
+  if (!sub) {
+    throw new AppError({
+      code: ERROR_CODES.RESOURCE_NOT_FOUND,
+      message: 'Subscription not found',
+      status: 404,
+    });
+  }
+  if (sub.user_id !== userId) {
+    throw new AppError({
+      code: ERROR_CODES.PERMISSION_DENIED,
+      message: 'You do not own this subscription',
+      status: 403,
+    });
+  }
+  if (sub.status !== 'ACTIVE' && sub.status !== 'PAST_DUE') {
+    throw new AppError({
+      code: ERROR_CODES.VIP_SUBSCRIPTION_INACTIVE,
+      message: 'Only active or past-due subscriptions can be canceled',
+      status: 409,
+    });
+  }
+
+  const updated = await prisma.vipSubscription.update({
+    where: { id: subscriptionId },
+    data: { cancel_at_period_end: true, canceled_at: new Date() },
+  });
+
+  await auditService.log(
+    {
+      action: 'SUBSCRIPTION_CANCELED',
+      entityType: 'VipSubscription',
+      entityId: subscriptionId,
+      before: { cancelAtPeriodEnd: sub.cancel_at_period_end },
+      after: { cancelAtPeriodEnd: true },
+    },
+    context,
+  );
+
+  return toSubscriptionDto(updated);
+}
+
+export { buildVipMetadata, buildPlacementMetadata, buildSuccessUrl, buildCancelUrl };

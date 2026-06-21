@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { requireStaffProfile } from '@/server/auth/profile';
 import { AppSidebar } from '@/components/dashboard/app-sidebar';
 import { DashboardHeader } from '@/components/dashboard/dashboard-header';
+import { DashboardRouteGuard } from '@/components/dashboard/dashboard-route-guard';
 
 export default async function DashboardLayout({ children }: { children: ReactNode }) {
   const profile = await requireStaffProfile();
@@ -22,7 +23,7 @@ export default async function DashboardLayout({ children }: { children: ReactNod
           staffInitials={profile.initials}
         />
         <main id="content" className="flex-1 p-4 md:p-6">
-          {children}
+          <DashboardRouteGuard staffRole={profile.role}>{children}</DashboardRouteGuard>
         </main>
       </div>
     </div>

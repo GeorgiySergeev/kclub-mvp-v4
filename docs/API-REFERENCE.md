@@ -37,11 +37,16 @@ Base path: `/api/v1`
 - `POST /introductions`
 - `POST /introductions/{id}/cancel`
 
-### Subscriptions
+### Subscriptions (member)
 
-- `GET /subscriptions`
-- `GET /subscriptions/{id}`
-- `POST /subscriptions/{id}/cancel`
+- `GET /subscriptions` — list own VIP subscriptions
+- `GET /subscriptions/{id}` — subscription detail (owner-gated)
+- `POST /subscriptions/{id}/cancel` — self-cancel at period end
+
+### Stripe
+
+- `POST /checkout/vip` — start VIP checkout
+- `POST /businesses/{id}/checkout-placement` — start placement checkout
 
 ## Admin API
 
@@ -92,7 +97,11 @@ Base path: `/api/admin/v1`
 - `GET/PATCH /admin-config/{key}`
 - `GET/POST/PATCH/DELETE /staff`
 - `GET /audit`
-- `GET /webhooks/{eventId}/replay`
+- `POST /webhooks/{eventId}/replay` — **not yet implemented**; use Stripe Dashboard resend
+
+### Cron
+
+- `POST /api/cron/daily-maintenance` — protected by `CRON_SECRET` env var
 
 ## Shared Response Envelope
 
