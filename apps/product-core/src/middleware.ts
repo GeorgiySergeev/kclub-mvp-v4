@@ -1,68 +1,48 @@
+import createIntlMiddleware from 'next-intl/middleware';
 import { NextRequest, NextResponse } from 'next/server';
 
-const LOCALES = ['en', 'ru', 'uk'] as const;
-type Locale = (typeof LOCALES)[number];
+import { routing } from '@/i18n/routing';
 
-const DEFAULT_LOCALE: Locale = 'en';
+const handleI18nRouting = createIntlMiddleware(routing);
 
-function getLocale(request: NextRequest): Locale {
-  const acceptLanguage = request.headers.get('accept-language');
-  if (!acceptLanguage) return DEFAULT_LOCALE;
-
-  const preferred = acceptLanguage
-    .split(',')
-    .map((lang) => {
-      const [code, q = 'q=1'] = lang.trim().split(';');
-      const quality = parseFloat(q.replace('q=', ''));
-      return { code: code.split('-')[0].toLowerCase(), quality: isNaN(quality) ? 1 : quality };
-    })
-    .sort((a, b) => b.quality - a.quality);
-
-  for (const { code } of preferred) {
-    if (LOCALES.includes(code as Locale)) return code as Locale;
-  }
-
-  return DEFAULT_LOCALE;
+function generateRequestId(): string {
+  return crypto.randomUUID();
 }
 
-function nextWithPathname(request: NextRequest) {
+function withRequestHeaders(request: NextRequest): NextRequest {
   const requestHeaders = new Headers(request.headers);
+
+  if (!requestHeaders.has('x-request-id')) {
+    requestHeaders.set('x-request-id', generateRequestId());
+  }
+
   requestHeaders.set('x-kclub-pathname', request.nextUrl.pathname);
 
-  return NextResponse.next({
-    request: {
-      headers: requestHeaders,
-    },
-  });
+  return new NextRequest(request, { headers: requestHeaders });
 }
 
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  const pathnameHasLocale = LOCALES.some(
-    (locale) => pathname.startsWith(`/${locale}/`) || pathname === `/${locale}`,
-  );
+  const isApiRoute = pathname.startsWith('/api/');
+  const isAssetRoute =
+    pathname.startsWith('/_next/') || pathname === '/favicon.ico' || pathname === '/robots.txt';
 
-  const isNonPageRoute =
-    pathname.startsWith('/api/') ||
-    pathname.startsWith('/_next/') ||
-    pathname === '/favicon.ico' ||
-    pathname === '/robots.txt';
+  if (isApiRoute) {
+    return NextResponse.next({
+      request: {
+        headers: withRequestHeaders(request).headers,
+      },
+    });
+  }
 
-  if (isNonPageRoute) return;
+  if (isAssetRoute) {
+    return;
+  }
 
-  if (pathnameHasLocale) return nextWithPathname(request);
-
-  const locale = getLocale(request);
-  const newUrl = new URL(`/${locale}${pathname}`, request.url);
-  newUrl.search = request.nextUrl.search;
-
-  const response = NextResponse.redirect(newUrl);
-  response.headers.set('x-locale', locale);
-
-  return response;
+  return handleI18nRouting(withRequestHeaders(request));
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico).*)'],
+  matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'],
 };

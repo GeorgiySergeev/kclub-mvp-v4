@@ -12,7 +12,13 @@
       "toggleTheme": "Toggle theme",
       "scroll": "Scroll to content",
       "viewProfile": "View Profile",
-      "website": "Website"
+      "website": "Website",
+      "discountLabel": "{percent}% off"
+    },
+    "carousel": {
+      "navigationLabel": "Carousel navigation",
+      "previousLabel": "Previous",
+      "nextLabel": "Next"
     },
     "nav": {
       "directory": "Directory",
@@ -48,7 +54,8 @@
           "title": "Global reach",
           "copy": "Members, partners, and warm introductions."
         }
-      }
+      },
+      "flagsMarquee": "Members from every region, including —"
     },
     "stats": {
       "members": "Members",
@@ -223,6 +230,12 @@
       "terms": "Terms",
       "privacy": "Privacy",
       "copyright": "© All rights reserved."
+    },
+    "partners": {
+      "eyebrow": "Trusted Elite Brands",
+      "title": "Top Kylyvnyk Partners",
+      "subtitle": "Curated blue-chip collaborations with unprecedented conditions secured for our private club holders",
+      "viewSpecial": "View Special"
     }
   },
   "auth": {

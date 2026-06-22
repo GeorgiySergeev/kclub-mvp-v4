@@ -1,9 +1,12 @@
 import type {
   AdminBusinessDetailDto,
   AdminCardListItemDto,
+  MemberBusinessProfileDto,
   MemberCardDto,
   PublicBusinessDetailDto,
+  PublicBusinessListItemDto,
   PublicCardVerificationDto,
+  CurrentMemberProfileDto,
 } from '../src';
 
 type Assert<T extends true> = T;
@@ -51,6 +54,24 @@ type MemberCardDtoDoesNotExposeUserDisplayName = Assert<
   HasKey<MemberCardDto, 'userDisplayName'> extends false ? true : false
 >;
 
+type PublicBusinessListItemDoesNotExposeStatus = Assert<
+  HasKey<PublicBusinessListItemDto, 'status'> extends false ? true : false
+>;
+type PublicBusinessListItemDoesNotExposeOwnerId = Assert<
+  HasKey<PublicBusinessListItemDto, 'ownerUserId'> extends false ? true : false
+>;
+type PublicBusinessDetailDoesNotExposeStripeId = Assert<
+  HasKey<PublicBusinessDetailDto, 'stripeCustomerId'> extends false ? true : false
+>;
+
+type MemberBusinessProfileDoesNotExposeInternalNotes = Assert<
+  HasKey<MemberBusinessProfileDto, 'internalNotes'> extends false ? true : false
+>;
+
+type MemberProfileDoesNotExposeSupabaseId = Assert<
+  HasKey<CurrentMemberProfileDto, 'supabaseAuthUserId'> extends false ? true : false
+>;
+
 export type {
   AdminBusinessExposesAuditEntries,
   AdminBusinessExposesModerationFields,
@@ -65,4 +86,9 @@ export type {
   PublicBusinessDoesNotExposeOwner,
   PublicCardVerifyDoesNotExposeUserId,
   PublicCardVerifyDoesNotExposeCardId,
+  PublicBusinessListItemDoesNotExposeStatus,
+  PublicBusinessListItemDoesNotExposeOwnerId,
+  PublicBusinessDetailDoesNotExposeStripeId,
+  MemberBusinessProfileDoesNotExposeInternalNotes,
+  MemberProfileDoesNotExposeSupabaseId,
 };

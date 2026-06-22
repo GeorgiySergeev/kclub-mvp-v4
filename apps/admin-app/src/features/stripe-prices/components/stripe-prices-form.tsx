@@ -38,13 +38,18 @@ export function StripePricesForm({ prices }: StripePricesFormProps) {
       headers: { 'content-type': 'application/json' },
       body: JSON.stringify({ value: values[key] }),
     });
-    if (!res.ok) { toast.error('Failed to save'); return; }
+    if (!res.ok) {
+      toast.error('Failed to save');
+      return;
+    }
     toast.success('Price ID updated');
     router.refresh();
   }
 
   if (!prices.length) {
-    return <p className="py-8 text-center text-muted-foreground">No Stripe price configurations found</p>;
+    return (
+      <p className="py-8 text-center text-muted-foreground">No Stripe price configurations found</p>
+    );
   }
 
   return (
@@ -68,10 +73,13 @@ export function StripePricesForm({ prices }: StripePricesFormProps) {
                 className="font-mono text-sm"
               />
             </TableCell>
-            <TableCell className="text-sm text-muted-foreground">{price.description ?? '—'}</TableCell>
+            <TableCell className="text-sm text-muted-foreground">
+              {price.description ?? '—'}
+            </TableCell>
             <TableCell>
               <Button variant="outline" size="xs" onClick={() => handleSave(price.key)}>
-                <Save className="h-3.5 w-3.5" />Save
+                <Save className="h-3.5 w-3.5" />
+                Save
               </Button>
             </TableCell>
           </TableRow>

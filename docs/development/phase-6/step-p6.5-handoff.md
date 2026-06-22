@@ -6,18 +6,18 @@ Complete remaining admin MVP surfaces: Introductions, taxonomy/reference data, s
 
 ## Admin Surfaces
 
-| Surface | Status | Pages | Features |
-|---------|--------|-------|----------|
+| Surface       | Status      | Pages                      | Features                                                                                                          |
+| ------------- | ----------- | -------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | Introductions | Operational | `/dashboard/introductions` | List with status badges, approve/reject/complete dialogs, requester/target business summaries, role-gated actions |
-| Categories | Operational | `/dashboard/categories` | CRUD table, create/edit dialog with high-risk flag, delete confirm, active/inactive toggle |
-| Countries | Operational | `/dashboard/countries` | CRUD table, create/edit dialog with ISO codes, delete confirm |
-| Cities | Operational | `/dashboard/cities` | CRUD table, create/edit dialog with country dropdown, delete confirm |
-| Subscriptions | Operational | `/dashboard/subscriptions` | List by kind (VIP/Business), user summary, period dates, cancel-at-period-end, cancel dialog (OWNER/ADMIN only) |
-| Memberships | Operational | `/dashboard/memberships` | Read-only plan metadata from admin_config |
-| Stripe Prices | Operational | `/dashboard/stripe-prices` | OWNER-only editable Price ID config values |
-| Staff | Operational | `/dashboard/staff` | OWNER-only list, role update dialog via `staff/[id]/role` PUT |
-| Audit | Operational | `/dashboard/audit` | Filterable (action/role/entity/date range), paginated read-only table |
-| Settings | Operational | `/dashboard/settings` | OWNER-only platform settings (shares StripePricesForm) |
+| Categories    | Operational | `/dashboard/categories`    | CRUD table, create/edit dialog with high-risk flag, delete confirm, active/inactive toggle                        |
+| Countries     | Operational | `/dashboard/countries`     | CRUD table, create/edit dialog with ISO codes, delete confirm                                                     |
+| Cities        | Operational | `/dashboard/cities`        | CRUD table, create/edit dialog with country dropdown, delete confirm                                              |
+| Subscriptions | Operational | `/dashboard/subscriptions` | List by kind (VIP/Business), user summary, period dates, cancel-at-period-end, cancel dialog (OWNER/ADMIN only)   |
+| Memberships   | Operational | `/dashboard/memberships`   | Read-only plan metadata from admin_config                                                                         |
+| Stripe Prices | Operational | `/dashboard/stripe-prices` | OWNER-only editable Price ID config values                                                                        |
+| Staff         | Operational | `/dashboard/staff`         | OWNER-only list, role update dialog via `staff/[id]/role` PUT                                                     |
+| Audit         | Operational | `/dashboard/audit`         | Filterable (action/role/entity/date range), paginated read-only table                                             |
+| Settings      | Operational | `/dashboard/settings`      | OWNER-only platform settings (shares StripePricesForm)                                                            |
 
 ## Permissions
 
@@ -30,15 +30,18 @@ Complete remaining admin MVP surfaces: Introductions, taxonomy/reference data, s
 ## Files Changed
 
 ### `packages/contracts/src/dto.ts`
+
 - Added `SUBSCRIPTION_KINDS` const + `SubscriptionKind` type
 - Added DTOs: `AdminIntroductionListItemDto`, `CategoryDto`, `CountryDto`, `CityDto`, `AdminSubscriptionListItemDto`, `AdminStaffListItemDto`, `AdminConfigEntryDto`, `MembershipPlanDto`
 
 ### `packages/validation/src/admin.ts`
+
 - Added `auditLogListSchema` with action/role/entity/date/page/limit filters
 - Added `staffDeactivateSchema` with optional reason
 - Exported `AuditLogListInput` and `StaffDeactivateInput` types
 
 ### `apps/product-core/src/server/services/admin-service.ts`
+
 - Taxonomy functions (list/get/create/update) now return typed `CategoryDto[]`, `CountryDto[]`, `CityDto[]`
 - `listIntroductions`/`getIntroductionDetail` return `AdminIntroductionListItemDto[]` with requester user/business and target business summaries
 - Added `listAdminSubscriptions`/`getAdminSubscriptionDetail` querying `Subscription` model (both kinds)
@@ -50,16 +53,19 @@ Complete remaining admin MVP surfaces: Introductions, taxonomy/reference data, s
 - Added helper mappers: `toAdminIntroductionListItem`, `toAdminSubscriptionListItem`, `toCategoryDto`, `toCountryDto`, `toCityDto`, `toAdminStaffListItem`, `toAdminConfigEntry`
 
 ### `apps/product-core/src/app/api/admin/v1/` (new routes)
+
 - `staff/[id]/route.ts` — GET staff detail
 - `staff/[id]/role/route.ts` — PUT update role
 - `staff/[id]/deactivate/route.ts` — POST deactivate
 - `memberships/route.ts` — GET membership plans
 
 ### `apps/product-core/src/app/api/admin/v1/` (updated routes)
+
 - `subscriptions/route.ts` — now calls `listAdminSubscriptions()` (both kinds)
 - `audit/route.ts` — now parses query params, passes filters to `listAuditLogs(filters)`, returns paginated response
 
 ### `apps/admin-app/src/features/` (new)
+
 - `introductions/api.ts` + `components/introductions-table.tsx`
 - `categories/api.ts` + `components/categories-table.tsx`
 - `countries/api.ts` + `components/countries-table.tsx`
@@ -71,27 +77,29 @@ Complete remaining admin MVP surfaces: Introductions, taxonomy/reference data, s
 - `memberships/api.ts` + `components/memberships-view.tsx`
 
 ### `apps/admin-app/src/app/dashboard/` (updated)
+
 - All 10 placeholder pages replaced with real server components:
   `introductions`, `categories`, `countries`, `cities`, `subscriptions`, `memberships`, `stripe-prices`, `staff`, `audit`, `settings`
 
 ### `apps/admin-app/tests/server/route-permissions.test.ts`
+
 - Added test block for all P6.5 route permissions
 - Added authorized/unauthorized tests for new surfaces
 
 ## Tests Run
 
-| Command | Result |
-|---------|--------|
-| `packages/contracts: test` | 10 pass, 0 fail |
-| `packages/validation: test` | 24 pass, 0 fail |
-| `packages/contracts: typecheck` | Pass |
-| `packages/validation: typecheck` | Pass |
-| `apps/admin-app: test` | 26 pass, 1 skip, 0 fail |
-| `apps/admin-app: typecheck` | 1 pre-existing error in `session.test.ts` (unrelated) |
-| `apps/product-core: typecheck` | Pass |
-| `apps/admin-app: build` | Compiled successfully, 23 pages |
-| `packages/contracts: lint` | Pass |
-| `packages/validation: lint` | Pass |
+| Command                          | Result                                                |
+| -------------------------------- | ----------------------------------------------------- |
+| `packages/contracts: test`       | 10 pass, 0 fail                                       |
+| `packages/validation: test`      | 24 pass, 0 fail                                       |
+| `packages/contracts: typecheck`  | Pass                                                  |
+| `packages/validation: typecheck` | Pass                                                  |
+| `apps/admin-app: test`           | 26 pass, 1 skip, 0 fail                               |
+| `apps/admin-app: typecheck`      | 1 pre-existing error in `session.test.ts` (unrelated) |
+| `apps/product-core: typecheck`   | Pass                                                  |
+| `apps/admin-app: build`          | Compiled successfully, 23 pages                       |
+| `packages/contracts: lint`       | Pass                                                  |
+| `packages/validation: lint`      | Pass                                                  |
 
 ## Remaining Gaps
 

@@ -47,23 +47,44 @@ function CancelDialog({ id, onAction }: { id: string; onAction: () => void }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button variant="destructive" size="xs"><Ban className="h-3.5 w-3.5" />Cancel</Button>} />
+      <DialogTrigger
+        render={
+          <Button variant="destructive" size="xs">
+            <Ban className="h-3.5 w-3.5" />
+            Cancel
+          </Button>
+        }
+      />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Cancel Subscription</DialogTitle>
-          <DialogDescription>This will set the subscription to cancel at period end. The member will lose VIP access after the current period.</DialogDescription>
+          <DialogDescription>
+            This will set the subscription to cancel at period end. The member will lose VIP access
+            after the current period.
+          </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>No, keep it</Button>
-          <Button variant="destructive" disabled={loading} onClick={async () => {
-            setLoading(true);
-            const result = await cancelSubscription(id);
-            setLoading(false);
-            if (!result.ok) { toast.error(result.error); return; }
-            setOpen(false);
-            toast.success('Subscription will cancel at period end');
-            onAction();
-          }}>{loading ? 'Processing...' : 'Yes, cancel'}</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            No, keep it
+          </Button>
+          <Button
+            variant="destructive"
+            disabled={loading}
+            onClick={async () => {
+              setLoading(true);
+              const result = await cancelSubscription(id);
+              setLoading(false);
+              if (!result.ok) {
+                toast.error(result.error);
+                return;
+              }
+              setOpen(false);
+              toast.success('Subscription will cancel at period end');
+              onAction();
+            }}
+          >
+            {loading ? 'Processing...' : 'Yes, cancel'}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -95,16 +116,30 @@ export function SubscriptionsTable({ subscriptions, staffRole }: SubscriptionsTa
         {subscriptions.map((sub) => (
           <TableRow key={sub.id}>
             <TableCell>
-              <Badge variant="outline">{sub.kind === 'VIP_MEMBERSHIP' ? 'VIP' : 'Business Placement'}</Badge>
+              <Badge variant="outline">
+                {sub.kind === 'VIP_MEMBERSHIP' ? 'VIP' : 'Business Placement'}
+              </Badge>
             </TableCell>
             <TableCell>
               <div className="text-sm font-medium">{sub.user?.displayName ?? 'N/A'}</div>
               <div className="text-xs text-muted-foreground">{sub.user?.phone ?? '—'}</div>
             </TableCell>
-            <TableCell><StatusBadge status={sub.status} /></TableCell>
-            <TableCell className="text-sm text-muted-foreground">{sub.currentPeriodStart ? new Date(sub.currentPeriodStart).toLocaleDateString() : '—'}</TableCell>
-            <TableCell className="text-sm text-muted-foreground">{sub.currentPeriodEnd ? new Date(sub.currentPeriodEnd).toLocaleDateString() : '—'}</TableCell>
-            <TableCell>{sub.cancelAtPeriodEnd ? <Badge variant="destructive">Yes</Badge> : <Badge variant="secondary">No</Badge>}</TableCell>
+            <TableCell>
+              <StatusBadge status={sub.status} />
+            </TableCell>
+            <TableCell className="text-sm text-muted-foreground">
+              {sub.currentPeriodStart ? new Date(sub.currentPeriodStart).toLocaleDateString() : '—'}
+            </TableCell>
+            <TableCell className="text-sm text-muted-foreground">
+              {sub.currentPeriodEnd ? new Date(sub.currentPeriodEnd).toLocaleDateString() : '—'}
+            </TableCell>
+            <TableCell>
+              {sub.cancelAtPeriodEnd ? (
+                <Badge variant="destructive">Yes</Badge>
+              ) : (
+                <Badge variant="secondary">No</Badge>
+              )}
+            </TableCell>
             {showCancel && (
               <TableCell>
                 {!sub.cancelAtPeriodEnd && sub.status === 'ACTIVE' && (

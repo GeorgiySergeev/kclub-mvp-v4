@@ -8,6 +8,12 @@ import {
   USER_STATUSES,
 } from '@kclub/contracts';
 import { pageSchema, limitSchema, searchSchema } from './shared';
+import {
+  businessNameSchema,
+  representativeNameSchema,
+  businessBriefDescriptionSchema,
+} from './business';
+import { emailSchema, phoneSchema, urlSchema } from './shared';
 
 export const blockUserSchema = z.object({
   reason: z.string().min(1).max(500).optional(),
@@ -147,3 +153,15 @@ export type AdminConfigUpdateInput = z.infer<typeof adminConfigUpdateSchema>;
 export type StaffRoleUpdateInput = z.infer<typeof staffRoleUpdateSchema>;
 export type AuditLogListInput = z.infer<typeof auditLogListSchema>;
 export type StaffDeactivateInput = z.infer<typeof staffDeactivateSchema>;
+
+export const adminBusinessUpdateSchema = z.object({
+  name: businessNameSchema.optional(),
+  representativeName: representativeNameSchema.optional(),
+  representativeEmail: emailSchema.optional(),
+  representativePhone: phoneSchema.optional(),
+  websiteUrl: urlSchema.optional().nullable(),
+  socialUrl: urlSchema.optional().nullable(),
+  briefDescription: businessBriefDescriptionSchema,
+});
+
+export type AdminBusinessUpdateInput = z.infer<typeof adminBusinessUpdateSchema>;

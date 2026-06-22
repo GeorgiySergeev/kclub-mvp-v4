@@ -11970,8 +11970,18 @@ export namespace Prisma {
 
   export type AggregateBusinessProfile = {
     _count: BusinessProfileCountAggregateOutputType | null;
+    _avg: BusinessProfileAvgAggregateOutputType | null;
+    _sum: BusinessProfileSumAggregateOutputType | null;
     _min: BusinessProfileMinAggregateOutputType | null;
     _max: BusinessProfileMaxAggregateOutputType | null;
+  };
+
+  export type BusinessProfileAvgAggregateOutputType = {
+    member_discount_percent: number | null;
+  };
+
+  export type BusinessProfileSumAggregateOutputType = {
+    member_discount_percent: number | null;
   };
 
   export type BusinessProfileMinAggregateOutputType = {
@@ -11992,6 +12002,7 @@ export namespace Prisma {
     description: string | null;
     featured_top: boolean | null;
     featured_recommended: boolean | null;
+    member_discount_percent: number | null;
     internal_notes: string | null;
     rejection_reason: string | null;
     approved_at: Date | null;
@@ -12020,6 +12031,7 @@ export namespace Prisma {
     description: string | null;
     featured_top: boolean | null;
     featured_recommended: boolean | null;
+    member_discount_percent: number | null;
     internal_notes: string | null;
     rejection_reason: string | null;
     approved_at: Date | null;
@@ -12048,6 +12060,7 @@ export namespace Prisma {
     description: number;
     featured_top: number;
     featured_recommended: number;
+    member_discount_percent: number;
     internal_notes: number;
     rejection_reason: number;
     approved_at: number;
@@ -12057,6 +12070,14 @@ export namespace Prisma {
     created_at: number;
     updated_at: number;
     _all: number;
+  };
+
+  export type BusinessProfileAvgAggregateInputType = {
+    member_discount_percent?: true;
+  };
+
+  export type BusinessProfileSumAggregateInputType = {
+    member_discount_percent?: true;
   };
 
   export type BusinessProfileMinAggregateInputType = {
@@ -12077,6 +12098,7 @@ export namespace Prisma {
     description?: true;
     featured_top?: true;
     featured_recommended?: true;
+    member_discount_percent?: true;
     internal_notes?: true;
     rejection_reason?: true;
     approved_at?: true;
@@ -12105,6 +12127,7 @@ export namespace Prisma {
     description?: true;
     featured_top?: true;
     featured_recommended?: true;
+    member_discount_percent?: true;
     internal_notes?: true;
     rejection_reason?: true;
     approved_at?: true;
@@ -12133,6 +12156,7 @@ export namespace Prisma {
     description?: true;
     featured_top?: true;
     featured_recommended?: true;
+    member_discount_percent?: true;
     internal_notes?: true;
     rejection_reason?: true;
     approved_at?: true;
@@ -12184,6 +12208,18 @@ export namespace Prisma {
     /**
      * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
      *
+     * Select which fields to average
+     **/
+    _avg?: BusinessProfileAvgAggregateInputType;
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
+     * Select which fields to sum
+     **/
+    _sum?: BusinessProfileSumAggregateInputType;
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     *
      * Select which fields to find the minimum value
      **/
     _min?: BusinessProfileMinAggregateInputType;
@@ -12215,6 +12251,8 @@ export namespace Prisma {
     take?: number;
     skip?: number;
     _count?: BusinessProfileCountAggregateInputType | true;
+    _avg?: BusinessProfileAvgAggregateInputType;
+    _sum?: BusinessProfileSumAggregateInputType;
     _min?: BusinessProfileMinAggregateInputType;
     _max?: BusinessProfileMaxAggregateInputType;
   };
@@ -12237,6 +12275,7 @@ export namespace Prisma {
     description: string | null;
     featured_top: boolean;
     featured_recommended: boolean;
+    member_discount_percent: number | null;
     internal_notes: string | null;
     rejection_reason: string | null;
     approved_at: Date | null;
@@ -12246,6 +12285,8 @@ export namespace Prisma {
     created_at: Date;
     updated_at: Date;
     _count: BusinessProfileCountAggregateOutputType | null;
+    _avg: BusinessProfileAvgAggregateOutputType | null;
+    _sum: BusinessProfileSumAggregateOutputType | null;
     _min: BusinessProfileMinAggregateOutputType | null;
     _max: BusinessProfileMaxAggregateOutputType | null;
   };
@@ -12284,6 +12325,7 @@ export namespace Prisma {
       description?: boolean;
       featured_top?: boolean;
       featured_recommended?: boolean;
+      member_discount_percent?: boolean;
       internal_notes?: boolean;
       rejection_reason?: boolean;
       approved_at?: boolean;
@@ -12325,6 +12367,7 @@ export namespace Prisma {
       description?: boolean;
       featured_top?: boolean;
       featured_recommended?: boolean;
+      member_discount_percent?: boolean;
       internal_notes?: boolean;
       rejection_reason?: boolean;
       approved_at?: boolean;
@@ -12362,6 +12405,7 @@ export namespace Prisma {
       description?: boolean;
       featured_top?: boolean;
       featured_recommended?: boolean;
+      member_discount_percent?: boolean;
       internal_notes?: boolean;
       rejection_reason?: boolean;
       approved_at?: boolean;
@@ -12396,6 +12440,7 @@ export namespace Prisma {
     description?: boolean;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: boolean;
     internal_notes?: boolean;
     rejection_reason?: boolean;
     approved_at?: boolean;
@@ -12426,6 +12471,7 @@ export namespace Prisma {
     | 'description'
     | 'featured_top'
     | 'featured_recommended'
+    | 'member_discount_percent'
     | 'internal_notes'
     | 'rejection_reason'
     | 'approved_at'
@@ -12497,6 +12543,7 @@ export namespace Prisma {
         description: string | null;
         featured_top: boolean;
         featured_recommended: boolean;
+        member_discount_percent: number | null;
         internal_notes: string | null;
         rejection_reason: string | null;
         approved_at: Date | null;
@@ -13138,6 +13185,7 @@ export namespace Prisma {
     readonly description: FieldRef<'BusinessProfile', 'String'>;
     readonly featured_top: FieldRef<'BusinessProfile', 'Boolean'>;
     readonly featured_recommended: FieldRef<'BusinessProfile', 'Boolean'>;
+    readonly member_discount_percent: FieldRef<'BusinessProfile', 'Int'>;
     readonly internal_notes: FieldRef<'BusinessProfile', 'String'>;
     readonly rejection_reason: FieldRef<'BusinessProfile', 'String'>;
     readonly approved_at: FieldRef<'BusinessProfile', 'DateTime'>;
@@ -23014,6 +23062,7 @@ export namespace Prisma {
     description: 'description';
     featured_top: 'featured_top';
     featured_recommended: 'featured_recommended';
+    member_discount_percent: 'member_discount_percent';
     internal_notes: 'internal_notes';
     rejection_reason: 'rejection_reason';
     approved_at: 'approved_at';
@@ -23302,6 +23351,16 @@ export namespace Prisma {
   >;
 
   /**
+   * Reference to a field of type 'Int'
+   */
+  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>;
+
+  /**
+   * Reference to a field of type 'Int[]'
+   */
+  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>;
+
+  /**
    * Reference to a field of type 'IntroductionStatus'
    */
   export type EnumIntroductionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
@@ -23347,14 +23406,14 @@ export namespace Prisma {
   >;
 
   /**
-   * Reference to a field of type 'Int'
+   * Reference to a field of type 'Float'
    */
-  export type IntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int'>;
+  export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>;
 
   /**
-   * Reference to a field of type 'Int[]'
+   * Reference to a field of type 'Float[]'
    */
-  export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>;
+  export type ListFloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float[]'>;
 
   /**
    * Deep Input Types
@@ -24017,6 +24076,7 @@ export namespace Prisma {
     description?: StringNullableFilter<'BusinessProfile'> | string | null;
     featured_top?: BoolFilter<'BusinessProfile'> | boolean;
     featured_recommended?: BoolFilter<'BusinessProfile'> | boolean;
+    member_discount_percent?: IntNullableFilter<'BusinessProfile'> | number | null;
     internal_notes?: StringNullableFilter<'BusinessProfile'> | string | null;
     rejection_reason?: StringNullableFilter<'BusinessProfile'> | string | null;
     approved_at?: DateTimeNullableFilter<'BusinessProfile'> | Date | string | null;
@@ -24052,6 +24112,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder;
     featured_top?: SortOrder;
     featured_recommended?: SortOrder;
+    member_discount_percent?: SortOrderInput | SortOrder;
     internal_notes?: SortOrderInput | SortOrder;
     rejection_reason?: SortOrderInput | SortOrder;
     approved_at?: SortOrderInput | SortOrder;
@@ -24091,6 +24152,7 @@ export namespace Prisma {
       description?: StringNullableFilter<'BusinessProfile'> | string | null;
       featured_top?: BoolFilter<'BusinessProfile'> | boolean;
       featured_recommended?: BoolFilter<'BusinessProfile'> | boolean;
+      member_discount_percent?: IntNullableFilter<'BusinessProfile'> | number | null;
       internal_notes?: StringNullableFilter<'BusinessProfile'> | string | null;
       rejection_reason?: StringNullableFilter<'BusinessProfile'> | string | null;
       approved_at?: DateTimeNullableFilter<'BusinessProfile'> | Date | string | null;
@@ -24128,6 +24190,7 @@ export namespace Prisma {
     description?: SortOrderInput | SortOrder;
     featured_top?: SortOrder;
     featured_recommended?: SortOrder;
+    member_discount_percent?: SortOrderInput | SortOrder;
     internal_notes?: SortOrderInput | SortOrder;
     rejection_reason?: SortOrderInput | SortOrder;
     approved_at?: SortOrderInput | SortOrder;
@@ -24137,8 +24200,10 @@ export namespace Prisma {
     created_at?: SortOrder;
     updated_at?: SortOrder;
     _count?: BusinessProfileCountOrderByAggregateInput;
+    _avg?: BusinessProfileAvgOrderByAggregateInput;
     _max?: BusinessProfileMaxOrderByAggregateInput;
     _min?: BusinessProfileMinOrderByAggregateInput;
+    _sum?: BusinessProfileSumOrderByAggregateInput;
   };
 
   export type BusinessProfileScalarWhereWithAggregatesInput = {
@@ -24166,6 +24231,7 @@ export namespace Prisma {
     description?: StringNullableWithAggregatesFilter<'BusinessProfile'> | string | null;
     featured_top?: BoolWithAggregatesFilter<'BusinessProfile'> | boolean;
     featured_recommended?: BoolWithAggregatesFilter<'BusinessProfile'> | boolean;
+    member_discount_percent?: IntNullableWithAggregatesFilter<'BusinessProfile'> | number | null;
     internal_notes?: StringNullableWithAggregatesFilter<'BusinessProfile'> | string | null;
     rejection_reason?: StringNullableWithAggregatesFilter<'BusinessProfile'> | string | null;
     approved_at?: DateTimeNullableWithAggregatesFilter<'BusinessProfile'> | Date | string | null;
@@ -25427,6 +25493,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -25462,6 +25529,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -25489,6 +25557,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -25524,6 +25593,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -25555,6 +25625,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -25579,6 +25650,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -25607,6 +25679,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -26843,6 +26916,17 @@ export namespace Prisma {
     not?: NestedEnumBusinessStatusFilter<$PrismaModel> | $Enums.BusinessStatus;
   };
 
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null;
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null;
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null;
+    lt?: number | IntFieldRefInput<$PrismaModel>;
+    lte?: number | IntFieldRefInput<$PrismaModel>;
+    gt?: number | IntFieldRefInput<$PrismaModel>;
+    gte?: number | IntFieldRefInput<$PrismaModel>;
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null;
+  };
+
   export type CityScalarRelationFilter = {
     is?: CityWhereInput;
     isNot?: CityWhereInput;
@@ -26871,6 +26955,7 @@ export namespace Prisma {
     description?: SortOrder;
     featured_top?: SortOrder;
     featured_recommended?: SortOrder;
+    member_discount_percent?: SortOrder;
     internal_notes?: SortOrder;
     rejection_reason?: SortOrder;
     approved_at?: SortOrder;
@@ -26879,6 +26964,10 @@ export namespace Prisma {
     rejected_at?: SortOrder;
     created_at?: SortOrder;
     updated_at?: SortOrder;
+  };
+
+  export type BusinessProfileAvgOrderByAggregateInput = {
+    member_discount_percent?: SortOrder;
   };
 
   export type BusinessProfileMaxOrderByAggregateInput = {
@@ -26899,6 +26988,7 @@ export namespace Prisma {
     description?: SortOrder;
     featured_top?: SortOrder;
     featured_recommended?: SortOrder;
+    member_discount_percent?: SortOrder;
     internal_notes?: SortOrder;
     rejection_reason?: SortOrder;
     approved_at?: SortOrder;
@@ -26927,6 +27017,7 @@ export namespace Prisma {
     description?: SortOrder;
     featured_top?: SortOrder;
     featured_recommended?: SortOrder;
+    member_discount_percent?: SortOrder;
     internal_notes?: SortOrder;
     rejection_reason?: SortOrder;
     approved_at?: SortOrder;
@@ -26937,6 +27028,10 @@ export namespace Prisma {
     updated_at?: SortOrder;
   };
 
+  export type BusinessProfileSumOrderByAggregateInput = {
+    member_discount_percent?: SortOrder;
+  };
+
   export type EnumBusinessStatusWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.BusinessStatus | EnumBusinessStatusFieldRefInput<$PrismaModel>;
     in?: $Enums.BusinessStatus[] | ListEnumBusinessStatusFieldRefInput<$PrismaModel>;
@@ -26945,6 +27040,22 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>;
     _min?: NestedEnumBusinessStatusFilter<$PrismaModel>;
     _max?: NestedEnumBusinessStatusFilter<$PrismaModel>;
+  };
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null;
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null;
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null;
+    lt?: number | IntFieldRefInput<$PrismaModel>;
+    lte?: number | IntFieldRefInput<$PrismaModel>;
+    gt?: number | IntFieldRefInput<$PrismaModel>;
+    gte?: number | IntFieldRefInput<$PrismaModel>;
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null;
+    _count?: NestedIntNullableFilter<$PrismaModel>;
+    _avg?: NestedFloatNullableFilter<$PrismaModel>;
+    _sum?: NestedIntNullableFilter<$PrismaModel>;
+    _min?: NestedIntNullableFilter<$PrismaModel>;
+    _max?: NestedIntNullableFilter<$PrismaModel>;
   };
 
   export type EnumIntroductionStatusFilter<$PrismaModel = never> = {
@@ -28367,6 +28478,14 @@ export namespace Prisma {
     set?: $Enums.BusinessStatus;
   };
 
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null;
+    increment?: number;
+    decrement?: number;
+    multiply?: number;
+    divide?: number;
+  };
+
   export type UserUpdateOneRequiredWithoutBusiness_profilesNestedInput = {
     create?: XOR<
       UserCreateWithoutBusiness_profilesInput,
@@ -29377,6 +29496,33 @@ export namespace Prisma {
     _max?: NestedEnumBusinessStatusFilter<$PrismaModel>;
   };
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null;
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null;
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null;
+    lt?: number | IntFieldRefInput<$PrismaModel>;
+    lte?: number | IntFieldRefInput<$PrismaModel>;
+    gt?: number | IntFieldRefInput<$PrismaModel>;
+    gte?: number | IntFieldRefInput<$PrismaModel>;
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null;
+    _count?: NestedIntNullableFilter<$PrismaModel>;
+    _avg?: NestedFloatNullableFilter<$PrismaModel>;
+    _sum?: NestedIntNullableFilter<$PrismaModel>;
+    _min?: NestedIntNullableFilter<$PrismaModel>;
+    _max?: NestedIntNullableFilter<$PrismaModel>;
+  };
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null;
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null;
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null;
+    lt?: number | FloatFieldRefInput<$PrismaModel>;
+    lte?: number | FloatFieldRefInput<$PrismaModel>;
+    gt?: number | FloatFieldRefInput<$PrismaModel>;
+    gte?: number | FloatFieldRefInput<$PrismaModel>;
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null;
+  };
+
   export type NestedEnumIntroductionStatusFilter<$PrismaModel = never> = {
     equals?: $Enums.IntroductionStatus | EnumIntroductionStatusFieldRefInput<$PrismaModel>;
     in?: $Enums.IntroductionStatus[] | ListEnumIntroductionStatusFieldRefInput<$PrismaModel>;
@@ -29619,6 +29765,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -29652,6 +29799,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -29881,6 +30029,7 @@ export namespace Prisma {
     description?: StringNullableFilter<'BusinessProfile'> | string | null;
     featured_top?: BoolFilter<'BusinessProfile'> | boolean;
     featured_recommended?: BoolFilter<'BusinessProfile'> | boolean;
+    member_discount_percent?: IntNullableFilter<'BusinessProfile'> | number | null;
     internal_notes?: StringNullableFilter<'BusinessProfile'> | string | null;
     rejection_reason?: StringNullableFilter<'BusinessProfile'> | string | null;
     approved_at?: DateTimeNullableFilter<'BusinessProfile'> | Date | string | null;
@@ -30167,6 +30316,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -30201,6 +30351,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -30300,6 +30451,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -30334,6 +30486,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -30360,6 +30513,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -30393,6 +30547,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -30491,6 +30646,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -30524,6 +30680,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -30650,6 +30807,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -30683,6 +30841,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -31317,6 +31476,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -31351,6 +31511,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -31385,6 +31546,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -31419,6 +31581,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -31527,6 +31690,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -31561,6 +31725,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -31607,6 +31772,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -31641,6 +31807,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -32331,6 +32498,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -32501,6 +32669,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -32534,6 +32703,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -32564,6 +32734,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -32624,6 +32795,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -32648,6 +32820,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -32681,6 +32854,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -32711,6 +32885,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -32747,6 +32922,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -32800,6 +32976,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -32833,6 +33010,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -32863,6 +33041,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -32890,6 +33069,7 @@ export namespace Prisma {
     description?: string | null;
     featured_top?: boolean;
     featured_recommended?: boolean;
+    member_discount_percent?: number | null;
     internal_notes?: string | null;
     rejection_reason?: string | null;
     approved_at?: Date | string | null;
@@ -32914,6 +33094,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -32947,6 +33128,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;
@@ -32977,6 +33159,7 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null;
     featured_top?: BoolFieldUpdateOperationsInput | boolean;
     featured_recommended?: BoolFieldUpdateOperationsInput | boolean;
+    member_discount_percent?: NullableIntFieldUpdateOperationsInput | number | null;
     internal_notes?: NullableStringFieldUpdateOperationsInput | string | null;
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null;
     approved_at?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null;

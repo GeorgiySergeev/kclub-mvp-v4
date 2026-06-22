@@ -6,10 +6,7 @@ import { CitiesTable } from '@/features/cities/components/cities-table';
 
 export default async function CitiesPage() {
   await requireStaffProfile();
-  const [cities, countries] = await Promise.all([
-    fetchCities(),
-    fetchCountries(),
-  ]);
+  const [cities, countries] = await Promise.all([fetchCities(), fetchCountries()]);
 
   return (
     <PageShell

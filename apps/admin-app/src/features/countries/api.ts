@@ -1,8 +1,5 @@
 import { adminApiFetch } from '@/server/proxy/admin-client';
-import type {
-  ApiResponse,
-  CountryDto,
-} from '@kclub/contracts';
+import type { ApiResponse, CountryDto } from '@kclub/contracts';
 
 export async function fetchCountries(): Promise<CountryDto[] | null> {
   const result = await adminApiFetch<ApiResponse<CountryDto[]>>('/countries');
@@ -10,9 +7,13 @@ export async function fetchCountries(): Promise<CountryDto[] | null> {
   return result.data.data;
 }
 
-export async function createCountry(
-  input: { code2: string; code3?: string; name: string; slug: string; isActive?: boolean },
-): Promise<CountryDto | null> {
+export async function createCountry(input: {
+  code2: string;
+  code3?: string;
+  name: string;
+  slug: string;
+  isActive?: boolean;
+}): Promise<CountryDto | null> {
   const res = await fetch('/api/proxy/countries', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

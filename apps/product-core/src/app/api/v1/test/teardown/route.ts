@@ -1,9 +1,12 @@
 import { NextResponse } from 'next/server';
 
-const E2E_SECRET = process.env.E2E_TEST_SECRET;
+function getE2eSecret(): string | undefined {
+  return process.env.E2E_TEST_SECRET;
+}
 
 export async function POST(request: Request): Promise<Response> {
-  if (!E2E_SECRET) {
+  const e2eSecret = getE2eSecret();
+  if (!e2eSecret) {
     return NextResponse.json(
       { data: null, error: { code: 'NOT_FOUND', message: 'Not found' } },
       { status: 404 },
@@ -11,7 +14,7 @@ export async function POST(request: Request): Promise<Response> {
   }
 
   const secretHeader = request.headers.get('x-e2e-secret');
-  if (secretHeader !== E2E_SECRET) {
+  if (secretHeader !== e2eSecret) {
     return NextResponse.json(
       { data: null, error: { code: 'UNAUTHORIZED', message: 'Invalid secret' } },
       { status: 401 },
@@ -24,6 +27,23 @@ export async function POST(request: Request): Promise<Response> {
 
     // Delete E2E test data by convention: display names starting with "E2E "
     // Order matters due to foreign key constraints
+    await prisma.subscription.deleteMany({
+      where: {
+        OR: [
+          { user: { display_name: { startsWith: 'E2E ' } } },
+          { business_profile: { name: { startsWith: 'E2E ' } } },
+          { stripe_subscription_id: { startsWith: 'sub_e2e_' } },
+        ],
+      },
+    });
+    await prisma.vipSubscription.deleteMany({
+      where: {
+        OR: [
+          { user: { display_name: { startsWith: 'E2E ' } } },
+          { stripe_subscription_id: { startsWith: 'sub_e2e_' } },
+        ],
+      },
+    });
     await prisma.businessIntroduction.deleteMany({
       where: { target_business: { name: { startsWith: 'E2E ' } } },
     });

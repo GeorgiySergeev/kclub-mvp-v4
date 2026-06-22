@@ -1,7 +1,7 @@
 import { beforeEach, afterEach, describe, expect, mock, test } from 'bun:test';
 
 const mockCookieStore = {
-  get: mock(() => undefined),
+  get: mock((_name: string) => undefined as { value: string } | undefined),
   set: mock(),
 };
 

@@ -10,6 +10,7 @@ export const PUBLIC_BUSINESS_DTO_KEYS = [
   'socialUrl',
   'featuredTop',
   'featuredRecommended',
+  'memberDiscountPercent',
   'description',
   'representativeName',
   'publishedAt',

@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'bun:test';
 
-import { locales, defaultLocale, isLocale } from '@/i18n/routing';
+import { locales, defaultLocale, isLocale, stripLocalePrefix } from '@/i18n/routing';
 
 describe('i18n routing config', () => {
   test('exports expected locales', () => {
@@ -33,5 +33,23 @@ describe('isLocale', () => {
       const locale: 'en' | 'ru' | 'uk' = value;
       expect(locale).toBe('en');
     }
+  });
+});
+
+describe('stripLocalePrefix', () => {
+  test('removes locale from home paths', () => {
+    expect(stripLocalePrefix('/ru')).toBe('/');
+    expect(stripLocalePrefix('/uk')).toBe('/');
+    expect(stripLocalePrefix('/en')).toBe('/');
+  });
+
+  test('removes locale from nested paths', () => {
+    expect(stripLocalePrefix('/ru/directory')).toBe('/directory');
+    expect(stripLocalePrefix('/uk/m/dashboard')).toBe('/m/dashboard');
+  });
+
+  test('returns pathname unchanged when no locale prefix is present', () => {
+    expect(stripLocalePrefix('/')).toBe('/');
+    expect(stripLocalePrefix('/directory')).toBe('/directory');
   });
 });

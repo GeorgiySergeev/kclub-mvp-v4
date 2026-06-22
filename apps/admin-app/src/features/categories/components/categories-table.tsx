@@ -52,7 +52,8 @@ function CategoryFormDialog({
   async function handleSubmit() {
     setLoading(true);
     const body = { name, slug, isHighRisk, isActive };
-    const url = mode === 'create' ? '/api/proxy/categories' : `/api/proxy/categories/${category!.id}`;
+    const url =
+      mode === 'create' ? '/api/proxy/categories' : `/api/proxy/categories/${category!.id}`;
     const method = mode === 'create' ? 'POST' : 'PUT';
     const res = await fetch(url, {
       method,
@@ -60,7 +61,10 @@ function CategoryFormDialog({
       body: JSON.stringify(body),
     });
     setLoading(false);
-    if (!res.ok) { toast.error(`Failed to ${mode} category`); return; }
+    if (!res.ok) {
+      toast.error(`Failed to ${mode} category`);
+      return;
+    }
     setOpen(false);
     toast.success(mode === 'create' ? 'Category created' : 'Category updated');
     onAction();
@@ -70,9 +74,16 @@ function CategoryFormDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
         render={
-          mode === 'create'
-            ? <Button size="sm"><Plus className="h-4 w-4" />Add Category</Button>
-            : <Button variant="outline" size="xs"><Pencil className="h-3.5 w-3.5" /></Button>
+          mode === 'create' ? (
+            <Button size="sm">
+              <Plus className="h-4 w-4" />
+              Add Category
+            </Button>
+          ) : (
+            <Button variant="outline" size="xs">
+              <Pencil className="h-3.5 w-3.5" />
+            </Button>
+          )
         }
       />
       <DialogContent>
@@ -90,16 +101,30 @@ function CategoryFormDialog({
             <Input id="slug" value={slug} onChange={(e) => setSlug(e.target.value)} />
           </div>
           <div className="flex items-center gap-2">
-            <input id="isHighRisk" type="checkbox" checked={isHighRisk} onChange={(e) => setIsHighRisk(e.target.checked)} className="h-4 w-4 rounded border-gray-300" />
+            <input
+              id="isHighRisk"
+              type="checkbox"
+              checked={isHighRisk}
+              onChange={(e) => setIsHighRisk(e.target.checked)}
+              className="h-4 w-4 rounded border-gray-300"
+            />
             <Label htmlFor="isHighRisk">High Risk</Label>
           </div>
           <div className="flex items-center gap-2">
-            <input id="isActive" type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="h-4 w-4 rounded border-gray-300" />
+            <input
+              id="isActive"
+              type="checkbox"
+              checked={isActive}
+              onChange={(e) => setIsActive(e.target.checked)}
+              className="h-4 w-4 rounded border-gray-300"
+            />
             <Label htmlFor="isActive">Active</Label>
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
           <Button disabled={loading || !name.trim() || !slug.trim()} onClick={handleSubmit}>
             {loading ? 'Saving...' : mode === 'create' ? 'Create' : 'Update'}
           </Button>
@@ -109,29 +134,56 @@ function CategoryFormDialog({
   );
 }
 
-function DeleteCategoryDialog({ id, name, onAction }: { id: string; name: string; onAction: () => void }) {
+function DeleteCategoryDialog({
+  id,
+  name,
+  onAction,
+}: {
+  id: string;
+  name: string;
+  onAction: () => void;
+}) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button variant="destructive" size="xs"><Trash2 className="h-3.5 w-3.5" /></Button>} />
+      <DialogTrigger
+        render={
+          <Button variant="destructive" size="xs">
+            <Trash2 className="h-3.5 w-3.5" />
+          </Button>
+        }
+      />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete Category</DialogTitle>
-          <DialogDescription>Are you sure you want to delete &ldquo;{name}&rdquo;? This cannot be undone.</DialogDescription>
+          <DialogDescription>
+            Are you sure you want to delete &ldquo;{name}&rdquo;? This cannot be undone.
+          </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button variant="destructive" disabled={loading} onClick={async () => {
-            setLoading(true);
-            const res = await fetch(`/api/proxy/categories/${id}`, { method: 'DELETE' });
-            setLoading(false);
-            if (!res.ok) { toast.error('Failed to delete category'); return; }
-            setOpen(false);
-            toast.success('Category deleted');
-            onAction();
-          }}>{loading ? 'Deleting...' : 'Delete'}</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="destructive"
+            disabled={loading}
+            onClick={async () => {
+              setLoading(true);
+              const res = await fetch(`/api/proxy/categories/${id}`, { method: 'DELETE' });
+              setLoading(false);
+              if (!res.ok) {
+                toast.error('Failed to delete category');
+                return;
+              }
+              setOpen(false);
+              toast.success('Category deleted');
+              onAction();
+            }}
+          >
+            {loading ? 'Deleting...' : 'Delete'}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -164,12 +216,26 @@ export function CategoriesTable({ categories }: CategoriesTableProps) {
               <TableRow key={cat.id}>
                 <TableCell className="font-medium">{cat.name}</TableCell>
                 <TableCell className="text-muted-foreground">{cat.slug}</TableCell>
-                <TableCell>{cat.isHighRisk && <Badge variant="destructive">High Risk</Badge>}</TableCell>
-                <TableCell><Badge variant={cat.isActive ? 'default' : 'secondary'}>{cat.isActive ? 'Active' : 'Inactive'}</Badge></TableCell>
+                <TableCell>
+                  {cat.isHighRisk && <Badge variant="destructive">High Risk</Badge>}
+                </TableCell>
+                <TableCell>
+                  <Badge variant={cat.isActive ? 'default' : 'secondary'}>
+                    {cat.isActive ? 'Active' : 'Inactive'}
+                  </Badge>
+                </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">
-                    <CategoryFormDialog mode="edit" category={cat} onAction={() => router.refresh()} />
-                    <DeleteCategoryDialog id={cat.id} name={cat.name} onAction={() => router.refresh()} />
+                    <CategoryFormDialog
+                      mode="edit"
+                      category={cat}
+                      onAction={() => router.refresh()}
+                    />
+                    <DeleteCategoryDialog
+                      id={cat.id}
+                      name={cat.name}
+                      onAction={() => router.refresh()}
+                    />
                   </div>
                 </TableCell>
               </TableRow>

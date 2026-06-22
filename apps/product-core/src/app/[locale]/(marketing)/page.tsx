@@ -9,6 +9,7 @@ import { HeroSection } from '@/features/marketing/components/HeroSection';
 import { ServicesSection } from '@/features/marketing/components/ServicesSection';
 import { StatsSection } from '@/features/marketing/components/StatsSection';
 import { TestimonialsSection } from '@/features/marketing/components/TestimonialsSection';
+import { TopPartnersSection } from '@/features/marketing/components/TopPartnersSection';
 import { Locale } from '@/i18n/routing';
 import { getPublicBusinesses } from '@/server/services/business-service';
 
@@ -29,6 +30,7 @@ export default async function Page(props: { params: Promise<{ locale: Locale }> 
   return (
     <>
       <HeroSection locale={locale} />
+      <TopPartnersSection locale={locale} businesses={businesses} />
       <StatsSection />
       <FeaturesSection />
       <ServicesSection locale={locale} />

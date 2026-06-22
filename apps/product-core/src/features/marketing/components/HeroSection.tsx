@@ -1,15 +1,22 @@
 import { ArrowUpRight, QrCode } from 'lucide-react';
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
+import type { CSSProperties } from 'react';
 
+import heroBg from '@/assets/images/hero-bg.png';
+import { HeroFlagsCarousel } from '@/features/marketing/components/HeroFlagsCarousel';
 import { Locale } from '@/i18n/routing';
 
 export function HeroSection({ locale }: { locale: Locale }) {
   const t = useTranslations('home');
 
   return (
-    <section className="kclub-premium-hero relative isolate min-h-[calc(100vh-112px)] overflow-hidden border-b border-zinc-200 dark:border-border">
-      <div className="kclub-hero-visual absolute inset-0" aria-hidden="true" />
+    <section className="kclub-premium-hero relative isolate flex min-h-[calc(100vh-112px)] flex-col overflow-hidden border-b border-zinc-200 dark:border-border">
+      <div
+        className="kclub-hero-visual absolute inset-0"
+        style={{ '--hero-bg-image': `url(${heroBg.src})` } as CSSProperties}
+        aria-hidden="true"
+      />
       <div className="kclub-premium-hero-tint absolute inset-0" aria-hidden="true" />
       <div
         className="kclub-premium-hero-fade absolute bottom-0 left-0 right-0 h-24"
@@ -24,7 +31,7 @@ export function HeroSection({ locale }: { locale: Locale }) {
         aria-hidden="true"
       />
 
-      <div className="relative mx-auto grid min-h-[calc(100vh-112px)] max-w-7xl items-center gap-11 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-20 lg:px-10 lg:py-[6.625rem] xl:gap-[5rem]">
+      <div className="relative mx-auto flex min-h-0 w-full max-w-7xl flex-1 items-center gap-11 px-4 py-16 sm:px-6 sm:py-20 lg:grid lg:min-h-[calc(100vh-112px)] lg:grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] lg:gap-20 lg:px-10 lg:py-[6.625rem] xl:gap-[5rem]">
         <div className="min-w-0 max-w-3xl lg:pr-6">
           <p className="kclub-section-label mb-11 border-l border-accent pl-4 text-xs font-semibold uppercase tracking-[0.24em] text-zinc-600 dark:text-white/70">
             {t('hero.eyebrow')}
@@ -136,6 +143,8 @@ export function HeroSection({ locale }: { locale: Locale }) {
           </div>
         </div> */}
       </div>
+
+      {/* <HeroFlagsCarousel /> */}
     </section>
   );
 }

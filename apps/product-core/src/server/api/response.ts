@@ -9,6 +9,7 @@ import {
 } from '@kclub/contracts';
 
 import { mapErrorToApiError, type ErrorResponseMapping } from '@/server/errors';
+import { createLogger } from '@/server/logger';
 
 type ResponseInit = {
   status?: number;
@@ -57,6 +58,12 @@ export function jsonErrorFromUnknown(
   meta?: ApiMeta,
 ): NextResponse<ApiResponse<never>> {
   const mapped = mapErrorToApiError(error);
+
+  const log = createLogger();
+  log.error('API error response', {
+    error: { code: mapped.error.code, message: mapped.error.message },
+    status: mapped.status,
+  });
 
   return jsonError(mapped.error, meta, { status: mapped.status });
 }

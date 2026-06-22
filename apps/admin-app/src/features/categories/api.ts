@@ -1,8 +1,5 @@
 import { adminApiFetch } from '@/server/proxy/admin-client';
-import type {
-  ApiResponse,
-  CategoryDto,
-} from '@kclub/contracts';
+import type { ApiResponse, CategoryDto } from '@kclub/contracts';
 
 export async function fetchCategories(): Promise<CategoryDto[] | null> {
   const result = await adminApiFetch<ApiResponse<CategoryDto[]>>('/categories');
@@ -10,9 +7,12 @@ export async function fetchCategories(): Promise<CategoryDto[] | null> {
   return result.data.data;
 }
 
-export async function createCategory(
-  input: { name: string; slug: string; isHighRisk?: boolean; isActive?: boolean },
-): Promise<CategoryDto | null> {
+export async function createCategory(input: {
+  name: string;
+  slug: string;
+  isHighRisk?: boolean;
+  isActive?: boolean;
+}): Promise<CategoryDto | null> {
   const res = await fetch('/api/proxy/categories', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

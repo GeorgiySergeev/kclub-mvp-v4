@@ -13,10 +13,7 @@ export default async function SubscriptionsPage() {
       description="Stripe-synchronized subscription operations and review."
       roleScope="ADMIN"
     >
-      <SubscriptionsTable
-        subscriptions={subscriptions ?? []}
-        staffRole={profile.role}
-      />
+      <SubscriptionsTable subscriptions={subscriptions ?? []} staffRole={profile.role} />
     </PageShell>
   );
 }

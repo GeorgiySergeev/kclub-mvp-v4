@@ -362,6 +362,7 @@ export function toPublicBusinessListItemDto(business: any): PublicBusinessListIt
     socialUrl: business.social_url,
     featuredTop: business.featured_top,
     featuredRecommended: business.featured_recommended,
+    memberDiscountPercent: business.member_discount_percent ?? null,
   };
 }
 

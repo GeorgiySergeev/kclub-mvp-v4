@@ -11,17 +11,23 @@ datasource db {
 enum MemberTier {
   MEMBER
   VIP
+
+  @@map("member_tier")
 }
 
 enum UserStatus {
   ACTIVE
   BLOCKED
+
+  @@map("user_status")
 }
 
 enum ClubCardStatus {
   ACTIVE
   REVOKED
   EXPIRED
+
+  @@map("club_card_status")
 }
 
 enum SubscriptionStatus {
@@ -30,11 +36,15 @@ enum SubscriptionStatus {
   PAST_DUE
   CANCELED
   EXPIRED
+
+  @@map("subscription_status")
 }
 
 enum SubscriptionKind {
   VIP_MEMBERSHIP
   BUSINESS_PLACEMENT
+
+  @@map("subscription_kind")
 }
 
 enum BusinessStatus {
@@ -43,6 +53,8 @@ enum BusinessStatus {
   PUBLISHED
   REJECTED
   HIDDEN
+
+  @@map("business_status")
 }
 
 enum IntroductionStatus {
@@ -52,6 +64,8 @@ enum IntroductionStatus {
   COMPLETED
   REJECTED
   CANCELED
+
+  @@map("introduction_status")
 }
 
 enum StaffRole {
@@ -59,6 +73,8 @@ enum StaffRole {
   ADMIN
   MODERATOR
   SUPPORT
+
+  @@map("staff_role")
 }
 
 model User {
@@ -192,38 +208,39 @@ model City {
 }
 
 model BusinessProfile {
-  id                     String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id                String                 @db.Uuid
-  user                   User                   @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  slug                   String                 @unique @db.VarChar(140)
-  name                   String                 @db.VarChar(100)
-  representative_name    String                 @db.VarChar(100)
-  representative_email   String                 @db.VarChar(255)
-  representative_phone   String                 @db.VarChar(32)
-  country_id             String                 @db.Uuid
-  country                Country                @relation(fields: [country_id], references: [id], onDelete: Restrict)
-  city_id                String                 @db.Uuid
-  city                   City                   @relation(fields: [city_id], references: [id], onDelete: Restrict)
-  category_id            String                 @db.Uuid
-  category               Category               @relation(fields: [category_id], references: [id], onDelete: Restrict)
-  status                 BusinessStatus         @default(UNDER_REVIEW)
-  website_url            String?                @db.Text
-  social_url             String?                @db.Text
-  brief_description      String?                @db.VarChar(500)
-  description            String?                @db.Text
-  featured_top           Boolean                @default(false)
-  featured_recommended   Boolean                @default(false)
-  internal_notes         String?                @db.Text
-  rejection_reason       String?                @db.Text
-  approved_at            DateTime?
-  published_at           DateTime?
-  hidden_at              DateTime?
-  rejected_at            DateTime?
-  created_at             DateTime               @default(now())
-  updated_at             DateTime               @updatedAt
-  subscriptions          Subscription[]
-  outgoing_introductions BusinessIntroduction[] @relation("requester_business")
-  incoming_introductions BusinessIntroduction[] @relation("target_business")
+  id                      String                 @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id                 String                 @db.Uuid
+  user                    User                   @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  slug                    String                 @unique @db.VarChar(140)
+  name                    String                 @db.VarChar(100)
+  representative_name     String                 @db.VarChar(100)
+  representative_email    String                 @db.VarChar(255)
+  representative_phone    String                 @db.VarChar(32)
+  country_id              String                 @db.Uuid
+  country                 Country                @relation(fields: [country_id], references: [id], onDelete: Restrict)
+  city_id                 String                 @db.Uuid
+  city                    City                   @relation(fields: [city_id], references: [id], onDelete: Restrict)
+  category_id             String                 @db.Uuid
+  category                Category               @relation(fields: [category_id], references: [id], onDelete: Restrict)
+  status                  BusinessStatus         @default(UNDER_REVIEW)
+  website_url             String?                @db.Text
+  social_url              String?                @db.Text
+  brief_description       String?                @db.VarChar(500)
+  description             String?                @db.Text
+  featured_top            Boolean                @default(false)
+  featured_recommended    Boolean                @default(false)
+  member_discount_percent Int?                   @db.SmallInt
+  internal_notes          String?                @db.Text
+  rejection_reason        String?                @db.Text
+  approved_at             DateTime?
+  published_at            DateTime?
+  hidden_at               DateTime?
+  rejected_at             DateTime?
+  created_at              DateTime               @default(now())
+  updated_at              DateTime               @updatedAt
+  subscriptions           Subscription[]
+  outgoing_introductions  BusinessIntroduction[] @relation("requester_business")
+  incoming_introductions  BusinessIntroduction[] @relation("target_business")
 
   @@index([status, created_at])
   @@index([status, featured_top, featured_recommended, category_id])

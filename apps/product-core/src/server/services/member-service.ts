@@ -31,6 +31,16 @@ export function isOnboardingComplete(user: {
   return !!(user.display_name && user.locale_preference && user.terms_accepted_at);
 }
 
+export function assertMemberOnboardingComplete(user: UserRecord): void {
+  if (!isOnboardingComplete(user)) {
+    throw new AppError({
+      code: ERROR_CODES.PERMISSION_DENIED,
+      message: 'Onboarding must be completed before this action',
+      status: 403,
+    });
+  }
+}
+
 export function toCurrentMemberProfileDto(user: UserRecord): CurrentMemberProfileDto {
   return {
     id: user.id,

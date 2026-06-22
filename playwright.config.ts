@@ -13,6 +13,24 @@ export default defineConfig({
     video: 'on-first-retry',
     baseURL: 'http://localhost:3000',
   },
+  projects: [
+    {
+      name: 'product-core',
+      testMatch: [
+        /public-visitor\.spec\.ts/,
+        /member-journey\.spec\.ts/,
+        /billing-flow\.spec\.ts/,
+        /business-lifecycle\.spec\.ts/,
+        /introduction-flow\.spec\.ts/,
+      ],
+      use: { ...devices['Desktop Chrome'], baseURL: 'http://localhost:3000' },
+    },
+    {
+      name: 'admin-app',
+      testMatch: /staff-auth\.spec\.ts/,
+      use: { ...devices['Desktop Chrome'], baseURL: 'http://localhost:3001' },
+    },
+  ],
   timeout: 30_000,
   expect: {
     timeout: 5_000,

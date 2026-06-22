@@ -1,9 +1,5 @@
 import { adminApiFetch } from '@/server/proxy/admin-client';
-import type {
-  AdminSubscriptionListItemDto,
-  ApiResponse,
-  StaffRole,
-} from '@kclub/contracts';
+import type { AdminSubscriptionListItemDto, ApiResponse, StaffRole } from '@kclub/contracts';
 
 export async function fetchSubscriptions(): Promise<AdminSubscriptionListItemDto[] | null> {
   const result = await adminApiFetch<ApiResponse<AdminSubscriptionListItemDto[]>>('/subscriptions');

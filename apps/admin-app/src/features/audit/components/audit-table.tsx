@@ -67,7 +67,9 @@ export function AuditTable({ logs, total, page, limit, filters: initialFilters }
       {/* Filters */}
       <div className="flex flex-wrap items-end gap-3 rounded-lg border p-4">
         <div className="space-y-1">
-          <Label htmlFor="action" className="text-xs">Action</Label>
+          <Label htmlFor="action" className="text-xs">
+            Action
+          </Label>
           <select
             id="action"
             value={action}
@@ -75,11 +77,17 @@ export function AuditTable({ logs, total, page, limit, filters: initialFilters }
             className="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
           >
             <option value="">All actions</option>
-            {AUDIT_ACTIONS.map((a) => <option key={a} value={a}>{a}</option>)}
+            {AUDIT_ACTIONS.map((a) => (
+              <option key={a} value={a}>
+                {a}
+              </option>
+            ))}
           </select>
         </div>
         <div className="space-y-1">
-          <Label htmlFor="role" className="text-xs">Staff Role</Label>
+          <Label htmlFor="role" className="text-xs">
+            Staff Role
+          </Label>
           <select
             id="role"
             value={actorRole}
@@ -87,22 +95,53 @@ export function AuditTable({ logs, total, page, limit, filters: initialFilters }
             className="flex h-9 rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm"
           >
             <option value="">All roles</option>
-            {STAFF_ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
+            {STAFF_ROLES.map((r) => (
+              <option key={r} value={r}>
+                {r}
+              </option>
+            ))}
           </select>
         </div>
         <div className="space-y-1">
-          <Label htmlFor="entityType" className="text-xs">Entity Type</Label>
-          <Input id="entityType" placeholder="e.g. User" value={entityType} onChange={(e) => setEntityType(e.target.value)} className="h-9 w-40" />
+          <Label htmlFor="entityType" className="text-xs">
+            Entity Type
+          </Label>
+          <Input
+            id="entityType"
+            placeholder="e.g. User"
+            value={entityType}
+            onChange={(e) => setEntityType(e.target.value)}
+            className="h-9 w-40"
+          />
         </div>
         <div className="space-y-1">
-          <Label htmlFor="dateFrom" className="text-xs">From</Label>
-          <Input id="dateFrom" type="date" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} className="h-9" />
+          <Label htmlFor="dateFrom" className="text-xs">
+            From
+          </Label>
+          <Input
+            id="dateFrom"
+            type="date"
+            value={dateFrom}
+            onChange={(e) => setDateFrom(e.target.value)}
+            className="h-9"
+          />
         </div>
         <div className="space-y-1">
-          <Label htmlFor="dateTo" className="text-xs">To</Label>
-          <Input id="dateTo" type="date" value={dateTo} onChange={(e) => setDateTo(e.target.value)} className="h-9" />
+          <Label htmlFor="dateTo" className="text-xs">
+            To
+          </Label>
+          <Input
+            id="dateTo"
+            type="date"
+            value={dateTo}
+            onChange={(e) => setDateTo(e.target.value)}
+            className="h-9"
+          />
         </div>
-        <Button size="sm" onClick={applyFilters}><Search className="h-4 w-4" />Apply</Button>
+        <Button size="sm" onClick={applyFilters}>
+          <Search className="h-4 w-4" />
+          Apply
+        </Button>
       </div>
 
       {logs.length === 0 ? (
@@ -122,14 +161,25 @@ export function AuditTable({ logs, total, page, limit, filters: initialFilters }
             <TableBody>
               {logs.map((log) => (
                 <TableRow key={log.id}>
-                  <TableCell><Badge variant="outline">{log.action}</Badge></TableCell>
+                  <TableCell>
+                    <Badge variant="outline">{log.action}</Badge>
+                  </TableCell>
                   <TableCell>
                     <div className="text-sm">{log.actorRole ?? '—'}</div>
-                    <div className="text-xs text-muted-foreground">{log.actorStaffId ? `${log.actorStaffId.slice(0, 8)}...` : 'System'}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {log.actorStaffId ? `${log.actorStaffId.slice(0, 8)}...` : 'System'}
+                    </div>
                   </TableCell>
                   <TableCell>{log.entityType}</TableCell>
-                  <TableCell className="max-w-[120px] truncate text-xs text-muted-foreground" title={log.entityId}>{log.entityId.slice(0, 12)}...</TableCell>
-                  <TableCell className="text-sm text-muted-foreground">{new Date(log.createdAt).toLocaleString()}</TableCell>
+                  <TableCell
+                    className="max-w-[120px] truncate text-xs text-muted-foreground"
+                    title={log.entityId}
+                  >
+                    {log.entityId.slice(0, 12)}...
+                  </TableCell>
+                  <TableCell className="text-sm text-muted-foreground">
+                    {new Date(log.createdAt).toLocaleString()}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -137,10 +187,26 @@ export function AuditTable({ logs, total, page, limit, filters: initialFilters }
 
           {totalPages > 1 && (
             <div className="flex items-center justify-between text-sm text-muted-foreground">
-              <span>Page {page} of {totalPages} ({total} total)</span>
+              <span>
+                Page {page} of {totalPages} ({total} total)
+              </span>
               <div className="flex gap-2">
-                <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => goToPage(page - 1)}>Previous</Button>
-                <Button variant="outline" size="sm" disabled={page >= totalPages} onClick={() => goToPage(page + 1)}>Next</Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={page <= 1}
+                  onClick={() => goToPage(page - 1)}
+                >
+                  Previous
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={page >= totalPages}
+                  onClick={() => goToPage(page + 1)}
+                >
+                  Next
+                </Button>
               </div>
             </div>
           )}

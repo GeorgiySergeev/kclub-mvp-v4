@@ -12,11 +12,13 @@
     },
     "./client": {
       "types": "./dist/client.d.ts",
+      "import": "./dist/client.js",
+      "require": "./dist/cjs/client.js",
       "default": "./dist/client.js"
     }
   },
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json && tsc -p tsconfig.client-cjs.json && node -e \"require('node:fs').cpSync('client-cjs/package.json','dist/cjs/package.json')\"",
     "typecheck": "tsc --noEmit",
     "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\"",
     "test": "bun test",

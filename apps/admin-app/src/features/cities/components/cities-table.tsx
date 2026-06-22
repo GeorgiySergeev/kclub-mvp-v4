@@ -62,7 +62,10 @@ function CityFormDialog({
       body: JSON.stringify(body),
     });
     setLoading(false);
-    if (!res.ok) { toast.error(`Failed to ${mode} city`); return; }
+    if (!res.ok) {
+      toast.error(`Failed to ${mode} city`);
+      return;
+    }
     setOpen(false);
     toast.success(mode === 'create' ? 'City created' : 'City updated');
     onAction();
@@ -72,9 +75,16 @@ function CityFormDialog({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
         render={
-          mode === 'create'
-            ? <Button size="sm"><Plus className="h-4 w-4" />Add City</Button>
-            : <Button variant="outline" size="xs"><Pencil className="h-3.5 w-3.5" /></Button>
+          mode === 'create' ? (
+            <Button size="sm">
+              <Plus className="h-4 w-4" />
+              Add City
+            </Button>
+          ) : (
+            <Button variant="outline" size="xs">
+              <Pencil className="h-3.5 w-3.5" />
+            </Button>
+          )
         }
       />
       <DialogContent>
@@ -93,7 +103,9 @@ function CityFormDialog({
             >
               <option value="">Select country</option>
               {countries.map((c) => (
-                <option key={c.id} value={c.id}>{c.name}</option>
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
               ))}
             </select>
           </div>
@@ -106,13 +118,24 @@ function CityFormDialog({
             <Input id="slug" value={slug} onChange={(e) => setSlug(e.target.value)} />
           </div>
           <div className="flex items-center gap-2">
-            <input id="isActive" type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="h-4 w-4 rounded border-gray-300" />
+            <input
+              id="isActive"
+              type="checkbox"
+              checked={isActive}
+              onChange={(e) => setIsActive(e.target.checked)}
+              className="h-4 w-4 rounded border-gray-300"
+            />
             <Label htmlFor="isActive">Active</Label>
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button disabled={loading || !countryId || !name.trim() || !slug.trim()} onClick={handleSubmit}>
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button
+            disabled={loading || !countryId || !name.trim() || !slug.trim()}
+            onClick={handleSubmit}
+          >
             {loading ? 'Saving...' : mode === 'create' ? 'Create' : 'Update'}
           </Button>
         </DialogFooter>
@@ -121,29 +144,56 @@ function CityFormDialog({
   );
 }
 
-function DeleteCityDialog({ id, name, onAction }: { id: string; name: string; onAction: () => void }) {
+function DeleteCityDialog({
+  id,
+  name,
+  onAction,
+}: {
+  id: string;
+  name: string;
+  onAction: () => void;
+}) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button variant="destructive" size="xs"><Trash2 className="h-3.5 w-3.5" /></Button>} />
+      <DialogTrigger
+        render={
+          <Button variant="destructive" size="xs">
+            <Trash2 className="h-3.5 w-3.5" />
+          </Button>
+        }
+      />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete City</DialogTitle>
-          <DialogDescription>Are you sure you want to delete &ldquo;{name}&rdquo;? This cannot be undone.</DialogDescription>
+          <DialogDescription>
+            Are you sure you want to delete &ldquo;{name}&rdquo;? This cannot be undone.
+          </DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button variant="destructive" disabled={loading} onClick={async () => {
-            setLoading(true);
-            const res = await fetch(`/api/proxy/cities/${id}`, { method: 'DELETE' });
-            setLoading(false);
-            if (!res.ok) { toast.error('Failed to delete city'); return; }
-            setOpen(false);
-            toast.success('City deleted');
-            onAction();
-          }}>{loading ? 'Deleting...' : 'Delete'}</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="destructive"
+            disabled={loading}
+            onClick={async () => {
+              setLoading(true);
+              const res = await fetch(`/api/proxy/cities/${id}`, { method: 'DELETE' });
+              setLoading(false);
+              if (!res.ok) {
+                toast.error('Failed to delete city');
+                return;
+              }
+              setOpen(false);
+              toast.success('City deleted');
+              onAction();
+            }}
+          >
+            {loading ? 'Deleting...' : 'Delete'}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -177,11 +227,24 @@ export function CitiesTable({ cities, countries }: CitiesTableProps) {
                 <TableCell className="font-medium">{city.name}</TableCell>
                 <TableCell>{city.countryName}</TableCell>
                 <TableCell className="text-muted-foreground">{city.slug}</TableCell>
-                <TableCell><Badge variant={city.isActive ? 'default' : 'secondary'}>{city.isActive ? 'Active' : 'Inactive'}</Badge></TableCell>
+                <TableCell>
+                  <Badge variant={city.isActive ? 'default' : 'secondary'}>
+                    {city.isActive ? 'Active' : 'Inactive'}
+                  </Badge>
+                </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">
-                    <CityFormDialog mode="edit" city={city} countries={countries} onAction={() => router.refresh()} />
-                    <DeleteCityDialog id={city.id} name={city.name} onAction={() => router.refresh()} />
+                    <CityFormDialog
+                      mode="edit"
+                      city={city}
+                      countries={countries}
+                      onAction={() => router.refresh()}
+                    />
+                    <DeleteCityDialog
+                      id={city.id}
+                      name={city.name}
+                      onAction={() => router.refresh()}
+                    />
                   </div>
                 </TableCell>
               </TableRow>

@@ -12,7 +12,13 @@
       "toggleTheme": "Toggle theme",
       "scroll": "Scroll to content",
       "viewProfile": "View Profile",
-      "website": "Website"
+      "website": "Website",
+      "discountLabel": "−{percent}%"
+    },
+    "carousel": {
+      "navigationLabel": "Навигация карусели",
+      "previousLabel": "Назад",
+      "nextLabel": "Вперёд"
     },
     "nav": {
       "directory": "Directory",
@@ -48,7 +54,8 @@
           "title": "Global reach",
           "copy": "Members, partners, and warm introductions."
         }
-      }
+      },
+      "flagsMarquee": "Members from every region, including —"
     },
     "stats": {
       "members": "Members",
@@ -223,6 +230,12 @@
       "terms": "Terms",
       "privacy": "Конфиденциальность",
       "copyright": "© Все права защищены."
+    },
+    "partners": {
+      "eyebrow": "Проверенные Элитные Бренды",
+      "title": "Топ Партнёры Kylyvnyk",
+      "subtitle": "Отобранные партнёрства уровня blue-chip с беспрецедентными условиями для владельцев частного клуба",
+      "viewSpecial": "Смотреть Предложение"
     }
   },
   "auth": {

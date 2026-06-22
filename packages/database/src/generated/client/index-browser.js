@@ -227,6 +227,7 @@ exports.Prisma.BusinessProfileScalarFieldEnum = {
   description: 'description',
   featured_top: 'featured_top',
   featured_recommended: 'featured_recommended',
+  member_discount_percent: 'member_discount_percent',
   internal_notes: 'internal_notes',
   rejection_reason: 'rejection_reason',
   approved_at: 'approved_at',

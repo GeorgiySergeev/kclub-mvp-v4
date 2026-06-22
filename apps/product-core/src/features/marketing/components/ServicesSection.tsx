@@ -31,11 +31,11 @@ export function ServicesSection({ locale }: { locale: Locale }) {
         <h2 className="mt-5 max-w-4xl text-4xl font-black uppercase leading-tight text-zinc-950 dark:text-white sm:text-6xl">
           {t('services.title')}
         </h2>
-        <div className="kclub-border-strong mt-12 grid gap-px border bg-zinc-300 dark:bg-white/10 lg:grid-cols-3">
+        <div className="kclub-border-strong mt-12 grid items-stretch gap-px border bg-zinc-300 dark:bg-white/10 lg:grid-cols-3">
           {plans.map((plan) => (
             <article
               key={plan.name}
-              className={`bg-white p-6 dark:bg-surface sm:p-9 ${plan.featured ? 'relative overflow-hidden' : ''}`}
+              className={`flex h-full flex-col bg-white p-6 dark:bg-surface sm:p-9 ${plan.featured ? 'relative overflow-hidden' : ''}`}
             >
               {plan.featured ? <div className="absolute inset-x-0 top-0 h-1.5 bg-accent" /> : null}
               <div className="flex items-start justify-between gap-6">
@@ -51,7 +51,7 @@ export function ServicesSection({ locale }: { locale: Locale }) {
                   <ArrowUpRight aria-hidden="true" size={22} />
                 </span>
               </div>
-              <ul className="mt-8 grid gap-4">
+              <ul className="mt-8 grid flex-1 gap-4">
                 {plan.items.map((item) => (
                   <li
                     key={item}
@@ -69,7 +69,7 @@ export function ServicesSection({ locale }: { locale: Locale }) {
               </ul>
               <Link
                 href={plan.href}
-                className={`mt-8 inline-flex h-14 w-full items-center justify-between gap-8 border px-5 text-sm font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-focus dark:focus-visible:ring-offset-focus sm:w-auto ${plan.featured ? 'border-accent bg-accent text-white hover:bg-accent-hover' : 'border-zinc-950 text-zinc-950 hover:bg-zinc-950 hover:text-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-zinc-950'}`}
+                className={`mx-auto mt-8 flex h-14 w-fit shrink-0 items-center justify-center gap-8 border px-5 text-sm font-bold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-focus dark:focus-visible:ring-offset-focus ${plan.featured ? 'border-accent bg-accent text-white hover:bg-accent-hover' : 'border-zinc-950 text-zinc-950 hover:bg-zinc-950 hover:text-white dark:border-white dark:text-white dark:hover:bg-white dark:hover:text-zinc-950'}`}
               >
                 {plan.cta}
                 <ArrowUpRight aria-hidden="true" size={18} />

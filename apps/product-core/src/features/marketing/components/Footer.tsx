@@ -1,8 +1,9 @@
 import Link from 'next/link';
 import { useTranslations } from 'next-intl';
 
-import { Locale, locales } from '@/i18n/routing';
+import { Locale } from '@/i18n/routing';
 
+import { LocaleSwitcherLinks } from './LocaleSwitcherLinks';
 import { ThemeToggle } from './ThemeToggle';
 
 export function Footer({ locale }: { locale: Locale }) {
@@ -64,18 +65,7 @@ export function Footer({ locale }: { locale: Locale }) {
           <h3 className="text-xs font-bold uppercase text-zinc-500 dark:text-white/50">
             {t('footer.locales')}
           </h3>
-          <ul className="mt-5 grid gap-3">
-            {locales.map((item) => (
-              <li key={item}>
-                <Link
-                  href={`/${item}`}
-                  className="dark:text-white/68 text-sm font-medium text-zinc-600 transition hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent dark:hover:text-white dark:focus-visible:ring-white"
-                >
-                  {t(`locale.${item}`)}
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <LocaleSwitcherLinks locale={locale} variant="footer" />
         </div>
       </div>
       <div className="kclub-border border-t">

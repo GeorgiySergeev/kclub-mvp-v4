@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { readStaffSession } from '@/server/auth/session';
+import { createLogger } from '@/server/logger';
 
 const ADMIN_API_PREFIX = '/api/admin/v1';
 
@@ -53,8 +54,11 @@ export async function DELETE(
 }
 
 async function proxy(request: NextRequest, path: string[], method: string) {
+  const log = createLogger();
+
   const session = await readStaffSession();
   if (!session?.token) {
+    log.auth('Proxy rejected: no staff session', { path: `/${path.join('/')}`, method });
     return NextResponse.json(
       { data: null, error: { code: 'UNAUTHENTICATED', message: 'No staff session' } },
       { status: 401 },
@@ -77,6 +81,14 @@ async function proxy(request: NextRequest, path: string[], method: string) {
   });
 
   const responseBody = await response.text();
+
+  if (!response.ok) {
+    log.proxy('Upstream API returned error', {
+      path: upstreamPath,
+      method,
+      status: response.status,
+    });
+  }
 
   return new NextResponse(responseBody, {
     status: response.status,

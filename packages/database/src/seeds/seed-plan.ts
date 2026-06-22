@@ -41,6 +41,20 @@ export const COUNTRY_SEED_PLAN: readonly CountrySeedPlan[] = [
     slug: 'united-arab-emirates',
     citySlugs: ['dubai'],
   },
+  {
+    code2: 'CH',
+    code3: 'CHE',
+    name: 'Switzerland',
+    slug: 'switzerland',
+    citySlugs: ['geneva'],
+  },
+  {
+    code2: 'MC',
+    code3: 'MCO',
+    name: 'Monaco',
+    slug: 'monaco',
+    citySlugs: ['monaco'],
+  },
 ] as const;
 
 export const CITY_SEED_PLAN = [
@@ -50,6 +64,8 @@ export const CITY_SEED_PLAN = [
   { countrySlug: 'ukraine', name: 'Kyiv', slug: 'kyiv' },
   { countrySlug: 'united-kingdom', name: 'London', slug: 'london' },
   { countrySlug: 'united-arab-emirates', name: 'Dubai', slug: 'dubai' },
+  { countrySlug: 'switzerland', name: 'Geneva', slug: 'geneva' },
+  { countrySlug: 'monaco', name: 'Monaco', slug: 'monaco' },
 ] as const;
 
 export const CATEGORY_SEED_PLAN: readonly CategorySeedPlan[] = [
@@ -57,6 +73,9 @@ export const CATEGORY_SEED_PLAN: readonly CategorySeedPlan[] = [
   { slug: 'wellness', name: 'Wellness', isHighRisk: false },
   { slug: 'legal-services', name: 'Legal Services', isHighRisk: false },
   { slug: 'real-estate', name: 'Real Estate', isHighRisk: false },
+  { slug: 'lifestyle-concierge', name: 'Lifestyle & Concierge', isHighRisk: false },
+  { slug: 'investment-wealth', name: 'Investment & Wealth', isHighRisk: false },
+  { slug: 'yachting-charter', name: 'Yachting & Charter', isHighRisk: false },
   { slug: 'crypto', name: 'Crypto', isHighRisk: true },
   { slug: 'gambling', name: 'Gambling', isHighRisk: true },
   { slug: 'adult', name: 'Adult', isHighRisk: true },

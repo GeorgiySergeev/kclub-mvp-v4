@@ -22,6 +22,7 @@ const DEMO_BUSINESSES = [
     briefDescription: 'Boutique hotels and private dining for members.',
     featuredTop: true,
     featuredRecommended: false,
+    memberDiscountPercent: 10,
   },
   {
     userPhone: '+15551000002',
@@ -37,6 +38,7 @@ const DEMO_BUSINESSES = [
     briefDescription: 'Concierge wellness, recovery, and longevity programs.',
     featuredTop: false,
     featuredRecommended: true,
+    memberDiscountPercent: 20,
   },
   {
     userPhone: '+15551000003',
@@ -52,6 +54,64 @@ const DEMO_BUSINESSES = [
     briefDescription: 'Cross-border legal counsel for founders and families.',
     featuredTop: false,
     featuredRecommended: false,
+    memberDiscountPercent: null,
+  },
+  {
+    userPhone: '+44201000001',
+    userDisplayName: 'Regent Executive Concierge',
+    slug: 'regent-executive-concierge',
+    name: 'Regent Executive Concierge',
+    representativeName: 'James Whitmore',
+    representativeEmail: 'contact@regent-concierge.example',
+    representativePhone: '+44201000001',
+    categorySlug: 'lifestyle-concierge',
+    countrySlug: 'united-kingdom',
+    citySlug: 'london',
+    briefDescription:
+      'Bespoke high-touch lifestyle solutions, Michelin star bookings, private island access, and luxury experiences across the UK and Continental Europe.',
+    description:
+      'Regent Executive Concierge is the premier lifestyle management service for ultra-high-net-worth individuals across the United Kingdom and Europe. Our dedicated team handles everything from exclusive Michelin-starred restaurant reservations and private jet coordination to last-minute luxury hotel suites and curated island retreats. Members enjoy 24/7 personal concierge support, priority access to sold-out cultural events, and bespoke travel planning tailored to exacting standards.',
+    featuredTop: true,
+    featuredRecommended: false,
+    memberDiscountPercent: 15,
+  },
+  {
+    userPhone: '+41221000001',
+    userDisplayName: 'Prestige Capital Advisory',
+    slug: 'prestige-capital-advisory',
+    name: 'Prestige Capital Advisory',
+    representativeName: 'Dominique Fontaine',
+    representativeEmail: 'advisory@prestige-capital.example',
+    representativePhone: '+41221000001',
+    categorySlug: 'investment-wealth',
+    countrySlug: 'switzerland',
+    citySlug: 'geneva',
+    briefDescription:
+      'Swiss private registry investment consultants. Specialized in international asset protection, structure management, and generational wealth transitions.',
+    description:
+      'Prestige Capital Advisory is a boutique Geneva-based family office consultancy serving the complex financial needs of international private clients. We specialise in cross-border asset protection structures, trust and foundation governance, and discreet generational wealth transition planning. With deep expertise in Swiss and Liechtenstein legal frameworks, we deliver confidential, independent counsel to families, entrepreneurs, and private institutions.',
+    featuredTop: true,
+    featuredRecommended: false,
+    memberDiscountPercent: 10,
+  },
+  {
+    userPhone: '+37793000001',
+    userDisplayName: 'Monaco Sail Experience',
+    slug: 'monaco-sail-experience',
+    name: 'Monaco Sail Experience',
+    representativeName: 'Pierre Beaumont',
+    representativeEmail: 'charter@monaco-sail.example',
+    representativePhone: '+37793000001',
+    categorySlug: 'yachting-charter',
+    countrySlug: 'monaco',
+    citySlug: 'monaco',
+    briefDescription:
+      'Ultimate Mediterranean yachting. Private luxury day cruises, elite cocktail receptions in the Port de Monaco, and access to a premium motor-yacht fleet.',
+    description:
+      'Monaco Sail Experience is the finest yachting charter operator in the principality of Monaco, offering an unrivalled portfolio of superyachts and motor-yachts for private day cruises and multi-day Mediterranean voyages. Our services extend from intimate sunset cocktail receptions at the Port Hercule to fully crewed corporate events and VIP birthday charters. Every voyage is curated by our master captain, with bespoke catering by Michelin-trained private chefs.',
+    featuredTop: true,
+    featuredRecommended: false,
+    memberDiscountPercent: 12,
   },
 ] as const;
 
@@ -215,6 +275,8 @@ async function seedDemoBusinesses(prisma: PrismaClient): Promise<void> {
       },
     });
 
+    const demoDescription = 'description' in demo ? demo.description : undefined;
+
     await prisma.businessProfile.upsert({
       where: { slug: demo.slug },
       create: {
@@ -229,8 +291,10 @@ async function seedDemoBusinesses(prisma: PrismaClient): Promise<void> {
         category_id: category.id,
         status: 'PUBLISHED',
         brief_description: demo.briefDescription,
+        description: demoDescription,
         featured_top: demo.featuredTop,
         featured_recommended: demo.featuredRecommended,
+        member_discount_percent: demo.memberDiscountPercent,
         approved_at: now,
         published_at: now,
       },
@@ -238,8 +302,10 @@ async function seedDemoBusinesses(prisma: PrismaClient): Promise<void> {
         name: demo.name,
         status: 'PUBLISHED',
         brief_description: demo.briefDescription,
+        description: demoDescription,
         featured_top: demo.featuredTop,
         featured_recommended: demo.featuredRecommended,
+        member_discount_percent: demo.memberDiscountPercent,
         published_at: now,
       },
     });

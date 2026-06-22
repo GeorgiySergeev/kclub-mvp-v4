@@ -12,7 +12,13 @@
       "toggleTheme": "Toggle theme",
       "scroll": "Scroll to content",
       "viewProfile": "View Profile",
-      "website": "Website"
+      "website": "Website",
+      "discountLabel": "−{percent}%"
+    },
+    "carousel": {
+      "navigationLabel": "Навігація каруселі",
+      "previousLabel": "Назад",
+      "nextLabel": "Вперед"
     },
     "nav": {
       "directory": "Directory",
@@ -48,7 +54,8 @@
           "title": "Global reach",
           "copy": "Members, partners, and warm introductions."
         }
-      }
+      },
+      "flagsMarquee": "Members from every region, including —"
     },
     "stats": {
       "members": "Members",
@@ -223,6 +230,12 @@
       "terms": "Terms",
       "privacy": "Конфіденційність",
       "copyright": "© Всі права захищені."
+    },
+    "partners": {
+      "eyebrow": "Перевірені Елітні Бренди",
+      "title": "Топ Партнери Kylyvnyk",
+      "subtitle": "Відібрані партнерства рівня blue-chip з безпрецедентними умовами для власників приватного клубу",
+      "viewSpecial": "Дивитись Пропозицію"
     }
   },
   "auth": {

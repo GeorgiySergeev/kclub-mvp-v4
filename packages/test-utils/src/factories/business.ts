@@ -61,6 +61,7 @@ function createBusinessProfileBase(
       socialUrl: `https://instagram.com/business_${sequence}`,
       featuredTop: false,
       featuredRecommended: false,
+      memberDiscountPercent: null,
       representativeName: `Representative ${sequence}`,
       representativeEmail: `rep${sequence}@example.com`,
       representativePhone: `+1555222${sequence.toString().padStart(4, '0')}`,

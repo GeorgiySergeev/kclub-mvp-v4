@@ -33,7 +33,9 @@ export function MembershipsView({ plans }: MembershipsViewProps) {
           <TableRow key={plan.key}>
             <TableCell className="font-mono text-sm">{plan.key}</TableCell>
             <TableCell className="font-mono text-sm">{JSON.stringify(plan.value)}</TableCell>
-            <TableCell className="text-sm text-muted-foreground">{plan.description ?? '—'}</TableCell>
+            <TableCell className="text-sm text-muted-foreground">
+              {plan.description ?? '—'}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

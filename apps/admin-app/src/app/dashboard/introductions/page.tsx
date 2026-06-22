@@ -13,10 +13,7 @@ export default async function IntroductionsPage() {
       description="Queue and review area for business introductions."
       roleScope="MODERATOR"
     >
-      <IntroductionsTable
-        introductions={introductions ?? []}
-        staffRole={profile.role}
-      />
+      <IntroductionsTable introductions={introductions ?? []} staffRole={profile.role} />
     </PageShell>
   );
 }

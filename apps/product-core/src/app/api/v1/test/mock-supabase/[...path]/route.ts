@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
 import { getPrismaClient } from '@/server/db';
 
-const E2E_SECRET = process.env.E2E_TEST_SECRET;
+function getE2eSecret(): string | undefined {
+  return process.env.E2E_TEST_SECRET;
+}
 
 export async function POST(request: Request, { params }: { params: Promise<{ path: string[] }> }) {
-  if (!E2E_SECRET) {
+  if (!getE2eSecret()) {
     return NextResponse.json({ error: 'Mock only available in E2E' }, { status: 404 });
   }
 
@@ -63,7 +65,7 @@ export async function POST(request: Request, { params }: { params: Promise<{ pat
 }
 
 export async function GET(request: Request, { params }: { params: Promise<{ path: string[] }> }) {
-  if (!E2E_SECRET) {
+  if (!getE2eSecret()) {
     return NextResponse.json({ error: 'Mock only available in E2E' }, { status: 404 });
   }
 

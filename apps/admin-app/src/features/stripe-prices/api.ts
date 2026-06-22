@@ -1,8 +1,5 @@
 import { adminApiFetch } from '@/server/proxy/admin-client';
-import type {
-  AdminConfigEntryDto,
-  ApiResponse,
-} from '@kclub/contracts';
+import type { AdminConfigEntryDto, ApiResponse } from '@kclub/contracts';
 
 export async function fetchStripePrices(): Promise<AdminConfigEntryDto[] | null> {
   const result = await adminApiFetch<ApiResponse<AdminConfigEntryDto[]>>('/stripe-prices');

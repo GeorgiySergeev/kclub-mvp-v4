@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 
-const E2E_SECRET = process.env.E2E_TEST_SECRET;
+function getE2eSecret(): string | undefined {
+  return process.env.E2E_TEST_SECRET;
+}
 
 type SeedRequestBody = {
   scenario: string;
@@ -20,8 +22,9 @@ type SeedResult = {
 };
 
 export async function POST(request: Request): Promise<Response> {
+  const e2eSecret = getE2eSecret();
   // Guard: only available when E2E_TEST_SECRET is set
-  if (!E2E_SECRET) {
+  if (!e2eSecret) {
     return NextResponse.json(
       { data: null, error: { code: 'NOT_FOUND', message: 'Not found' } },
       { status: 404 },
@@ -30,7 +33,7 @@ export async function POST(request: Request): Promise<Response> {
 
   // Verify secret header
   const secretHeader = request.headers.get('x-e2e-secret');
-  if (secretHeader !== E2E_SECRET) {
+  if (secretHeader !== e2eSecret) {
     return NextResponse.json(
       { data: null, error: { code: 'UNAUTHORIZED', message: 'Invalid secret' } },
       { status: 401 },
@@ -95,6 +98,15 @@ async function seedScenario(
   };
 
   switch (scenario) {
+    case 'stripe-webhook': {
+      if (!_webhookEvent) {
+        throw new Error('stripe-webhook scenario requires webhookEvent');
+      }
+
+      await applyStripeWebhook(_webhookEvent);
+      return {};
+    }
+
     case 'member-with-card': {
       const user = await prisma.user.create({
         data: {
@@ -138,6 +150,9 @@ async function seedScenario(
         },
       });
 
+      await createActiveVipSubscription(user.id, `vip-member-${timestamp}`);
+      await createActiveCard(user.id, 'VIP', `VIP-${timestamp.toString().slice(-6)}`);
+
       return { userId: user.id, phone: testPhone };
     }
 
@@ -153,6 +168,9 @@ async function seedScenario(
           supabase_auth_user_id: crypto.randomUUID(),
         },
       });
+
+      await createActiveVipSubscription(user.id, `vip-business-${timestamp}`);
+      await createActiveCard(user.id, 'VIP', `VIP-${timestamp.toString().slice(-6)}`);
 
       const relations = await getBusinessRelations();
 
@@ -191,6 +209,9 @@ async function seedScenario(
           supabase_auth_user_id: crypto.randomUUID(),
         },
       });
+
+      await createActiveVipSubscription(user.id, `vip-published-${timestamp}`);
+      await createActiveCard(user.id, 'VIP', `VIP-${timestamp.toString().slice(-6)}`);
 
       const relations = await getBusinessRelations();
 
@@ -275,5 +296,120 @@ async function seedScenario(
 
     default:
       throw new Error(`Unknown seed scenario: ${scenario}`);
+  }
+
+  async function createActiveCard(
+    userId: string,
+    membershipTier: 'MEMBER' | 'VIP',
+    cardNumber: string,
+  ): Promise<void> {
+    await prisma.memberCard.create({
+      data: {
+        user_id: userId,
+        card_number: cardNumber,
+        membership_tier: membershipTier,
+        status: 'ACTIVE',
+        issued_at: new Date(),
+        expires_at: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+      },
+    });
+  }
+
+  async function createActiveVipSubscription(userId: string, suffix: string): Promise<void> {
+    await prisma.vipSubscription.create({
+      data: {
+        user_id: userId,
+        status: 'ACTIVE',
+        stripe_customer_id: `cus_e2e_${suffix}`,
+        stripe_subscription_id: `sub_e2e_${suffix}`,
+        stripe_price_id: 'price_e2e_vip',
+        current_period_start: new Date(),
+        current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+      },
+    });
+  }
+
+  async function applyStripeWebhook(webhookEvent: {
+    type: string;
+    data: Record<string, unknown>;
+  }): Promise<void> {
+    if (webhookEvent.type !== 'checkout.session.completed') {
+      throw new Error(`Unsupported test webhook event: ${webhookEvent.type}`);
+    }
+
+    const rawObject = webhookEvent.data.object;
+    if (!rawObject || typeof rawObject !== 'object') {
+      throw new Error('Stripe webhook object is required');
+    }
+
+    const checkoutSession = rawObject as {
+      customer?: string;
+      subscription?: string;
+      metadata?: {
+        userId?: string;
+        businessProfileId?: string;
+        type?: string;
+      };
+    };
+
+    const metadata = checkoutSession.metadata;
+    const subscriptionId = checkoutSession.subscription ?? `sub_e2e_${timestamp}`;
+    const customerId = checkoutSession.customer ?? `cus_e2e_${timestamp}`;
+
+    if (metadata?.type === 'vip' && metadata.userId) {
+      await prisma.$transaction([
+        prisma.user.update({
+          where: { id: metadata.userId },
+          data: { membership_tier: 'VIP' },
+        }),
+        prisma.vipSubscription.upsert({
+          where: { stripe_subscription_id: subscriptionId },
+          create: {
+            user_id: metadata.userId,
+            status: 'ACTIVE',
+            stripe_customer_id: customerId,
+            stripe_subscription_id: subscriptionId,
+            stripe_price_id: 'price_e2e_vip',
+            current_period_start: new Date(),
+            current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+          },
+          update: {
+            status: 'ACTIVE',
+            current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+          },
+        }),
+      ]);
+      return;
+    }
+
+    if (metadata?.type === 'placement' && metadata.userId && metadata.businessProfileId) {
+      await prisma.$transaction([
+        prisma.businessProfile.update({
+          where: { id: metadata.businessProfileId },
+          data: { status: 'PUBLISHED', published_at: new Date() },
+        }),
+        prisma.subscription.upsert({
+          where: { stripe_subscription_id: subscriptionId },
+          create: {
+            user_id: metadata.userId,
+            business_profile_id: metadata.businessProfileId,
+            kind: 'BUSINESS_PLACEMENT',
+            status: 'ACTIVE',
+            stripe_customer_id: customerId,
+            stripe_subscription_id: subscriptionId,
+            stripe_price_id: 'price_e2e_business',
+            current_period_start: new Date(),
+            current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+          },
+          update: {
+            status: 'ACTIVE',
+            current_period_end: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000),
+          },
+        }),
+      ]);
+      return;
+    }
+
+    throw new Error('Unsupported checkout.session.completed metadata for E2E webhook');
   }
 }

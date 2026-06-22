@@ -15,7 +15,7 @@ export function FeaturesSection() {
   return (
     <section className="kclub-border border-b bg-surface-muted py-16 dark:bg-surface-muted sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
-        <div className="grid gap-8 lg:grid-cols-[0.72fr_1fr] lg:items-end">
+        <div className="grid gap-4 lg:items-end">
           <p className="border-l-4 border-accent pl-4 text-xs font-bold uppercase text-zinc-500 dark:text-white/60">
             {t('features.eyebrow')}
           </p>

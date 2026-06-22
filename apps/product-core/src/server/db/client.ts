@@ -1,3 +1,5 @@
+import 'server-only';
+
 import type { PrismaClient } from '@kclub/database/client';
 
 let cachedPrisma: PrismaClient | null = null;

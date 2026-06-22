@@ -7,6 +7,7 @@ import {
 import { hasStaffPermission } from '@kclub/domain';
 import { AppError } from '@/server/errors';
 import { createRequestContext, type RequestContext } from '@/server/context';
+import { createLogger } from '@/server/logger';
 import { getBearerToken, getStaffSession } from '@/server/staff-auth';
 
 export type AuthenticatedStaff = {
@@ -17,6 +18,9 @@ export type AuthenticatedStaff = {
 export async function authenticateStaff(request: Request): Promise<AuthenticatedStaff> {
   const token = getBearerToken(request);
   if (!token) {
+    const log = createLogger();
+    log.auth('Admin auth failed: missing bearer token');
+
     throw new AppError({
       code: ERROR_CODES.AUTH_SESSION_REQUIRED,
       message: 'Authorization bearer token is required',
@@ -26,6 +30,11 @@ export async function authenticateStaff(request: Request): Promise<Authenticated
 
   const profile = await getStaffSession(token);
   if (!profile) {
+    const log = createLogger();
+    log.auth('Admin auth failed: invalid or expired session', {
+      tokenPrefix: token.substring(0, 10),
+    });
+
     throw new AppError({
       code: ERROR_CODES.AUTH_SESSION_INVALID,
       message: 'Staff session is invalid or expired',
@@ -34,6 +43,9 @@ export async function authenticateStaff(request: Request): Promise<Authenticated
   }
 
   if (!profile.totpVerified) {
+    const log = createLogger();
+    log.auth('Admin auth failed: TOTP not verified', { staffId: profile.id });
+
     throw new AppError({
       code: ERROR_CODES.AUTH_STAFF_2FA_REQUIRED,
       message: 'TOTP verification is required for admin access',
@@ -49,6 +61,13 @@ export function requireStaffPermission(
   permission: StaffPermission,
 ): void {
   if (!hasStaffPermission(profile.role as StaffRole, permission)) {
+    const log = createLogger();
+    log.auth('Admin permission denied', {
+      staffId: profile.id,
+      role: profile.role,
+      requiredPermission: permission,
+    });
+
     throw new AppError({
       code: ERROR_CODES.PERMISSION_DENIED,
       message: `Staff role ${profile.role} does not have permission: ${permission}`,
@@ -70,6 +89,12 @@ export function enrichStaffContext(profile: StaffProfileDto, request: Request): 
 
 export function enforceSupportReadOnly(profile: StaffProfileDto, method: string): void {
   if (profile.role === 'SUPPORT' && method !== 'GET' && method !== 'HEAD') {
+    const log = createLogger();
+    log.auth('Support role attempted write', {
+      staffId: profile.id,
+      method,
+    });
+
     throw new AppError({
       code: ERROR_CODES.PERMISSION_DENIED,
       message: 'SUPPORT role is strictly read-only',

@@ -18,8 +18,9 @@ import type { ReactElement, ReactNode } from 'react';
 import { useEffect, useRef, useState } from 'react';
 
 import { IconButton, cn } from '@kclub/ui';
-import { Locale, locales } from '@/i18n/routing';
+import { Locale } from '@/i18n/routing';
 
+import { LocaleSwitcherLinks } from './LocaleSwitcherLinks';
 import { ThemeToggle } from './ThemeToggle';
 
 type NavItem = {
@@ -106,12 +107,11 @@ export function TopBar({
           href={`/${locale}`}
           className="group inline-flex items-center gap-3 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-focus dark:focus-visible:ring-white dark:focus-visible:ring-offset-focus"
         >
-          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-accent text-base font-black uppercase text-white shadow-[0_10px_30px_rgba(255,0,48,0.28)]">
-            K
-          </span>
-          <span className="grid text-sm font-semibold leading-none text-zinc-950 dark:text-white">
-            <span>KYLYVNYK</span>
-            <span className="dark:text-white/72 font-normal text-zinc-500">CLUB</span>
+          <span className="grid text-2xl font-bold leading-none text-zinc-950 dark:text-white">
+            <span>KYLYVNYK CLUB</span>
+            <span className="text-thin text-base font-normal text-zinc-500 dark:text-zinc-500">
+              discover new
+            </span>
           </span>
         </Link>
 
@@ -145,21 +145,11 @@ export function TopBar({
                 id="locale-switcher"
                 className="kclub-topbar-menu absolute right-0 top-full z-50 mt-3 w-40 rounded-md border p-1"
               >
-                {locales.map((item) => (
-                  <Link
-                    key={item}
-                    href={`/${item}`}
-                    onClick={() => setLocaleOpen(false)}
-                    className={cn(
-                      'block px-4 py-3 text-sm normal-case transition focus:outline-none focus-visible:ring-2 focus-visible:ring-inset dark:focus-visible:ring-accent',
-                      item === locale
-                        ? 'font-semibold text-zinc-950 dark:text-white'
-                        : 'dark:text-white/68 text-zinc-500',
-                    )}
-                  >
-                    {t(`locale.${item}`)}
-                  </Link>
-                ))}
+                <LocaleSwitcherLinks
+                  locale={locale}
+                  variant="topbar-menu"
+                  onSelect={() => setLocaleOpen(false)}
+                />
               </div>
             )}
           </div>
@@ -303,21 +293,11 @@ export function TopBar({
               {t('footer.locales')}
             </p>
             <div className="grid gap-1">
-              {locales.map((item) => (
-                <Link
-                  key={item}
-                  href={`/${item}`}
-                  onClick={() => setOpen(false)}
-                  className={cn(
-                    'border px-4 py-3 text-sm transition hover:bg-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent dark:hover:bg-white/[0.06] dark:focus-visible:ring-white',
-                    item === locale
-                      ? 'border-zinc-950 text-zinc-950 dark:border-white dark:text-white'
-                      : 'dark:text-white/68 border-zinc-200 text-zinc-500 dark:border-white/10',
-                  )}
-                >
-                  {t(`locale.${item}`)}
-                </Link>
-              ))}
+              <LocaleSwitcherLinks
+                locale={locale}
+                variant="topbar-mobile"
+                onSelect={() => setOpen(false)}
+              />
             </div>
           </nav>
         </div>

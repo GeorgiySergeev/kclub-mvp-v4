@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 
 import { ADMIN_API_ROUTES } from '@kclub/contracts';
 import { clearStaffSession, readStaffSession, setStaffSession } from '@/server/auth/session';
+import { createLogger } from '@/server/logger';
 import type {
   ApiResponse,
   StaffAuthChallengeDto,
@@ -43,13 +44,16 @@ async function postProductCore<T>(path: string, body: Record<string, string>, to
 }
 
 export async function sendStaffOtpAction(formData: FormData) {
+  const log = createLogger();
   const phone = formValue(formData, 'phone');
+
   const { response, payload } = await postProductCore<StaffAuthChallengeDto>(
     ADMIN_API_ROUTES.STAFF_AUTH_PHONE_OTP_SEND,
     { phone },
   );
 
   if (!response.ok || !payload?.data) {
+    log.auth('Staff OTP send failed', { status: response.status, error: payload?.error });
     redirectWithError('/auth/sign-in', payload?.error?.message ?? 'Unable to send staff OTP');
   }
 
@@ -57,14 +61,17 @@ export async function sendStaffOtpAction(formData: FormData) {
 }
 
 export async function verifyStaffOtpAction(formData: FormData) {
+  const log = createLogger();
   const phone = formValue(formData, 'phone');
   const code = formValue(formData, 'code');
+
   const { response, payload } = await postProductCore<StaffAuthSessionDto>(
     ADMIN_API_ROUTES.STAFF_AUTH_PHONE_OTP_VERIFY,
     { phone, code },
   );
 
   if (!response.ok || !payload?.data) {
+    log.auth('Staff OTP verify failed', { status: response.status, error: payload?.error });
     redirectWithError('/auth/sign-in', payload?.error?.message ?? 'Unable to verify staff OTP');
   }
 
@@ -80,8 +87,10 @@ export async function verifyStaffOtpAction(formData: FormData) {
 }
 
 export async function verifyStaffTotpAction(formData: FormData) {
+  const log = createLogger();
   const session = await readStaffSession();
   if (!session?.token) {
+    log.auth('Staff TOTP verify failed: no session');
     redirect('/auth/sign-in');
   }
 
@@ -93,6 +102,7 @@ export async function verifyStaffTotpAction(formData: FormData) {
   );
 
   if (!response.ok || !payload?.data) {
+    log.auth('Staff TOTP verify failed', { status: response.status, error: payload?.error });
     redirectWithError(
       '/auth/2fa-required',
       payload?.error?.message ?? 'Unable to verify authenticator code',

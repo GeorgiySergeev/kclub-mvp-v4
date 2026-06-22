@@ -1,4 +1,8 @@
+import { mock } from 'bun:test';
 import { JSDOM } from 'jsdom';
+
+// server-only throws when window is defined; mock it so server modules load in tests
+mock.module('server-only', () => ({}));
 
 const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
   url: 'http://localhost:3000/en',

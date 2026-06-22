@@ -54,6 +54,7 @@ export const AUDIT_ACTIONS = [
   'SUBSCRIPTION_CANCELED',
   'STAFF_ROLE_UPDATED',
   'STRIPE_WEBHOOK_REPLAYED',
+  'CRON_DAILY_MAINTENANCE',
 ] as const;
 export type AuditAction = (typeof AUDIT_ACTIONS)[number];
 
@@ -181,6 +182,7 @@ export type PublicBusinessListItemDto = {
   socialUrl: string | null;
   featuredTop: boolean;
   featuredRecommended: boolean;
+  memberDiscountPercent: number | null;
 };
 
 export type PublicBusinessDetailDto = PublicBusinessListItemDto & {
@@ -271,6 +273,7 @@ export type AdminBusinessListItemDto = {
   socialUrl: string | null;
   featuredTop: boolean;
   featuredRecommended: boolean;
+  memberDiscountPercent: number | null;
   description: string | null;
   representativeName: string | null;
   publishedAt: IsoDateTime | null;
@@ -405,6 +408,13 @@ export type MembershipPlanDto = {
   key: string;
   value: unknown;
   description: string | null;
+};
+
+export type CronResultDto = {
+  cardsExpired: number;
+  subscriptionsExpired: number;
+  businessesHidden: number;
+  webhookEventsCleaned: number;
 };
 
 import type { StaffRole } from './permissions';

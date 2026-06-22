@@ -1,8 +1,5 @@
 import { adminApiFetch } from '@/server/proxy/admin-client';
-import type {
-  ApiListResponse,
-  AuditLogDto,
-} from '@kclub/contracts';
+import type { ApiListResponse, AuditLogDto } from '@kclub/contracts';
 
 export type AuditLogSearchParams = {
   page?: number;
@@ -34,9 +31,7 @@ export async function fetchAuditLogs(
   if (params.dateTo) searchParams.set('dateTo', params.dateTo);
 
   const qs = searchParams.toString();
-  const result = await adminApiFetch<ApiListResponse<AuditLogDto>>(
-    `/audit${qs ? `?${qs}` : ''}`,
-  );
+  const result = await adminApiFetch<ApiListResponse<AuditLogDto>>(`/audit${qs ? `?${qs}` : ''}`);
   if (!result.ok || !result.data?.data) return null;
 
   return {

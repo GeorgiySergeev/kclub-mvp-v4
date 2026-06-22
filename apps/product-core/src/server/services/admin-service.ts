@@ -38,6 +38,7 @@ import {
 } from '@kclub/domain';
 import type {
   AdminBusinessListInput,
+  AdminBusinessUpdateInput,
   AdminCardListInput,
   AdminUserListInput,
   AuditLogListInput,
@@ -396,7 +397,9 @@ const BUSINESS_LIST_INCLUDE = {
   category: true,
   country: true,
   city: true,
-  user: { select: { id: true, phone: true, display_name: true, status: true, membership_tier: true } },
+  user: {
+    select: { id: true, phone: true, display_name: true, status: true, membership_tier: true },
+  },
   subscriptions: {
     where: { kind: 'BUSINESS_PLACEMENT' as const },
     orderBy: { created_at: 'desc' as const },
@@ -432,7 +435,9 @@ const BUSINESS_MUTATION_INCLUDE = {
   category: true,
   country: true,
   city: true,
-  user: { select: { id: true, phone: true, display_name: true, status: true, membership_tier: true } },
+  user: {
+    select: { id: true, phone: true, display_name: true, status: true, membership_tier: true },
+  },
   subscriptions: {
     where: { kind: 'BUSINESS_PLACEMENT' as const },
     orderBy: { created_at: 'desc' as const },
@@ -444,7 +449,9 @@ const BUSINESS_DETAIL_INCLUDE = {
   category: true,
   country: true,
   city: true,
-  user: { select: { id: true, phone: true, display_name: true, status: true, membership_tier: true } },
+  user: {
+    select: { id: true, phone: true, display_name: true, status: true, membership_tier: true },
+  },
   subscriptions: {
     where: { kind: 'BUSINESS_PLACEMENT' as const },
     orderBy: { created_at: 'desc' as const },
@@ -473,6 +480,66 @@ export async function getBusinessDetail(businessId: string): Promise<AdminBusine
   });
 
   return toAdminBusinessDetail(business, auditEntries);
+}
+
+export async function adminUpdateBusiness(
+  businessId: string,
+  input: AdminBusinessUpdateInput,
+  context: RequestContext,
+): Promise<AdminBusinessDetailDto> {
+  const prisma = getPrismaClient();
+
+  const business = await prisma.businessProfile.findUnique({
+    where: { id: businessId },
+    include: BUSINESS_MUTATION_INCLUDE,
+  });
+
+  if (!business) {
+    throw new AppError({
+      code: ERROR_CODES.RESOURCE_NOT_FOUND,
+      message: 'Business not found',
+      status: 404,
+    });
+  }
+
+  const updated = await prisma.businessProfile.update({
+    where: { id: businessId },
+    data: {
+      ...(input.name !== undefined && { name: input.name }),
+      ...(input.representativeName !== undefined && {
+        representative_name: input.representativeName,
+      }),
+      ...(input.representativeEmail !== undefined && {
+        representative_email: input.representativeEmail,
+      }),
+      ...(input.representativePhone !== undefined && {
+        representative_phone: input.representativePhone,
+      }),
+      ...(input.websiteUrl !== undefined && { website_url: input.websiteUrl }),
+      ...(input.socialUrl !== undefined && { social_url: input.socialUrl }),
+      ...(input.briefDescription !== undefined && {
+        brief_description: input.briefDescription,
+      }),
+      updated_at: new Date(),
+    },
+    include: BUSINESS_MUTATION_INCLUDE,
+  });
+
+  await auditService.log(
+    {
+      action: 'BUSINESS_UPDATED',
+      entityType: 'BusinessProfile',
+      entityId: businessId,
+      before: {
+        name: business.name,
+        representativeEmail: business.representative_email,
+      },
+      after: { name: updated.name, representativeEmail: updated.representative_email },
+    },
+    context,
+  );
+
+  return toAdminBusinessDetail(updated);
 }
 
 export async function approveBusiness(
@@ -720,7 +787,15 @@ export async function updateBusinessFeatured(
         category: true,
         country: true,
         city: true,
-        user: { select: { id: true, phone: true, display_name: true, status: true, membership_tier: true } },
+        user: {
+          select: {
+            id: true,
+            phone: true,
+            display_name: true,
+            status: true,
+            membership_tier: true,
+          },
+        },
         subscriptions: {
           where: { kind: 'BUSINESS_PLACEMENT' as const },
           orderBy: { created_at: 'desc' as const },
@@ -769,7 +844,9 @@ export async function listIntroductions(): Promise<AdminIntroductionListItemDto[
   return introductions.map(toAdminIntroductionListItem);
 }
 
-export async function getIntroductionDetail(introductionId: string): Promise<AdminIntroductionListItemDto> {
+export async function getIntroductionDetail(
+  introductionId: string,
+): Promise<AdminIntroductionListItemDto> {
   const prisma = getPrismaClient();
   const intro = await prisma.businessIntroduction.findUnique({
     where: { id: introductionId },
@@ -946,7 +1023,10 @@ export async function createCategory(input: CategoryCreateInput): Promise<Catego
   return toCategoryDto(category);
 }
 
-export async function updateCategory(categoryId: string, input: CategoryUpdateInput): Promise<CategoryDto> {
+export async function updateCategory(
+  categoryId: string,
+  input: CategoryUpdateInput,
+): Promise<CategoryDto> {
   const prisma = getPrismaClient();
   const existing = await prisma.category.findUnique({ where: { id: categoryId } });
   if (!existing) {
@@ -1015,7 +1095,10 @@ export async function createCountry(input: CountryCreateInput): Promise<CountryD
   return toCountryDto(country);
 }
 
-export async function updateCountry(countryId: string, input: CountryUpdateInput): Promise<CountryDto> {
+export async function updateCountry(
+  countryId: string,
+  input: CountryUpdateInput,
+): Promise<CountryDto> {
   const prisma = getPrismaClient();
   const existing = await prisma.country.findUnique({ where: { id: countryId } });
   if (!existing) {
@@ -1172,7 +1255,9 @@ export async function listAdminSubscriptions(): Promise<AdminSubscriptionListIte
   return subs.map(toAdminSubscriptionListItem);
 }
 
-export async function getAdminSubscriptionDetail(subscriptionId: string): Promise<AdminSubscriptionListItemDto> {
+export async function getAdminSubscriptionDetail(
+  subscriptionId: string,
+): Promise<AdminSubscriptionListItemDto> {
   const prisma = getPrismaClient();
   const sub = await prisma.subscription.findUnique({
     where: { id: subscriptionId },
@@ -1309,7 +1394,10 @@ export async function getAdminConfig(key: string): Promise<AdminConfigEntryDto> 
   return toAdminConfigEntry(config);
 }
 
-export async function updateAdminConfig(key: string, input: AdminConfigUpdateInput): Promise<AdminConfigEntryDto> {
+export async function updateAdminConfig(
+  key: string,
+  input: AdminConfigUpdateInput,
+): Promise<AdminConfigEntryDto> {
   const prisma = getPrismaClient();
   const existing = await prisma.adminConfig.findUnique({ where: { key } });
 
@@ -1540,6 +1628,7 @@ function toAdminBusinessListItem(business: any): AdminBusinessListItemDto {
     socialUrl: business.social_url,
     featuredTop: business.featured_top,
     featuredRecommended: business.featured_recommended,
+    memberDiscountPercent: business.member_discount_percent ?? null,
     description: business.description,
     representativeName: business.representative_name,
     publishedAt: business.published_at?.toISOString() ?? null,

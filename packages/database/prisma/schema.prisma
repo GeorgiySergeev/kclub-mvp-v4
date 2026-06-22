@@ -1,5 +1,6 @@
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/generated/client"
 }
 
 datasource db {
@@ -228,6 +229,7 @@ model BusinessProfile {
   description            String?                @db.Text
   featured_top           Boolean                @default(false)
   featured_recommended   Boolean                @default(false)
+  member_discount_percent Int?                  @db.SmallInt
   internal_notes         String?                @db.Text
   rejection_reason       String?                @db.Text
   approved_at            DateTime?

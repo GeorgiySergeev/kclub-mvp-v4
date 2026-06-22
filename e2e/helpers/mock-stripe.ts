@@ -64,11 +64,13 @@ export async function simulateVipCheckoutComplete(
   userId: string,
   subscriptionId?: string,
 ): Promise<void> {
+  const safeUserId = userId.replace(/[^a-zA-Z0-9]/g, '');
+
   await simulateStripeWebhook('checkout.session.completed', {
     id: 'cs_e2e_mock',
     object: 'checkout.session',
     customer: 'cus_e2e_mock',
-    subscription: subscriptionId ?? 'sub_e2e_mock',
+    subscription: subscriptionId ?? `sub_e2e_vip_${safeUserId}`,
     metadata: { userId, type: 'vip' },
   });
 }
@@ -80,11 +82,13 @@ export async function simulateBusinessPlacementComplete(
   userId: string,
   businessProfileId: string,
 ): Promise<void> {
+  const safeBusinessId = businessProfileId.replace(/[^a-zA-Z0-9]/g, '');
+
   await simulateStripeWebhook('checkout.session.completed', {
     id: 'cs_e2e_mock_placement',
     object: 'checkout.session',
     customer: 'cus_e2e_mock',
-    subscription: 'sub_e2e_mock_placement',
+    subscription: `sub_e2e_placement_${safeBusinessId}`,
     metadata: { userId, businessProfileId, type: 'placement' },
   });
 }

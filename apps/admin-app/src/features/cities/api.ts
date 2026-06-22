@@ -1,8 +1,5 @@
 import { adminApiFetch } from '@/server/proxy/admin-client';
-import type {
-  ApiResponse,
-  CityDto,
-} from '@kclub/contracts';
+import type { ApiResponse, CityDto } from '@kclub/contracts';
 
 export async function fetchCities(): Promise<CityDto[] | null> {
   const result = await adminApiFetch<ApiResponse<CityDto[]>>('/cities');
@@ -10,9 +7,12 @@ export async function fetchCities(): Promise<CityDto[] | null> {
   return result.data.data;
 }
 
-export async function createCity(
-  input: { countryId: string; name: string; slug: string; isActive?: boolean },
-): Promise<CityDto | null> {
+export async function createCity(input: {
+  countryId: string;
+  name: string;
+  slug: string;
+  isActive?: boolean;
+}): Promise<CityDto | null> {
   const res = await fetch('/api/proxy/cities', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

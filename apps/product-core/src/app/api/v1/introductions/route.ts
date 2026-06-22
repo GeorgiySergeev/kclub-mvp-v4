@@ -5,7 +5,7 @@ import { introductionSubmitSchema } from '@kclub/validation';
 
 import { createSupabaseServerClient } from '@/server/auth';
 import { jsonSuccess, jsonError, jsonErrorFromUnknown } from '@/server/api';
-import { getMemberBySupabaseUserId } from '@/server/services';
+import { getMemberBySupabaseUserId, assertMemberOnboardingComplete } from '@/server/services';
 import { submitIntroduction, getOwnIntroductions } from '@/server/services/introduction-service';
 import { createRequestContext } from '@/server/context';
 
@@ -50,6 +50,7 @@ export async function POST(request: NextRequest) {
     }
 
     const localUser = await getMemberBySupabaseUserId(supabaseUser.id);
+    assertMemberOnboardingComplete(localUser);
     const context = createRequestContext({
       actor: { kind: 'member', userId: localUser.id },
       headers: request.headers,

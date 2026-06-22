@@ -31,14 +31,29 @@ type StaffTableProps = {
   staff: AdminStaffListItemDto[];
 };
 
-function RoleUpdateDialog({ id, currentRole, onAction }: { id: string; currentRole: string; onAction: () => void }) {
+function RoleUpdateDialog({
+  id,
+  currentRole,
+  onAction,
+}: {
+  id: string;
+  currentRole: string;
+  onAction: () => void;
+}) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [role, setRole] = useState(currentRole);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button variant="outline" size="xs"><Shield className="h-3.5 w-3.5" />Change Role</Button>} />
+      <DialogTrigger
+        render={
+          <Button variant="outline" size="xs">
+            <Shield className="h-3.5 w-3.5" />
+            Change Role
+          </Button>
+        }
+      />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Update Staff Role</DialogTitle>
@@ -59,20 +74,30 @@ function RoleUpdateDialog({ id, currentRole, onAction }: { id: string; currentRo
           </select>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button disabled={loading || role === currentRole} onClick={async () => {
-            setLoading(true);
-            const res = await fetch(`/api/proxy/staff/${id}/role`, {
-              method: 'PUT',
-              headers: { 'content-type': 'application/json' },
-              body: JSON.stringify({ role }),
-            });
-            setLoading(false);
-            if (!res.ok) { toast.error('Failed to update role'); return; }
-            setOpen(false);
-            toast.success('Role updated');
-            onAction();
-          }}>{loading ? 'Saving...' : 'Update'}</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button
+            disabled={loading || role === currentRole}
+            onClick={async () => {
+              setLoading(true);
+              const res = await fetch(`/api/proxy/staff/${id}/role`, {
+                method: 'PUT',
+                headers: { 'content-type': 'application/json' },
+                body: JSON.stringify({ role }),
+              });
+              setLoading(false);
+              if (!res.ok) {
+                toast.error('Failed to update role');
+                return;
+              }
+              setOpen(false);
+              toast.success('Role updated');
+              onAction();
+            }}
+          >
+            {loading ? 'Saving...' : 'Update'}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -103,12 +128,26 @@ export function StaffTable({ staff }: StaffTableProps) {
           <TableRow key={s.id}>
             <TableCell>{s.phone}</TableCell>
             <TableCell>{s.displayName ?? '—'}</TableCell>
-            <TableCell><Badge variant="outline">{s.role}</Badge></TableCell>
-            <TableCell><Badge variant={s.isActive ? 'default' : 'secondary'}>{s.isActive ? 'Active' : 'Inactive'}</Badge></TableCell>
-            <TableCell><Badge variant={s.totpVerified ? 'default' : 'secondary'}>{s.totpVerified ? 'Verified' : 'Not set'}</Badge></TableCell>
+            <TableCell>
+              <Badge variant="outline">{s.role}</Badge>
+            </TableCell>
+            <TableCell>
+              <Badge variant={s.isActive ? 'default' : 'secondary'}>
+                {s.isActive ? 'Active' : 'Inactive'}
+              </Badge>
+            </TableCell>
+            <TableCell>
+              <Badge variant={s.totpVerified ? 'default' : 'secondary'}>
+                {s.totpVerified ? 'Verified' : 'Not set'}
+              </Badge>
+            </TableCell>
             <TableCell>
               {s.isActive && (
-                <RoleUpdateDialog id={s.id} currentRole={s.role} onAction={() => router.refresh()} />
+                <RoleUpdateDialog
+                  id={s.id}
+                  currentRole={s.role}
+                  onAction={() => router.refresh()}
+                />
               )}
             </TableCell>
           </TableRow>

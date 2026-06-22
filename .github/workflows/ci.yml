@@ -42,6 +42,20 @@ jobs:
   e2e:
     needs: validate
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres -d test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     env:
       CI: true
       E2E_TEST_SECRET: e2e-test-secret-ci
@@ -49,7 +63,10 @@ jobs:
       NEXT_PUBLIC_SUPABASE_ANON_KEY: dummy-anon-key
       SUPABASE_SERVICE_ROLE_KEY: dummy-service-role-key
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test
-      ADMIN_JWT_SECRET: e2e-admin-jwt-secret
+      ADMIN_JWT_SECRET: e2e-admin-jwt-secret-at-least-32-chars
+      ADMIN_BOOTSTRAP_OWNER_PHONE: '+15551234567'
+      ADMIN_STAFF_DEV_OTP: '000000'
+      ADMIN_STAFF_DEV_TOTP: '123456'
       ADMIN_STAFF_ALLOWLIST_JSON: '[]'
       PRODUCT_CORE_URL: http://localhost:3000
     steps:
@@ -66,6 +83,9 @@ jobs:
 
       - name: Install Playwright Browsers
         run: bunx playwright install --with-deps chromium
+
+      - name: Prepare Test Database
+        run: bun --filter @kclub/database db:migrate:deploy
 
       - name: Build Applications
         run: bun run build

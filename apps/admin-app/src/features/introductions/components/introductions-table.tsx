@@ -65,7 +65,14 @@ function ApproveDialog({ id, onAction }: { id: string; onAction: () => void }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button variant="default" size="xs"><CheckCircle className="h-3.5 w-3.5" />Approve</Button>} />
+      <DialogTrigger
+        render={
+          <Button variant="default" size="xs">
+            <CheckCircle className="h-3.5 w-3.5" />
+            Approve
+          </Button>
+        }
+      />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Approve Introduction</DialogTitle>
@@ -73,19 +80,34 @@ function ApproveDialog({ id, onAction }: { id: string; onAction: () => void }) {
         </DialogHeader>
         <div className="space-y-2">
           <Label htmlFor="notes">Notes</Label>
-          <Input id="notes" placeholder="Optional notes..." value={notes} onChange={(e) => setNotes(e.target.value)} />
+          <Input
+            id="notes"
+            placeholder="Optional notes..."
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+          />
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button disabled={loading} onClick={async () => {
-            setLoading(true);
-            const result = await approveIntroduction(id, notes || undefined);
-            setLoading(false);
-            if (!result.ok) { toast.error(result.error); return; }
-            setOpen(false);
-            toast.success('Introduction approved');
-            onAction();
-          }}>{loading ? 'Processing...' : 'Approve'}</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button
+            disabled={loading}
+            onClick={async () => {
+              setLoading(true);
+              const result = await approveIntroduction(id, notes || undefined);
+              setLoading(false);
+              if (!result.ok) {
+                toast.error(result.error);
+                return;
+              }
+              setOpen(false);
+              toast.success('Introduction approved');
+              onAction();
+            }}
+          >
+            {loading ? 'Processing...' : 'Approve'}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -99,7 +121,14 @@ function RejectDialog({ id, onAction }: { id: string; onAction: () => void }) {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button variant="destructive" size="xs"><XCircle className="h-3.5 w-3.5" />Reject</Button>} />
+      <DialogTrigger
+        render={
+          <Button variant="destructive" size="xs">
+            <XCircle className="h-3.5 w-3.5" />
+            Reject
+          </Button>
+        }
+      />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Reject Introduction</DialogTitle>
@@ -107,19 +136,35 @@ function RejectDialog({ id, onAction }: { id: string; onAction: () => void }) {
         </DialogHeader>
         <div className="space-y-2">
           <Label htmlFor="reason">Reason</Label>
-          <Input id="reason" placeholder="Required rejection reason..." value={reason} onChange={(e) => setReason(e.target.value)} />
+          <Input
+            id="reason"
+            placeholder="Required rejection reason..."
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+          />
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button variant="destructive" disabled={loading || !reason.trim()} onClick={async () => {
-            setLoading(true);
-            const result = await rejectIntroduction(id, reason.trim());
-            setLoading(false);
-            if (!result.ok) { toast.error(result.error); return; }
-            setOpen(false);
-            toast.success('Introduction rejected');
-            onAction();
-          }}>{loading ? 'Processing...' : 'Reject'}</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button
+            variant="destructive"
+            disabled={loading || !reason.trim()}
+            onClick={async () => {
+              setLoading(true);
+              const result = await rejectIntroduction(id, reason.trim());
+              setLoading(false);
+              if (!result.ok) {
+                toast.error(result.error);
+                return;
+              }
+              setOpen(false);
+              toast.success('Introduction rejected');
+              onAction();
+            }}
+          >
+            {loading ? 'Processing...' : 'Reject'}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -132,23 +177,40 @@ function CompleteDialog({ id, onAction }: { id: string; onAction: () => void }) 
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger render={<Button variant="secondary" size="xs"><RotateCcw className="h-3.5 w-3.5" />Complete</Button>} />
+      <DialogTrigger
+        render={
+          <Button variant="secondary" size="xs">
+            <RotateCcw className="h-3.5 w-3.5" />
+            Complete
+          </Button>
+        }
+      />
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Complete Introduction</DialogTitle>
           <DialogDescription>Mark this introduction as completed.</DialogDescription>
         </DialogHeader>
         <DialogFooter>
-          <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-          <Button disabled={loading} onClick={async () => {
-            setLoading(true);
-            const result = await completeIntroduction(id);
-            setLoading(false);
-            if (!result.ok) { toast.error(result.error); return; }
-            setOpen(false);
-            toast.success('Introduction completed');
-            onAction();
-          }}>{loading ? 'Processing...' : 'Complete'}</Button>
+          <Button variant="outline" onClick={() => setOpen(false)}>
+            Cancel
+          </Button>
+          <Button
+            disabled={loading}
+            onClick={async () => {
+              setLoading(true);
+              const result = await completeIntroduction(id);
+              setLoading(false);
+              if (!result.ok) {
+                toast.error(result.error);
+                return;
+              }
+              setOpen(false);
+              toast.success('Introduction completed');
+              onAction();
+            }}
+          >
+            {loading ? 'Processing...' : 'Complete'}
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
@@ -181,12 +243,18 @@ export function IntroductionsTable({ introductions, staffRole }: IntroductionsTa
           <TableRow key={intro.id}>
             <TableCell className="max-w-[200px] truncate">
               <div className="text-sm font-medium">{intro.requesterBusiness.name}</div>
-              <div className="text-xs text-muted-foreground">{intro.requesterUser.displayName ?? intro.requesterUser.phone}</div>
+              <div className="text-xs text-muted-foreground">
+                {intro.requesterUser.displayName ?? intro.requesterUser.phone}
+              </div>
             </TableCell>
             <TableCell className="max-w-[200px] truncate">{intro.targetBusiness.name}</TableCell>
-            <TableCell><StatusBadge status={intro.status} /></TableCell>
+            <TableCell>
+              <StatusBadge status={intro.status} />
+            </TableCell>
             <TableCell className="max-w-[200px] truncate">{intro.message ?? '—'}</TableCell>
-            <TableCell className="text-sm text-muted-foreground">{new Date(intro.createdAt).toLocaleDateString()}</TableCell>
+            <TableCell className="text-sm text-muted-foreground">
+              {new Date(intro.createdAt).toLocaleDateString()}
+            </TableCell>
             {canMutate && (
               <TableCell>
                 <div className="flex items-center gap-1">
