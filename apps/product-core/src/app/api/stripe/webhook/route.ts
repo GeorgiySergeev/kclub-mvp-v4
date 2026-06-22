@@ -1,5 +1,3 @@
-import { type NextRequest } from 'next/server';
-
 import { ERROR_CODES } from '@kclub/contracts';
 
 import { getStripeClient } from '@/server/stripe/client';
@@ -9,7 +7,7 @@ import { createLogger } from '@/server/logger';
 
 const log = createLogger();
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   const rawBody = await request.text();
   const signature = request.headers.get('stripe-signature');
 

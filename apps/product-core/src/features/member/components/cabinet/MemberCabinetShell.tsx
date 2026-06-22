@@ -45,9 +45,9 @@ export function MemberCabinetShell({
           <div className="mt-4 flex items-center gap-3">
             <div
               className={cn(
-                'flex h-11 w-11 shrink-0 items-center justify-center rounded-full font-display text-sm font-medium uppercase',
+                'font-display flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-medium uppercase',
                 isVip
-                  ? 'border border-kclub-gold-500/40 bg-kclub-gold-500/15 text-kclub-gold-300'
+                  ? 'border-kclub-gold-500/40 bg-kclub-gold-500/15 text-kclub-gold-300 border'
                   : 'border border-border bg-secondary text-muted-foreground',
               )}
               aria-hidden="true"
@@ -57,7 +57,7 @@ export function MemberCabinetShell({
             <div className="min-w-0">
               <p className="truncate text-sm font-medium text-foreground">{displayName}</p>
               <Badge
-                variant={isVip ? 'vip' : 'member'}
+                variant={isVip ? 'success' : 'outline'}
                 className="mt-1 text-[0.65rem] uppercase tracking-[0.1em]"
               >
                 {profile.membershipTier}

@@ -11,24 +11,26 @@ This document defines the environment contract for KCLUB MVP v4. Never commit re
 
 ## Product-Core
 
-| Variable                             | Required            | Environment | Purpose                                                       |
-| ------------------------------------ | ------------------- | ----------- | ------------------------------------------------------------- |
-| `NEXT_PUBLIC_APP_URL`                | Yes                 | all         | Public product-core base URL                                  |
-| `NEXT_PUBLIC_SUPABASE_URL`           | Yes                 | all         | Supabase project URL                                          |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY`      | Yes                 | all         | Public Supabase client key                                    |
-| `SUPABASE_SERVICE_ROLE_KEY`          | Yes                 | server only | Service-role access for product-core server logic             |
-| `SUPABASE_JWT_SECRET`                | Optional            | server only | Needed only if server verifies tokens directly                |
-| `STRIPE_SECRET_KEY`                  | Yes                 | server only | Stripe server SDK                                             |
-| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Yes                 | all         | Stripe client usage if checkout helpers require it            |
-| `STRIPE_WEBHOOK_SECRET`              | Yes                 | server only | Stripe webhook signature verification                         |
-| `CRON_SECRET`                        | Yes                 | server only | Protects cron route                                           |
-| `ADMIN_APP_URL`                      | Yes                 | all         | Admin app base URL for links and redirects                    |
-| `EMAIL_PROVIDER_API_KEY`             | Optional/likely yes | server only | Transactional email provider key                              |
-| `EMAIL_FROM_ADDRESS`                 | Optional/likely yes | server only | Sender for product emails                                     |
-| `ADMIN_BOOTSTRAP_OWNER_PHONE`        | Yes at bootstrap    | server only | First OWNER staff phone until OWNER can manage staff accounts |
-| `ADMIN_STAFF_DEV_OTP`                | Dev only            | server only | Local placeholder staff OTP code before SMS integration       |
-| `ADMIN_STAFF_DEV_TOTP`               | Dev only            | server only | Local placeholder staff TOTP code before real TOTP storage    |
-| `LOG_LEVEL`                          | Optional            | all         | Logging verbosity                                             |
+| Variable                             | Required            | Environment | Purpose                                                                                                                        |
+| ------------------------------------ | ------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------ |
+| `NEXT_PUBLIC_APP_URL`                | Yes                 | all         | Public product-core base URL                                                                                                   |
+| `NEXT_PUBLIC_SUPABASE_URL`           | Yes                 | all         | Supabase project URL                                                                                                           |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY`      | Yes                 | all         | Public Supabase client key                                                                                                     |
+| `SUPABASE_SERVICE_ROLE_KEY`          | Yes                 | server only | Service-role access for product-core server logic                                                                              |
+| `SUPABASE_JWT_SECRET`                | Optional            | server only | Needed only if server verifies tokens directly                                                                                 |
+| `STRIPE_SECRET_KEY`                  | Yes                 | server only | Stripe server SDK                                                                                                              |
+| `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` | Yes                 | all         | Stripe client usage if checkout helpers require it                                                                             |
+| `STRIPE_WEBHOOK_SECRET`              | Yes                 | server only | Stripe webhook signature verification                                                                                          |
+| `CRON_SECRET`                        | Yes                 | server only | Protects cron route                                                                                                            |
+| `ADMIN_APP_URL`                      | Yes                 | all         | Admin app base URL for links and redirects                                                                                     |
+| `EMAIL_PROVIDER_API_KEY`             | Optional/likely yes | server only | Transactional email provider key                                                                                               |
+| `EMAIL_FROM_ADDRESS`                 | Optional/likely yes | server only | Sender for product emails                                                                                                      |
+| `ADMIN_BOOTSTRAP_OWNER_PHONE`        | Yes at bootstrap    | server only | First OWNER staff phone until OWNER can manage staff accounts                                                                  |
+| `ADMIN_STAFF_DEV_OTP`                | Dev only            | server only | Local placeholder staff OTP code before SMS integration                                                                        |
+| `ADMIN_STAFF_DEV_TOTP`               | Dev only            | server only | Local placeholder staff TOTP code before real TOTP storage                                                                     |
+| `AUTH_DEV_PHONE_BYPASS_ENABLED`      | Dev only            | server only | Enables member phone OTP bypass without SMS/Twilio                                                                             |
+| `AUTH_DEV_PHONE_BYPASS_SECRET`       | Dev only            | server only | Required acknowledgment when bypass is enabled locally; if set to 4–8 digits, also used as the dev OTP code (default `000000`) |
+| `LOG_LEVEL`                          | Optional            | all         | Logging verbosity                                                                                                              |
 
 ## Admin-App
 

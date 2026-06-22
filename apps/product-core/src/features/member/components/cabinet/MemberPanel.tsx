@@ -27,7 +27,9 @@ export function MemberPanelHeader({ title, description, className }: MemberPanel
     <header className={cn('mb-6', className)}>
       <h2 className="font-display text-xl font-medium tracking-tight text-foreground">{title}</h2>
       {description && (
-        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">{description}</p>
+        <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted-foreground">
+          {description}
+        </p>
       )}
     </header>
   );

@@ -36,16 +36,12 @@ describe('buildPlacementMetadata', () => {
 describe('buildSuccessUrl', () => {
   test('uses appUrl, locale, and CHECKOUT_SESSION_ID placeholder', () => {
     const url = buildSuccessUrl('https://example.com', 'en');
-    expect(url).toBe(
-      'https://example.com/en/m/checkout/success?session_id={CHECKOUT_SESSION_ID}',
-    );
+    expect(url).toBe('https://example.com/en/m/checkout/success?session_id={CHECKOUT_SESSION_ID}');
   });
 
   test('works with different locale', () => {
     const url = buildSuccessUrl('https://example.com', 'uk');
-    expect(url).toBe(
-      'https://example.com/uk/m/checkout/success?session_id={CHECKOUT_SESSION_ID}',
-    );
+    expect(url).toBe('https://example.com/uk/m/checkout/success?session_id={CHECKOUT_SESSION_ID}');
   });
 });
 

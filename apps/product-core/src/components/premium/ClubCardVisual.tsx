@@ -31,21 +31,24 @@ export function ClubCardVisual({
         className,
       )}
     >
-      <div className="kclub-noise pointer-events-none absolute inset-0 opacity-60" aria-hidden="true" />
+      <div
+        className="kclub-noise pointer-events-none absolute inset-0 opacity-60"
+        aria-hidden="true"
+      />
 
       <div className="relative flex h-full flex-col justify-between text-white">
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="kclub-overline text-white/50">{brandLabel}</p>
             {isVip ? (
-              <p className="mt-1 font-display text-lg tracking-wide text-kclub-gold-300">✦ VIP ✦</p>
+              <p className="font-display text-kclub-gold-300 mt-1 text-lg tracking-wide">✦ VIP ✦</p>
             ) : null}
           </div>
           <span
             className={cn(
               'kclub-overline rounded-full px-2.5 py-1',
               isVip
-                ? 'border border-kclub-gold-500/40 bg-kclub-gold-500/15 text-kclub-gold-300'
+                ? 'border-kclub-gold-500/40 bg-kclub-gold-500/15 text-kclub-gold-300 border'
                 : 'border border-white/10 bg-white/5 text-slate-300',
             )}
           >
@@ -54,7 +57,9 @@ export function ClubCardVisual({
         </div>
 
         <div>
-          <p className="font-mono text-xl font-medium tracking-[0.12em] sm:text-2xl">{maskedNumber}</p>
+          <p className="font-mono text-xl font-medium tracking-[0.12em] sm:text-2xl">
+            {maskedNumber}
+          </p>
           <div className="mt-6 flex items-end justify-between gap-4">
             <div
               className={cn(
@@ -85,7 +90,7 @@ export function ClubCardVisual({
           className={cn(
             'mt-4 h-px w-full',
             isVip
-              ? 'bg-gradient-to-r from-transparent via-kclub-gold-500/60 to-transparent'
+              ? 'via-kclub-gold-500/60 bg-gradient-to-r from-transparent to-transparent'
               : 'bg-white/10',
           )}
           aria-hidden="true"

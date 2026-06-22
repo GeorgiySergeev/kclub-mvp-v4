@@ -5,7 +5,7 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts');
 
 const nextConfig: NextConfig = {
   transpilePackages: ['@kclub/ui'],
-  serverExternalPackages: ['@kclub/database'],
+  serverExternalPackages: ['@kclub/database', 'pino', 'pino-pretty'],
   experimental: {
     optimizePackageImports: ['lucide-react'],
   },

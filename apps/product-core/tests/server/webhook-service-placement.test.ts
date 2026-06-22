@@ -76,7 +76,9 @@ const mockStripeClient = {
 };
 
 let mockTx: ReturnType<typeof createMockTx>;
-let mockPrisma: ReturnType<typeof createPlacementMockPrisma> | ReturnType<typeof createVipMockPrisma>;
+let mockPrisma:
+  | ReturnType<typeof createPlacementMockPrisma>
+  | ReturnType<typeof createVipMockPrisma>;
 let mockAuditLog: (...args: any[]) => Promise<any>;
 
 mock.module('@/server/db', () => ({
@@ -377,9 +379,7 @@ describe('processStripeEvent placement routing', () => {
 
     await processStripeEvent(testEvent as any);
 
-    mockPrisma.stripeWebhookEvent.create.mockImplementation(() =>
-      Promise.reject(p2002Error),
-    );
+    mockPrisma.stripeWebhookEvent.create.mockImplementation(() => Promise.reject(p2002Error));
 
     const mockUpdate = mock(() => Promise.resolve({ id: 'evt-record-1' }));
     mockPrisma.stripeWebhookEvent.update = mockUpdate;
@@ -390,9 +390,7 @@ describe('processStripeEvent placement routing', () => {
   });
 
   test('handler failure records FAILED status', async () => {
-    mockPrisma.businessProfile.findUnique.mockImplementation(() =>
-      Promise.resolve(null as any),
-    );
+    mockPrisma.businessProfile.findUnique.mockImplementation(() => Promise.resolve(null as any));
 
     const testEvent = {
       id: 'evt_fail_test',
@@ -416,9 +414,7 @@ describe('processStripeEvent placement routing', () => {
       livemode: false,
     };
 
-    mockPrisma.stripeWebhookEvent.update = mock(() =>
-      Promise.resolve({ id: 'evt-record-1' }),
-    );
+    mockPrisma.stripeWebhookEvent.update = mock(() => Promise.resolve({ id: 'evt-record-1' }));
 
     await expect(processStripeEvent(testEvent as any)).rejects.toThrow();
 
@@ -433,7 +429,9 @@ describe('processStripeEvent placement routing', () => {
   });
 
   test('stripe subscription retrieve failure still publishes business', async () => {
-    mockStripeClient.subscriptions.retrieve = mock(() => Promise.reject(new Error('Network error')));
+    mockStripeClient.subscriptions.retrieve = mock(() =>
+      Promise.reject(new Error('Network error')),
+    );
 
     await handlePlacementCheckoutCompleted(validSession);
 
@@ -517,7 +515,9 @@ describe('handlePaymentFailed', () => {
   });
 
   test('graceful no-op when subscription not found locally', async () => {
-    (mockPrisma as any).vipSubscription.findFirst.mockImplementation(() => Promise.resolve(null as any));
+    (mockPrisma as any).vipSubscription.findFirst.mockImplementation(() =>
+      Promise.resolve(null as any),
+    );
 
     await processStripeEvent(failedInvoiceEvent('sub_unknown') as any);
 
@@ -571,7 +571,9 @@ describe('handleSubscriptionDeleted', () => {
   });
 
   test('graceful no-op when subscription not found locally', async () => {
-    (mockPrisma as any).vipSubscription.findFirst.mockImplementation(() => Promise.resolve(null as any));
+    (mockPrisma as any).vipSubscription.findFirst.mockImplementation(() =>
+      Promise.resolve(null as any),
+    );
 
     await processStripeEvent(deletedSubEvent('sub_unknown') as any);
 
@@ -607,9 +609,7 @@ describe('handleSubscriptionChange with cancel_at_period_end', () => {
       Promise.resolve({ id: 'vip-1', status: 'ACTIVE', cancel_at_period_end: false } as any),
     );
 
-    await processStripeEvent(
-      updateEvent('sub_cancel', { cancel_at_period_end: true }) as any,
-    );
+    await processStripeEvent(updateEvent('sub_cancel', { cancel_at_period_end: true }) as any);
 
     expect(mockPrisma.vipSubscription.update).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -627,9 +627,7 @@ describe('handleSubscriptionChange with cancel_at_period_end', () => {
       Promise.resolve({ id: 'vip-1', status: 'ACTIVE', cancel_at_period_end: true } as any),
     );
 
-    await processStripeEvent(
-      updateEvent('sub_uncancel', { cancel_at_period_end: false }) as any,
-    );
+    await processStripeEvent(updateEvent('sub_uncancel', { cancel_at_period_end: false }) as any);
 
     expect(mockPrisma.vipSubscription.update).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -649,7 +647,9 @@ describe('out-of-order subscription events', () => {
   });
 
   test('subscription.deleted before subscription record exists is graceful no-op', async () => {
-    (mockPrisma as any).vipSubscription.findFirst.mockImplementation(() => Promise.resolve(null as any));
+    (mockPrisma as any).vipSubscription.findFirst.mockImplementation(() =>
+      Promise.resolve(null as any),
+    );
 
     const event = {
       id: 'evt_ooo_del',
@@ -670,7 +670,9 @@ describe('out-of-order subscription events', () => {
   });
 
   test('subscription.updated before subscription record exists is graceful no-op', async () => {
-    (mockPrisma as any).vipSubscription.findFirst.mockImplementation(() => Promise.resolve(null as any));
+    (mockPrisma as any).vipSubscription.findFirst.mockImplementation(() =>
+      Promise.resolve(null as any),
+    );
 
     const event = {
       id: 'evt_ooo_upd',

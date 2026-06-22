@@ -33,6 +33,40 @@ This runbook describes how to deploy KCLUB MVP v4 to staging and production.
    - webhook endpoint reachable
 5. Record staging validation result in the release notes or handoff.
 
+## Migration Application Checklist
+
+Run this checklist before deploying any release that includes schema migrations.
+
+- [ ] Review pending migrations: `bun --filter @kclub/database db:migrate:status` (or inspect `packages/database/prisma/migrations/`)
+- [ ] Confirm migration is backward-compatible (app can run against old schema during the deployment window)
+- [ ] If migration is destructive (drops columns, changes types), take a database snapshot before proceeding
+- [ ] Apply migrations to **staging**: `DATABASE_URL=<staging-url> bun --filter @kclub/database db:migrate:deploy`
+- [ ] Verify staging app starts and key routes respond correctly
+- [ ] Apply migrations to **production**: `DATABASE_URL=<production-url> bun --filter @kclub/database db:migrate:deploy`
+- [ ] Verify production app starts and smoke checks pass
+
+## Stripe Dashboard Setup Checklist
+
+One-time configuration required before first production deploy. Use Stripe test mode for staging and live mode for production.
+
+### Products and Prices
+
+- [ ] Create product **"VIP Membership"** → add annual price → copy price ID to `STRIPE_PRICE_VIP_ANNUAL`
+- [ ] Create product **"Business Directory Placement"** → add annual price → copy price ID to `STRIPE_PRICE_BUSINESS_ANNUAL`
+- [ ] Configure **Customer Portal** (allowed products, cancellation policy) → copy portal configuration ID to `STRIPE_PORTAL_CONFIGURATION_ID`
+
+### Webhook Endpoint
+
+- [ ] Create webhook endpoint in Stripe dashboard pointing to `https://www.kylyvnyk.club/api/stripe/webhook`
+- [ ] Subscribe to these events:
+  - `checkout.session.completed`
+  - `customer.subscription.created`
+  - `customer.subscription.updated`
+  - `customer.subscription.deleted`
+  - `invoice.payment_failed`
+- [ ] Copy signing secret to `STRIPE_WEBHOOK_SECRET`
+- [ ] Repeat for **staging** using the staging preview URL and test-mode Stripe keys; store as a separate secret
+
 ## Production Deployment
 
 1. Freeze non-essential merges.
@@ -50,13 +84,23 @@ This runbook describes how to deploy KCLUB MVP v4 to staging and production.
    - webhook signature verification path
    - cron route auth
 
-## Post-Deploy Checks
+## Post-Deploy Verification
 
-- Public site loads and localized routes work.
-- Admin site is noindexed and login-protected.
-- Stripe webhook delivery succeeds.
-- No launch-blocking errors appear in logs/monitoring.
-- Dashboard metrics and audit log are reachable.
+### product-core (`www.kylyvnyk.club`)
+
+- [ ] Public home loads and localized routes work
+- [ ] Member sign-up flow starts (phone entry page renders)
+- [ ] `GET /api/stripe/webhook` returns **400**, not 404 (endpoint exists, rejects non-POST)
+- [ ] `GET /api/cron/daily-maintenance` without `Authorization` header returns **401**
+- [ ] No launch-blocking errors in logs or Sentry
+
+### admin-app (`admin.kylyvnyk.club`)
+
+- [ ] Admin login page loads
+- [ ] Response headers include `X-Robots-Tag: noindex, nofollow`
+- [ ] Staff sign-in redirects correctly after authentication
+- [ ] Audit log and moderation routes are accessible to authorized staff
+- [ ] No launch-blocking errors in logs or Sentry
 
 ## Rollback
 

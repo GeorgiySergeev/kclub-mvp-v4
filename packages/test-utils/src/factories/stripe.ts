@@ -1,4 +1,10 @@
-import { makeEntityId, makeIsoDate, nextSequence, type FactoryOverrides, withOverrides } from './shared';
+import {
+  makeEntityId,
+  makeIsoDate,
+  nextSequence,
+  type FactoryOverrides,
+  withOverrides,
+} from './shared';
 
 export const STRIPE_EVENT_TYPES = [
   'checkout.session.completed',
@@ -126,9 +132,10 @@ export function createStripeWebhookEvent(
   let dataObject: Record<string, unknown>;
   switch (eventType) {
     case 'checkout.session.completed':
-      dataObject = checkoutType === 'business_placement'
-        ? makePlacementCheckoutSessionData(sequence)
-        : makeCheckoutSessionData(sequence);
+      dataObject =
+        checkoutType === 'business_placement'
+          ? makePlacementCheckoutSessionData(sequence)
+          : makeCheckoutSessionData(sequence);
       break;
     case 'invoice.payment_failed':
       dataObject = makeInvoiceData(sequence);

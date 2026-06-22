@@ -14,9 +14,7 @@ mock.module('@/server/stripe/env', () => ({
   readStripeEnv: () => ({ STRIPE_WEBHOOK_SECRET: 'whsec_test' }),
 }));
 
-const { POST } = await import(
-  '../../src/app/api/stripe/webhook/route'
-);
+const { POST } = await import('../../src/app/api/stripe/webhook/route');
 
 function createRequest(body: string, signature: string | null): Request {
   const headers: Record<string, string> = {

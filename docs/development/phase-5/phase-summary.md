@@ -3,7 +3,7 @@
 ## Completed Steps
 
 - P5.1: Stripe price config and checkout — VIP and placement checkout sessions via subscription-service.ts
-- P5.2: VIP subscription webhooks — idempotent processing of checkout.session.completed, customer.subscription.*, invoice.payment_failed
+- P5.2: VIP subscription webhooks — idempotent processing of checkout.session.completed, customer.subscription.\*, invoice.payment_failed
 - P5.3: Business placement webhooks — placement checkout handling, business publication via webhook confirmation
 - P5.4: Daily maintenance cron — card expiration, subscription expiration, business hiding on VIP lapse, featured flag reset, old webhook cleanup (implemented alongside P5.5)
 - P5.5: Billing regression and failure modes — duplicate/out-of-order webhook tests, route-level signature tests, member subscription API + UI, webhook replay docs

@@ -10,7 +10,7 @@ function createBaseLogger(): pino.Logger {
 
   if (isProduction) {
     return pino({
-      level: process.env.LOG_LEVEL ?? 'info',
+      level: process.env.LOG_LEVEL || 'info',
       timestamp: pino.stdTimeFunctions.isoTime,
       formatters: {
         level(label) {
@@ -21,7 +21,7 @@ function createBaseLogger(): pino.Logger {
   }
 
   return pino({
-    level: process.env.LOG_LEVEL ?? 'debug',
+    level: process.env.LOG_LEVEL || 'debug',
     transport: {
       target: 'pino-pretty',
       options: {

@@ -120,7 +120,7 @@ describe('totp setup flow', () => {
     expect(totpPayload.data.state).toBe('AUTHENTICATED');
     expect(totpPayload.data.profile.totpVerified).toBe(true);
 
-    const sessionResponse = handleStaffSession(
+    const sessionResponse = await handleStaffSession(
       new Request('http://localhost/api/admin/v1/staff-auth/session', {
         headers: { authorization: `Bearer ${totpPayload.data.token}` },
       }),

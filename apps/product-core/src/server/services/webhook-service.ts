@@ -303,12 +303,13 @@ export async function handlePlacementCheckoutCompleted(
 
   try {
     const stripeSub: Stripe.Subscription = await stripe.subscriptions.retrieve(subscriptionId);
-    stripePriceId = stripeSub.items?.data?.[0]?.price?.id ?? null;
-    currentPeriodStart = stripeSub.current_period_start
-      ? new Date(stripeSub.current_period_start * 1000)
+    const firstItem = stripeSub.items?.data?.[0];
+    stripePriceId = firstItem?.price?.id ?? null;
+    currentPeriodStart = firstItem?.current_period_start
+      ? new Date(firstItem.current_period_start * 1000)
       : null;
-    currentPeriodEnd = stripeSub.current_period_end
-      ? new Date(stripeSub.current_period_end * 1000)
+    currentPeriodEnd = firstItem?.current_period_end
+      ? new Date(firstItem.current_period_end * 1000)
       : null;
     cancelAtPeriodEnd = stripeSub.cancel_at_period_end ?? false;
   } catch {

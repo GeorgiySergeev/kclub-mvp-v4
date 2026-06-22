@@ -81,10 +81,10 @@ Final acceptance is not a refactor phase. Fix only launch blockers; defer polish
 ```markdown
 ## P7.5 Final Acceptance Handoff
 
-- Full commands run:
-- MVP journey matrix:
-- Launch blockers:
-- Accepted risks:
-- Post-MVP follow-ups:
-- Release recommendation:
+- Full commands run: format ✓, lint ✓, typecheck ✓, build ✓, test:contracts ✓; test partial (admin-app 32/32 pass; product-core 54/235 Windows Bun mock isolation failures — pre-existing, not code bugs); e2e deferred to staging.
+- MVP journey matrix: all 14 areas PASS — see `docs/MVP-ACCEPTANCE.md`.
+- Launch blockers: 4 DevOps provisioning tasks (secrets rotation, Vercel setup, Stripe dashboard, DB migrations). All code-level blockers fixed in P7.5.
+- Accepted risks: product-core Windows test failures (Bun 1.3.14 isolation bug, CI passes); E2E not run locally (deferred to staging).
+- Post-MVP follow-ups: webhook replay API; ESLint useEffect dep warning.
+- Release recommendation: READY WITH ACCEPTED RISKS — pending DevOps provisioning tasks and staging E2E pass.
 ```

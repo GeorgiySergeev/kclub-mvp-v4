@@ -8,10 +8,7 @@ function createMockPrisma() {
     vipSubscription: {
       updateMany: mock(() => Promise.resolve({ count: 1 })),
       findMany: mock(() =>
-        Promise.resolve([
-          { user_id: 'user-expired-1' },
-          { user_id: 'user-expired-2' },
-        ]),
+        Promise.resolve([{ user_id: 'user-expired-1' }, { user_id: 'user-expired-2' }]),
       ),
     },
     businessProfile: {
@@ -58,9 +55,7 @@ mock.module('@/server/context', () => ({
   }),
 }));
 
-const { runDailyMaintenance } = await import(
-  '../../src/server/services/maintenance-service'
-);
+const { runDailyMaintenance } = await import('../../src/server/services/maintenance-service');
 
 describe('runDailyMaintenance', () => {
   test('returns result counts for all actions', async () => {

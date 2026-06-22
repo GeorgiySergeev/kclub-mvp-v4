@@ -2,6 +2,10 @@ import { ERROR_CODES } from '@kclub/contracts';
 import type { PhoneOtpSendInput, PhoneOtpVerifyInput } from '@kclub/validation';
 import type { SupabaseClient } from '@supabase/supabase-js';
 
+import {
+  isDevPhoneBypassEnabled,
+  verifyPhoneOtpWithDevBypass,
+} from '@/server/auth/dev-phone-bypass';
 import { AppError } from '@/server/errors';
 import { getPrismaClient } from '@/server/db';
 
@@ -81,6 +85,14 @@ export async function sendPhoneOtp(
   const intent = determineAuthIntent(existingUser, input.purpose);
   assertIntentAllowed(intent, input.purpose);
 
+  if (isDevPhoneBypassEnabled()) {
+    return {
+      phone: input.phone,
+      purpose: input.purpose,
+      delivery: 'dev-bypass',
+    };
+  }
+
   const { error } = await supabase.auth.signInWithOtp({
     phone: input.phone,
   });
@@ -123,6 +135,30 @@ export async function verifyPhoneOtp(
   const intent = determineAuthIntent(existingUser, input.purpose);
   assertIntentAllowed(intent, input.purpose);
 
+  const { supabaseUserId } = isDevPhoneBypassEnabled()
+    ? await verifyPhoneOtpWithDevBypass(supabase, {
+        phone: input.phone,
+        code: input.code,
+        purpose: input.purpose,
+      })
+    : await verifyPhoneOtpWithSupabase(supabase, input);
+
+  if (input.purpose === 'sign-up') {
+    await prisma.user.create({
+      data: {
+        supabase_auth_user_id: supabaseUserId,
+        phone: input.phone,
+      },
+    });
+  }
+
+  return { supabaseUserId };
+}
+
+async function verifyPhoneOtpWithSupabase(
+  supabase: SupabaseClient,
+  input: PhoneOtpVerifyInput,
+): Promise<{ supabaseUserId: string }> {
   const { data, error } = await supabase.auth.verifyOtp({
     phone: input.phone,
     token: input.code,
@@ -138,18 +174,7 @@ export async function verifyPhoneOtp(
     });
   }
 
-  const supabaseUserId = data.user.id;
-
-  if (input.purpose === 'sign-up') {
-    await prisma.user.create({
-      data: {
-        supabase_auth_user_id: supabaseUserId,
-        phone: input.phone,
-      },
-    });
-  }
-
-  return { supabaseUserId };
+  return { supabaseUserId: data.user.id };
 }
 
 export async function signOutLocal(supabase: SupabaseClient): Promise<void> {

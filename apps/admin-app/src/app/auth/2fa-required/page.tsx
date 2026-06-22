@@ -63,7 +63,7 @@ export default async function TwoFactorRequiredPage({ searchParams }: TwoFactorR
         </form>
         <div className="border-t px-6 py-4 text-center text-sm">
           <span className="text-muted-foreground">Need to set up 2FA? </span>
-          <Link href="/auth/totp-setup" className="text-primary hover:underline font-medium">
+          <Link href="/auth/totp-setup" className="font-medium text-primary hover:underline">
             Go to setup
           </Link>
         </div>

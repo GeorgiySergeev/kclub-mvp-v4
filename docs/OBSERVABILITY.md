@@ -79,11 +79,11 @@ operator.
 
 ### Environment Variables Required
 
-| Variable | Purpose | App |
-|---|---|---|
-| `LOG_LEVEL` | Pino log level (`info` in production, `debug` locally) | product-core, admin-app |
-| `CRON_SECRET` | Authorization token for the daily-maintenance cron trigger | product-core |
-| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signature verification | product-core |
+| Variable                | Purpose                                                    | App                     |
+| ----------------------- | ---------------------------------------------------------- | ----------------------- |
+| `LOG_LEVEL`             | Pino log level (`info` in production, `debug` locally)     | product-core, admin-app |
+| `CRON_SECRET`           | Authorization token for the daily-maintenance cron trigger | product-core            |
+| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signature verification                      | product-core            |
 
 ### Vercel Log Drain Filter Fields
 
@@ -117,7 +117,7 @@ validation_error_rate > 5% over 1hr
 
 ### Health Check URLs
 
-| Endpoint | App | Checks |
-|---|---|---|
-| `GET /api/health` | product-core (port 3000) | app boot, database connectivity |
-| `GET /api/health` | admin-app (port 3001) | app boot, product-core reachability |
+| Endpoint          | App                      | Checks                              |
+| ----------------- | ------------------------ | ----------------------------------- |
+| `GET /api/health` | product-core (port 3000) | app boot, database connectivity     |
+| `GET /api/health` | admin-app (port 3001)    | app boot, product-core reachability |

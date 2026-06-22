@@ -26,10 +26,7 @@ export async function runDailyMaintenance(): Promise<DailyMaintenanceResult> {
   return { expiredCards, expiredSubscriptions, hiddenBusinesses, cleanedEvents };
 }
 
-async function expireCards(
-  prisma: ReturnType<typeof getPrismaClient>,
-  now: Date,
-): Promise<number> {
+async function expireCards(prisma: ReturnType<typeof getPrismaClient>, now: Date): Promise<number> {
   const result = await prisma.memberCard.updateMany({
     where: { status: 'ACTIVE', expires_at: { not: null, lte: now } },
     data: { status: 'EXPIRED' },

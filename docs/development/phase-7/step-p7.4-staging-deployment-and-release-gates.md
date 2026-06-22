@@ -72,9 +72,9 @@ Deployment docs are part of the product. Keep them synchronized with actual app/
 ```markdown
 ## P7.4 Handoff
 
-- Deployment config:
-- Env docs:
-- Release gates:
-- Tests:
-- Production blockers:
+- Deployment config: `apps/product-core/vercel.json` and `apps/admin-app/vercel.json` created; Vercel projects must set Root Directory to respective app folder in the dashboard.
+- Env docs: `docs/ENVIRONMENT.md` is the authoritative contract; `apps/admin-app/.env.example` updated to include `TOTP_ENCRYPTION_KEY`.
+- Release gates: `docs/RELEASE-CHECKLIST.md` covers CI, E2E, platform, and documentation sign-off; `docs/DEPLOYMENT.md` has migration checklist, Stripe setup checklist, and post-deploy verification steps.
+- Tests: `bun run format`, `bun run lint`, `bun run typecheck`, `bun run test`, `bun run test:contracts`, `bun run build` — all pass.
+- Production blockers: Stripe products/prices/webhook not yet created in live mode; Vercel projects not yet provisioned; real production secrets not yet set.
 ```

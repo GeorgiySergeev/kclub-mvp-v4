@@ -1,13 +1,14 @@
 import { afterEach, beforeEach, describe, expect, mock, test } from 'bun:test';
 
-const mockGetCookie = mock();
-const mockSetCookie = mock();
+const mockReadStaffSession = mock();
+const mockSetStaffSession = mock();
 
-mock.module('next/headers', () => ({
-  cookies: async () => ({
-    get: mockGetCookie,
-    set: mockSetCookie,
-  }),
+mock.module('@/server/auth/session', () => ({
+  readStaffSession: mockReadStaffSession,
+  setStaffSession: mockSetStaffSession,
+  clearStaffSession: mock(),
+  STAFF_SESSION_COOKIE: 'kclub_staff_session',
+  STAFF_SESSION_TTL_SECONDS: 28800,
 }));
 
 const mockRedirect = mock(() => {
@@ -23,8 +24,8 @@ const originalFetch = globalThis.fetch;
 describe('setupStaffTotpAction', () => {
   beforeEach(() => {
     mockRedirect.mockClear();
-    mockGetCookie.mockReset();
-    mockSetCookie.mockReset();
+    mockReadStaffSession.mockReset();
+    mockSetStaffSession.mockReset();
     process.env.PRODUCT_CORE_API_BASE_URL = 'http://localhost:3000';
   });
 
@@ -34,7 +35,7 @@ describe('setupStaffTotpAction', () => {
   });
 
   test('redirects to sign-in when no session exists', async () => {
-    mockGetCookie.mockReturnValue(undefined);
+    mockReadStaffSession.mockResolvedValue(null);
 
     const { setupStaffTotpAction } = await import('../../src/server/auth/actions');
 
@@ -48,9 +49,10 @@ describe('setupStaffTotpAction', () => {
   });
 
   test('returns setup data on success', async () => {
-    mockGetCookie.mockImplementation((name: string) =>
-      name === 'kclub_staff_session' ? { value: 'pre-totp-token' } : undefined,
-    );
+    mockReadStaffSession.mockResolvedValue({
+      token: 'pre-totp-token',
+      expiresAtIso: '2026-12-31T23:59:59.000Z',
+    });
 
     globalThis.fetch = mock(async () => ({
       ok: true,
@@ -73,9 +75,10 @@ describe('setupStaffTotpAction', () => {
   });
 
   test('returns null when product-core returns error', async () => {
-    mockGetCookie.mockImplementation((name: string) =>
-      name === 'kclub_staff_session' ? { value: 'pre-totp-token' } : undefined,
-    );
+    mockReadStaffSession.mockResolvedValue({
+      token: 'pre-totp-token',
+      expiresAtIso: '2026-12-31T23:59:59.000Z',
+    });
 
     globalThis.fetch = mock(async () => ({
       ok: false,
@@ -96,8 +99,7 @@ describe('setupStaffTotpAction', () => {
 describe('verifyStaffOtpAction state differentiation', () => {
   beforeEach(() => {
     mockRedirect.mockClear();
-    mockGetCookie.mockReset();
-    mockSetCookie.mockReset();
+    mockSetStaffSession.mockReset();
     process.env.PRODUCT_CORE_API_BASE_URL = 'http://localhost:3000';
   });
 
@@ -132,7 +134,7 @@ describe('verifyStaffOtpAction state differentiation', () => {
       // redirect throws
     }
 
-    expect(mockSetCookie).toHaveBeenCalled();
+    expect(mockSetStaffSession).toHaveBeenCalled();
     expect(mockRedirect).toHaveBeenCalledWith('/auth/totp-setup');
   });
 
@@ -162,7 +164,7 @@ describe('verifyStaffOtpAction state differentiation', () => {
       // redirect throws
     }
 
-    expect(mockSetCookie).toHaveBeenCalled();
+    expect(mockSetStaffSession).toHaveBeenCalled();
     expect(mockRedirect).toHaveBeenCalledWith('/auth/2fa-required');
   });
 
@@ -192,7 +194,7 @@ describe('verifyStaffOtpAction state differentiation', () => {
       // redirect throws
     }
 
-    expect(mockSetCookie).toHaveBeenCalled();
+    expect(mockSetStaffSession).toHaveBeenCalled();
     expect(mockRedirect).toHaveBeenCalledWith('/dashboard');
   });
 });

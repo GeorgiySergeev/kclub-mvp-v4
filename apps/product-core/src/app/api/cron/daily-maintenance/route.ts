@@ -1,5 +1,3 @@
-import { type NextRequest } from 'next/server';
-
 import { ERROR_CODES } from '@kclub/contracts';
 
 import { jsonSuccess, jsonError } from '@/server/api';
@@ -9,7 +7,7 @@ import { createLogger } from '@/server/logger';
 const CRON_SECRET = process.env.CRON_SECRET;
 const log = createLogger();
 
-export async function POST(request: NextRequest) {
+export async function POST(request: Request) {
   const authHeader = request.headers.get('authorization');
 
   if (!CRON_SECRET) {
