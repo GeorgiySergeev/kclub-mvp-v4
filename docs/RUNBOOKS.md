@@ -19,7 +19,9 @@ Check:
 Action:
 
 1. fix secret/config issue
-2. replay event through supported mechanism if available
+2. replay event through supported mechanism:
+   - **Stripe Dashboard**: Developers → Webhooks → find event → "Resend". Safe because product-core deduplicates by event ID.
+   - **product-core admin replay API**: `POST /api/admin/v1/webhooks/{eventId}/replay` is specified but **not yet implemented**. Prefer Stripe Dashboard resend.
 3. verify subscription/business state after replay
 
 ## Approved Business Not Published
@@ -87,5 +89,5 @@ Check:
 Action:
 
 1. fix schedule or secret
-2. run safe manual backfill if supported
+2. run safe manual backfill by calling `POST /api/cron/daily-maintenance` with `Authorization: Bearer <CRON_SECRET>`
 3. verify expired subscriptions/cards/business visibility after recovery

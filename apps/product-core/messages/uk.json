@@ -244,6 +244,8 @@
       "otpPlaceholder": "123456",
       "submitOtp": "Підтвердити і продовжити",
       "backToPhone": "Змінити номер телефону",
+      "continueWithPhone": "Продовжити за телефоном",
+      "privacyNote": "Захищений доступ для учасників. Підтвердження за телефоном зберігає вашу цифрову клубну картку приватною.",
       "loading": "Завантаження...",
       "signingOut": "Вихід...",
       "errors": {
@@ -338,8 +340,15 @@
       },
       "subscription": {
         "title": "Subscription",
-        "memberDescription": "Your MEMBER access is active. VIP checkout will be added in the billing phase.",
-        "vipDescription": "Your VIP access is active. Billing management will be added in the billing phase."
+        "memberDescription": "Your MEMBER access is active. Upgrade to VIP for additional features.",
+        "vipDescription": "Your VIP access is active. Manage your subscription below.",
+        "statusNone": "No active subscription",
+        "statusActive": "Active",
+        "statusPastDue": "Past due — payment required",
+        "statusCanceled": "Canceled — access until period end",
+        "statusExpired": "Expired",
+        "cancelAtPeriodEnd": "Canceled — renews at period end unless reactivated",
+        "renewalDate": "Next billing: {date}"
       },
       "profile": {
         "title": "Profile",
@@ -386,6 +395,7 @@
     "website": "Website",
     "featuredTopLabel": "Top",
     "recommendedLabel": "Recommended",
+    "verifiedPartner": "Перевірений партнер",
     "detail": {
       "profileTitle": "Partner profile",
       "location": "Location",

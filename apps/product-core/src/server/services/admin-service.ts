@@ -1371,14 +1371,58 @@ export async function listAuditLogs(
   };
 }
 
-// ── Placeholders ──
+// ── Stripe Price Config (OWNER) ──
 
-export async function getStripePrices(): Promise<AdminConfigEntryDto[]> {
+export const STRIPE_PRICE_KEYS = [
+  'stripe_price_vip_membership_monthly',
+  'stripe_price_business_placement_monthly',
+] as const;
+
+export type StripePriceKey = (typeof STRIPE_PRICE_KEYS)[number];
+
+export type StripePricesMap = Record<StripePriceKey, string | null>;
+
+export async function getStripePrices(): Promise<StripePricesMap> {
   const prisma = getPrismaClient();
-  const config = await prisma.adminConfig.findMany({
-    where: { key: { startsWith: 'stripe_price_' } },
+  const configs = await prisma.adminConfig.findMany({
+    where: { key: { in: STRIPE_PRICE_KEYS as unknown as string[] } },
   });
-  return config.map(toAdminConfigEntry);
+
+  const result: StripePricesMap = {
+    stripe_price_vip_membership_monthly: null,
+    stripe_price_business_placement_monthly: null,
+  };
+
+  for (const config of configs) {
+    result[config.key as StripePriceKey] = (config.value as { priceId?: string })?.priceId ?? null;
+  }
+
+  return result;
+}
+
+export async function updateStripePrices(
+  input: Partial<StripePricesMap>,
+  context: RequestContext,
+): Promise<StripePricesMap> {
+  const prisma = getPrismaClient();
+
+  for (const [key, priceId] of Object.entries(input)) {
+    if (!STRIPE_PRICE_KEYS.includes(key as StripePriceKey)) continue;
+
+    await prisma.adminConfig.upsert({
+      where: { key },
+      create: {
+        key,
+        value: { priceId },
+        description: `Stripe Price ID for ${key.replace('stripe_price_', '')}`,
+      },
+      update: {
+        value: { priceId },
+      },
+    });
+  }
+
+  return getStripePrices();
 }
 
 export async function getAdminConfig(key: string): Promise<AdminConfigEntryDto> {
