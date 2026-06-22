@@ -4,8 +4,10 @@ import { ERROR_CODES } from '@kclub/contracts';
 
 import { jsonSuccess, jsonError } from '@/server/api';
 import { runDailyMaintenance } from '@/server/services/maintenance-service';
+import { createLogger } from '@/server/logger';
 
 const CRON_SECRET = process.env.CRON_SECRET;
+const log = createLogger();
 
 export async function POST(request: NextRequest) {
   const authHeader = request.headers.get('authorization');
@@ -27,9 +29,17 @@ export async function POST(request: NextRequest) {
   }
 
   try {
+    log.cron('Daily maintenance started');
     const result = await runDailyMaintenance();
+    log.cron('Daily maintenance completed', {
+      expiredCards: result.expiredCards,
+      expiredSubscriptions: result.expiredSubscriptions,
+      hiddenBusinesses: result.hiddenBusinesses,
+      cleanedEvents: result.cleanedEvents,
+    });
     return jsonSuccess(result);
-  } catch {
+  } catch (error) {
+    log.error('Daily maintenance failed', { domain: 'cron', error });
     return jsonError(
       { code: ERROR_CODES.SERVER_ERROR, message: 'Daily maintenance failed' },
       undefined,
