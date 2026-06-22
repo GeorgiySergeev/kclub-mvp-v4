@@ -5,6 +5,9 @@ import { ERROR_CODES } from '@kclub/contracts';
 import { getStripeClient } from '@/server/stripe/client';
 import { readStripeEnv } from '@/server/stripe/env';
 import { jsonError } from '@/server/api';
+import { createLogger } from '@/server/logger';
+
+const log = createLogger();
 
 export async function POST(request: NextRequest) {
   const rawBody = await request.text();
@@ -12,7 +15,10 @@ export async function POST(request: NextRequest) {
 
   if (!signature) {
     return jsonError(
-      { code: ERROR_CODES.SERVER_STRIPE_WEBHOOK_INVALID, message: 'Missing stripe-signature header' },
+      {
+        code: ERROR_CODES.SERVER_STRIPE_WEBHOOK_INVALID,
+        message: 'Missing stripe-signature header',
+      },
       undefined,
       { status: 400 },
     );
@@ -21,8 +27,15 @@ export async function POST(request: NextRequest) {
   let event;
   try {
     const env = readStripeEnv();
-    event = getStripeClient().webhooks.constructEvent(rawBody, signature, env.STRIPE_WEBHOOK_SECRET);
+    event = getStripeClient().webhooks.constructEvent(
+      rawBody,
+      signature,
+      env.STRIPE_WEBHOOK_SECRET,
+    );
   } catch {
+    log.webhook('Stripe signature validation failed', {
+      signatureTruncated: signature.slice(0, 16),
+    });
     return jsonError(
       { code: ERROR_CODES.SERVER_STRIPE_WEBHOOK_INVALID, message: 'Invalid stripe signature' },
       undefined,
@@ -33,8 +46,15 @@ export async function POST(request: NextRequest) {
   try {
     const { processStripeEvent } = await import('@/server/services/webhook-service');
     await processStripeEvent(event);
+    log.webhook('Stripe event processed', { eventId: event.id, eventType: event.type });
     return new Response(null, { status: 200 });
-  } catch {
+  } catch (error) {
+    log.error('Stripe event processing failed', {
+      domain: 'webhook',
+      eventId: event.id,
+      eventType: event.type,
+      error,
+    });
     return new Response(null, { status: 500 });
   }
 }

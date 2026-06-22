@@ -70,3 +70,54 @@ Medium:
 Low:
 
 - isolated UX/client errors with workaround
+
+## Production Monitoring Configuration (Placeholders)
+
+The following are placeholder structures for wiring up alerts in Vercel or an
+external monitoring provider. None are active until configured by the deployment
+operator.
+
+### Environment Variables Required
+
+| Variable | Purpose | App |
+|---|---|---|
+| `LOG_LEVEL` | Pino log level (`info` in production, `debug` locally) | product-core, admin-app |
+| `CRON_SECRET` | Authorization token for the daily-maintenance cron trigger | product-core |
+| `STRIPE_WEBHOOK_SECRET` | Stripe webhook signature verification | product-core |
+
+### Vercel Log Drain Filter Fields
+
+When a log drain is configured, the following structured fields are available
+for filter rules:
+
+- `domain: "webhook"` — all Stripe webhook events
+- `domain: "cron"` — all cron execution events
+- `domain: "auth"` — all authentication failures
+- `domain: "admin"` — all admin state-changing actions
+- `level: "error"` — all error-level entries
+- `data.eventId` — Stripe event ID (webhook logs)
+- `data.requestId` — correlation ID (all request-scoped logs)
+
+### Alert Thresholds (placeholder — not yet active)
+
+```
+# High priority — page immediately
+webhook_processing_errors > 0 in 5min window
+auth_failures_distinct_users > 5 in 10min window
+product_core_5xx_rate > 1% over 5min
+
+# Medium priority — notify on-call
+cron_failure_count > 0 (any daily-maintenance failure)
+admin_app_5xx_rate > 1% over 5min
+backend_health_status = "unreachable" for > 2min
+
+# Low priority — review async
+validation_error_rate > 5% over 1hr
+```
+
+### Health Check URLs
+
+| Endpoint | App | Checks |
+|---|---|---|
+| `GET /api/health` | product-core (port 3000) | app boot, database connectivity |
+| `GET /api/health` | admin-app (port 3001) | app boot, product-core reachability |
