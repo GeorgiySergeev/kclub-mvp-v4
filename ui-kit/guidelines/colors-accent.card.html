@@ -1,0 +1,30 @@
+<!-- @dsCard group="Colors" viewport="700x160" subtitle="Brand red — primary accent" name="Accent — Red" -->
+<link rel="stylesheet" href="../styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  body { background: #1A1A1A; margin: 0; padding: 20px 24px; font-family: 'Barlow', sans-serif; }
+  .row { display: flex; gap: 6px; align-items: flex-end; }
+  .swatch { display: flex; flex-direction: column; gap: 8px; }
+  .wide { width: 200px; }
+  .mid { width: 140px; }
+  .label { font-size: 10px; font-weight: 600; color: #888; letter-spacing: 0.08em; text-transform: uppercase; }
+  .hex { font-size: 11px; color: #555; margin-top: 2px; }
+  .usage { font-size: 11px; color: #666; margin-top: 2px; }
+  .sep { flex: 1; }
+  .pill { display: inline-flex; align-items: center; gap: 6px; background: #E8192C; color: #fff; font-size: 13px; font-weight: 600; padding: 10px 18px; }
+  .tag { display: inline-flex; background: transparent; color: #E8192C; font-size: 10px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; }
+</style>
+<div class="row">
+  <div class="swatch wide"><div style="height:80px;background:#E8192C"></div><div class="label">500 — default</div><div class="hex">#E8192C</div></div>
+  <div class="swatch mid"><div style="height:80px;background:#C41422"></div><div class="label">600 — hover</div><div class="hex">#C41422</div></div>
+  <div class="swatch mid"><div style="height:80px;background:#9E1018"></div><div class="label">700 — press</div><div class="hex">#9E1018</div></div>
+  <div class="sep"></div>
+  <div class="swatch" style="gap:12px;justify-content:flex-end">
+    <div class="pill">Solutions →</div>
+    <div style="display:flex;gap:16px;align-items:center">
+      <span class="tag">About Us</span>
+      <span style="font-size:36px;font-weight:700;color:#E8192C;font-family:'Barlow Condensed','Barlow',sans-serif">26+</span>
+    </div>
+  </div>
+</div>

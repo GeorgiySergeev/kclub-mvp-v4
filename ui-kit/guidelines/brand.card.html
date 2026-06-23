@@ -1,0 +1,35 @@
+<!-- @dsCard group="Brand" viewport="700x180" subtitle="Logo, mark & hero text motif" name="Logo & Identity" -->
+<link rel="stylesheet" href="../styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&family=Barlow+Condensed:wght@700&display=swap" rel="stylesheet">
+<style>
+  body { background: #1A1A1A; margin: 0; padding: 24px; font-family: 'Barlow', sans-serif; }
+  .row { display: flex; gap: 0; align-items: stretch; }
+  .col { padding: 0 32px; border-right: 1px solid rgba(255,255,255,0.08); display: flex; flex-direction: column; justify-content: center; gap: 16px; }
+  .col:first-child { padding-left: 0; }
+  .col:last-child { border-right: none; }
+  .lbl { font-size: 10px; font-weight: 600; color: #555; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; }
+  .mark { display: flex; align-items: center; gap: 8px; }
+  .bs { width: 32px; height: 32px; background: #E8192C; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; letter-spacing: -0.03em; }
+  .wordmark { font-size: 11px; font-weight: 600; color: #fff; letter-spacing: 0.06em; line-height: 1.45; }
+</style>
+<div class="row">
+  <div class="col" style="min-width:180px">
+    <div class="lbl">On dark</div>
+    <div class="mark">
+      <div class="bs">bs</div>
+      <div class="wordmark">business<br>solutions</div>
+    </div>
+  </div>
+  <div class="col" style="min-width:180px;background:#F2F2F0">
+    <div class="lbl" style="color:#999">On light</div>
+    <div class="mark">
+      <div class="bs">bs</div>
+      <div class="wordmark" style="color:#1A1A1A">business<br>solutions</div>
+    </div>
+  </div>
+  <div class="col" style="flex:1;align-items:flex-start">
+    <div class="lbl">Hero ghost text motif</div>
+    <div style="font-size:52px;font-weight:700;font-family:'Barlow Condensed','Barlow',sans-serif;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,0.55);line-height:1">Tailored</div>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+<!-- @dsCard group="Spacing" viewport="700x210" subtitle="4px base grid — space scale" name="Space Scale" -->
+<link rel="stylesheet" href="../styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  body { background: #1A1A1A; margin: 0; padding: 24px; font-family: 'Barlow', sans-serif; }
+  .grid { display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap; }
+  .item { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .bar { background: #E8192C; width: 20px; }
+  .token { font-size: 10px; color: #555; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; }
+  .val { font-size: 10px; color: #444; }
+  .divider { width: 1px; background: rgba(255,255,255,0.08); height: 80px; }
+</style>
+<div class="grid">
+  <div class="item"><div class="bar" style="height:4px"></div><div class="token">–1</div><div class="val">4</div></div>
+  <div class="item"><div class="bar" style="height:8px"></div><div class="token">–2</div><div class="val">8</div></div>
+  <div class="item"><div class="bar" style="height:12px"></div><div class="token">–3</div><div class="val">12</div></div>
+  <div class="item"><div class="bar" style="height:16px"></div><div class="token">–4</div><div class="val">16</div></div>
+  <div class="item"><div class="bar" style="height:20px"></div><div class="token">–5</div><div class="val">20</div></div>
+  <div class="item"><div class="bar" style="height:24px"></div><div class="token">–6</div><div class="val">24</div></div>
+  <div class="item"><div class="bar" style="height:32px"></div><div class="token">–8</div><div class="val">32</div></div>
+  <div class="item"><div class="bar" style="height:40px"></div><div class="token">–10</div><div class="val">40</div></div>
+  <div class="item"><div class="bar" style="height:48px"></div><div class="token">–12</div><div class="val">48</div></div>
+  <div class="divider"></div>
+  <div class="item"><div class="bar" style="height:64px;background:#483"></div><div class="token">–16</div><div class="val">64</div></div>
+  <div class="item"><div class="bar" style="height:80px;background:#483"></div><div class="token">–20</div><div class="val">80</div></div>
+  <div class="item"><div class="bar" style="height:96px;background:#483"></div><div class="token">–24</div><div class="val">96</div></div>
+  <div class="item"><div class="bar" style="height:128px;background:#483"></div><div class="token">–32</div><div class="val">128</div></div>
+</div>

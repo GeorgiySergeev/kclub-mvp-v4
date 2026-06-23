@@ -86,6 +86,10 @@ model User {
   membership_tier       MemberTier             @default(MEMBER)
   status                UserStatus             @default(ACTIVE)
   terms_accepted_at     DateTime?
+  country               String?                @db.VarChar(100)
+  city                  String?                @db.VarChar(100)
+  about                 String?                @db.Text
+  avatar_url            String?                @db.VarChar(500)
   created_at            DateTime               @default(now())
   updated_at            DateTime               @updatedAt
   member_cards          MemberCard[]

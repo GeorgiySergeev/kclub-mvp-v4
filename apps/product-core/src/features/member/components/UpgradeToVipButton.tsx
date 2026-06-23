@@ -1,0 +1,58 @@
+'use client';
+
+import { useState } from 'react';
+import { useTranslations } from 'next-intl';
+import { MEMBER_API_ROUTES } from '@kclub/contracts';
+import { Button, Spinner } from '@kclub/ui';
+
+import { parseAuthResponse } from '@/features/auth/utils/api';
+
+type Props = {
+  locale: string;
+};
+
+export function UpgradeToVipButton({ locale: _locale }: Props) {
+  const t = useTranslations('member.dashboard.subscription');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleUpgrade = async () => {
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch(MEMBER_API_ROUTES.SUBSCRIPTION_CHECKOUT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const result = await parseAuthResponse<{ checkoutUrl: string }>(response);
+
+      if (!result.success || !result.data?.checkoutUrl) {
+        setError(t('checkoutError'));
+        return;
+      }
+
+      window.location.href = result.data.checkoutUrl;
+    } catch {
+      setError(t('checkoutError'));
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      <Button
+        onClick={handleUpgrade}
+        disabled={isLoading}
+        fullWidth
+        className="gap-2 rounded-none border-0 bg-zinc-950 px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-white hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100"
+      >
+        {isLoading && <Spinner size={13} />}
+        {isLoading ? t('vipUpgrading') : t('vipCta')}
+      </Button>
+      {error && <p className="text-xs text-red-600 dark:text-red-400">{error}</p>}
+    </div>
+  );
+}

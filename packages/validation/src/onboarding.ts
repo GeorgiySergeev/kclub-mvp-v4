@@ -1,8 +1,9 @@
 import { z } from 'zod';
 
-import { localeSchema, phoneSchema, safeTextSchema, withoutHtml } from './shared';
+import { localeSchema, optionalSafeTextSchema, phoneSchema, safeTextSchema, withoutHtml } from './shared';
 
 export const displayNameSchema = withoutHtml(safeTextSchema.min(2).max(100));
+const optionalShortText = (max: number) => withoutHtml(z.string().trim().max(max)).optional().nullable();
 
 export const memberOnboardingSchema = z.object({
   phone: phoneSchema,
@@ -17,8 +18,12 @@ export const memberProfileUpdateSchema = z
   .object({
     displayName: displayNameSchema.optional(),
     localePreference: localeSchema.optional(),
+    country: optionalShortText(100),
+    city: optionalShortText(100),
+    about: optionalSafeTextSchema(500),
+    avatarUrl: z.string().url().optional().nullable(),
   })
-  .refine((value) => Object.keys(value).length > 0, {
+  .refine((value) => Object.values(value).some((v) => v !== undefined), {
     message: 'At least one profile field is required',
   });
 

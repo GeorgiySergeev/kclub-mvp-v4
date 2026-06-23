@@ -18,6 +18,10 @@ const memberProfile: CurrentMemberProfileDto = {
   termsAcceptedAt: '2026-06-16T00:00:00.000Z',
   createdAt: '2026-06-16T00:00:00.000Z',
   updatedAt: '2026-06-16T00:00:00.000Z',
+  country: null,
+  city: null,
+  about: null,
+  avatarUrl: null,
 };
 
 const vipProfile: CurrentMemberProfileDto = {
@@ -32,10 +36,11 @@ const vipWithPublishedProfile: CurrentMemberProfileDto = {
 };
 
 describe('member dashboard tabs', () => {
-  test('MEMBER sees card, catalog, subscription, profile', () => {
+  test('MEMBER sees card, subscription, profile', () => {
     const tabs = getImplementedDashboardTabs(memberProfile);
 
-    expect(tabs).toEqual(['card', 'catalog', 'subscription', 'profile']);
+    expect(tabs).toEqual(['card', 'subscription', 'profile']);
+    expect(tabs).not.toContain('catalog');
     expect(tabs).not.toContain('business');
     expect(tabs).not.toContain('introductions');
   });
@@ -46,7 +51,7 @@ describe('member dashboard tabs', () => {
     expect(tabs).toContain('business');
     expect(tabs).not.toContain('introductions');
     expect(tabs).toContain('card');
-    expect(tabs).toContain('catalog');
+    expect(tabs).not.toContain('catalog');
     expect(tabs).toContain('subscription');
     expect(tabs).toContain('profile');
   });
@@ -59,7 +64,7 @@ describe('member dashboard tabs', () => {
 
     expect(tabs).toContain('business');
     expect(tabs).toContain('introductions');
-    expect(tabs).toHaveLength(6);
+    expect(tabs).toHaveLength(5);
   });
 
   test('normalizes invalid tab to first visible tab', () => {

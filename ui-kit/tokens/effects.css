@@ -1,0 +1,30 @@
+/* ──────────────────────────────────────────
+   Business Solutions — Effects & Motion Tokens
+   ────────────────────────────────────────── */
+
+:root {
+  /* ── Shadows (dark-on-dark, deep) ── */
+  --shadow-xs:  0 1px 3px  rgba(0, 0, 0, 0.45);
+  --shadow-sm:  0 2px 8px  rgba(0, 0, 0, 0.55);
+  --shadow-md:  0 4px 16px rgba(0, 0, 0, 0.60);
+  --shadow-lg:  0 8px 32px rgba(0, 0, 0, 0.65);
+  --shadow-xl:  0 16px 56px rgba(0, 0, 0, 0.70);
+
+  /* ── Transitions ── */
+  --transition-fast:    0.12s ease;
+  --transition-base:    0.2s ease;
+  --transition-slow:    0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-spring:  0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* ── Overlays ── */
+  --overlay-dark-light:  rgba(0, 0, 0, 0.40);
+  --overlay-dark-medium: rgba(0, 0, 0, 0.60);
+  --overlay-dark-heavy:  rgba(0, 0, 0, 0.80);
+
+  /* ── Hero ghost text (outline style) ── */
+  --text-stroke-light:   -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.55);
+  --text-stroke-subtle:  -webkit-text-stroke: 1px  rgba(255, 255, 255, 0.30);
+
+  /* ── Focus ring ── */
+  --focus-ring: 0 0 0 3px rgba(232, 25, 44, 0.45);
+}
