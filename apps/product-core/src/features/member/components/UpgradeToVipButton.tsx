@@ -47,7 +47,7 @@ export function UpgradeToVipButton({ locale: _locale }: Props) {
         onClick={handleUpgrade}
         disabled={isLoading}
         fullWidth
-        className="gap-2 rounded-none border-0 bg-zinc-950 px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-white hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100"
+        className="gap-2 rounded-none border-0 bg-accent px-5 py-3.5 text-sm font-semibold text-accent-foreground hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isLoading && <Spinner size={13} />}
         {isLoading ? t('vipUpgrading') : t('vipCta')}

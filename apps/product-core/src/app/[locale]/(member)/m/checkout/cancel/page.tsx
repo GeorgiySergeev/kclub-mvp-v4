@@ -1,13 +1,12 @@
 import { redirect } from 'next/navigation';
 
 import type { Locale } from '@/i18n/routing';
-import { getDashboardAliasHref } from '@/features/member/dashboard-tabs';
 
-export default async function ProfileAliasPage({
+export default async function CheckoutCancelPage({
   params,
 }: {
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
-  redirect(getDashboardAliasHref(locale, 'account'));
+  redirect(`/${locale}/m/dashboard?tab=subscription`);
 }

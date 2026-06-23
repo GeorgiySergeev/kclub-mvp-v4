@@ -1,15 +1,25 @@
 import Link from 'next/link';
 
 import type { CurrentMemberProfileDto } from '@kclub/contracts';
-import { Badge, cn } from '@kclub/ui';
+import { cn } from '@kclub/ui';
 
 import type { Locale } from '@/i18n/routing';
 import type { ImplementedMemberDashboardTab } from '@/features/member/dashboard-tabs';
 import {
-  memberCabinetNavLinkActiveClasses,
-  memberCabinetNavLinkClasses,
-  memberCabinetNavLinkInactiveClasses,
-  memberCabinetSidebarClasses,
+  getDashboardTabLockLabel,
+  isDashboardTabLocked,
+} from '@/features/member/dashboard-tabs';
+
+import { CabinetSignOut } from './CabinetSignOut';
+import {
+  cabinetLockTagClasses,
+  cabinetMobileNavClasses,
+  cabinetNavItemActiveClasses,
+  cabinetNavItemClasses,
+  cabinetNavItemInactiveClasses,
+  cabinetNavItemLockedClasses,
+  cabinetRootClasses,
+  cabinetSidebarClasses,
 } from './styles';
 
 type MemberCabinetShellProps = {
@@ -18,10 +28,64 @@ type MemberCabinetShellProps = {
   activeTab: ImplementedMemberDashboardTab;
   visibleTabs: readonly ImplementedMemberDashboardTab[];
   tabLabels: Record<ImplementedMemberDashboardTab, string>;
-  sidebarEyebrow: string;
+  pageTitle: string;
+  contactLine: string;
   tabsAriaLabel: string;
+  lockLabels: Record<'VIP' | 'BIZ', string>;
   children: React.ReactNode;
 };
+
+function getInitials(name: string): string {
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .map((part) => part.charAt(0))
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+}
+
+function getPlanLabel(tier: CurrentMemberProfileDto['membershipTier']): string {
+  return tier === 'VIP' ? 'VIP' : 'MEMBER';
+}
+
+function renderNavItem({
+  tab,
+  locale,
+  activeTab,
+  tabLabels,
+  profile,
+  lockLabels,
+}: {
+  tab: ImplementedMemberDashboardTab;
+  locale: Locale;
+  activeTab: ImplementedMemberDashboardTab;
+  tabLabels: Record<ImplementedMemberDashboardTab, string>;
+  profile: CurrentMemberProfileDto;
+  lockLabels: Record<'VIP' | 'BIZ', string>;
+}) {
+  const locked = isDashboardTabLocked(profile, tab);
+  const lockLabel = getDashboardTabLockLabel(tab);
+  const isActive = activeTab === tab;
+
+  return (
+    <Link
+      key={tab}
+      href={`/${locale}/m/dashboard?tab=${tab}`}
+      className={cn(
+        cabinetNavItemClasses,
+        isActive ? cabinetNavItemActiveClasses : cabinetNavItemInactiveClasses,
+        locked && !isActive && cabinetNavItemLockedClasses,
+      )}
+      aria-current={isActive ? 'page' : undefined}
+    >
+      <span>{tabLabels[tab]}</span>
+      {locked && lockLabel ? (
+        <span className={cabinetLockTagClasses}>{lockLabels[lockLabel]}</span>
+      ) : null}
+    </Link>
+  );
+}
 
 export function MemberCabinetShell({
   locale,
@@ -29,63 +93,69 @@ export function MemberCabinetShell({
   activeTab,
   visibleTabs,
   tabLabels,
-  sidebarEyebrow,
+  pageTitle,
+  contactLine,
   tabsAriaLabel,
+  lockLabels,
   children,
 }: MemberCabinetShellProps) {
-  const isVip = profile.membershipTier === 'VIP';
   const displayName = profile.displayName ?? profile.phone;
+  const planLabel = getPlanLabel(profile.membershipTier);
 
   return (
-    <div className="mx-auto grid max-w-5xl gap-6 lg:grid-cols-[240px_minmax(0,1fr)] lg:gap-8">
-      <aside className="lg:sticky lg:top-24 lg:self-start">
-        <div className={memberCabinetSidebarClasses}>
-          <p className="kclub-overline text-muted-foreground">{sidebarEyebrow}</p>
+    <div className={cabinetRootClasses}>
+      <nav aria-label={tabsAriaLabel} className={cabinetMobileNavClasses}>
+        {visibleTabs.map((tab) => renderNavItem({ tab, locale, activeTab, tabLabels, profile, lockLabels }))}
+      </nav>
 
-          <div className="mt-4 flex items-center gap-3">
+      <aside className={cabinetSidebarClasses}>
+        <Link
+          href={`/${locale}`}
+          className="flex shrink-0 items-center gap-2.5 border-b border-border px-6 py-5"
+        >
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center bg-accent text-xs font-bold text-accent-foreground">
+            KC
+          </span>
+          <span className="text-[11px] font-semibold uppercase leading-snug tracking-widest text-foreground">
+            Kylyvnyk
+            <br />
+            Club
+          </span>
+        </Link>
+
+        <div className="shrink-0 border-b border-border px-6 py-5">
+          <div className="flex items-center gap-3">
             <div
-              className={cn(
-                'font-display flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-medium uppercase',
-                isVip
-                  ? 'border-kclub-gold-500/40 bg-kclub-gold-500/15 text-kclub-gold-300 border'
-                  : 'border border-border bg-secondary text-muted-foreground',
-              )}
+              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-accent/30 bg-surface-muted text-sm font-bold text-accent"
               aria-hidden="true"
             >
-              {displayName.charAt(0)}
+              {getInitials(displayName)}
             </div>
             <div className="min-w-0">
-              <p className="truncate text-sm font-medium text-foreground">{displayName}</p>
-              <Badge
-                variant={isVip ? 'success' : 'outline'}
-                className="mt-1 text-[0.65rem] uppercase tracking-[0.1em]"
-              >
-                {profile.membershipTier}
-              </Badge>
+              <p className="truncate text-sm font-semibold text-foreground">{displayName}</p>
+              <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-accent">
+                {planLabel}
+              </p>
             </div>
           </div>
+        </div>
 
-          <nav aria-label={tabsAriaLabel} className="mt-6 space-y-1">
-            {visibleTabs.map((tab) => (
-              <Link
-                key={tab}
-                href={`/${locale}/m/dashboard?tab=${tab}`}
-                className={cn(
-                  memberCabinetNavLinkClasses,
-                  activeTab === tab
-                    ? memberCabinetNavLinkActiveClasses
-                    : memberCabinetNavLinkInactiveClasses,
-                )}
-                aria-current={activeTab === tab ? 'page' : undefined}
-              >
-                {tabLabels[tab]}
-              </Link>
-            ))}
-          </nav>
+        <nav aria-label={tabsAriaLabel} className="flex-1 space-y-0 py-2">
+          {visibleTabs.map((tab) => renderNavItem({ tab, locale, activeTab, tabLabels, profile, lockLabels }))}
+        </nav>
+
+        <div className="shrink-0 border-t border-border px-6 py-5">
+          <CabinetSignOut locale={locale} />
         </div>
       </aside>
 
-      <div className="min-w-0">{children}</div>
+      <div className="flex min-w-0 flex-1 flex-col">
+        <header className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-border bg-surface px-6 py-6 sm:px-12">
+          <h1 className="text-xl font-semibold text-foreground sm:text-2xl">{pageTitle}</h1>
+          <p className="hidden text-sm text-muted sm:block">{contactLine}</p>
+        </header>
+        <div className="flex-1">{children}</div>
+      </div>
     </div>
   );
 }

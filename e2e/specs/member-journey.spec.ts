@@ -54,10 +54,7 @@ test.describe('Member journey', () => {
 
     await expect(page).toHaveURL(new RegExp(`.*/${locale}/m/dashboard.*`), { timeout: 30000 });
 
-    const dashboard = new DashboardPage(page, locale);
-    await dashboard.clickTab('card');
-
-    // Card should be visible
+    // Account tab is the default and includes the club card
     await expect(page.locator('[data-testid="card-number"]')).toBeVisible();
   });
 
@@ -81,14 +78,11 @@ test.describe('Member journey', () => {
     const dashboard = new DashboardPage(page, locale);
     const visibleTabs = await dashboard.getVisibleTabNames();
 
-    // MEMBER tier should see: card, catalog, subscription, profile
-    expect(visibleTabs).toContain('card');
-    expect(visibleTabs).toContain('catalog');
+    // MEMBER tier sees all cabinet tabs; business and introductions are locked
+    expect(visibleTabs).toContain('account');
     expect(visibleTabs).toContain('subscription');
-    expect(visibleTabs).toContain('profile');
-
-    // MEMBER should NOT see business or introductions
-    expect(visibleTabs).not.toContain('business');
-    expect(visibleTabs).not.toContain('introductions');
+    expect(visibleTabs).toContain('settings');
+    expect(visibleTabs).toContain('business');
+    expect(visibleTabs).toContain('introductions');
   });
 });

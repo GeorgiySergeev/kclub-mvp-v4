@@ -93,12 +93,12 @@ export const MEMBER_CAPABILITIES = {
 export type MemberCapability = (typeof MEMBER_CAPABILITIES)[keyof typeof MEMBER_CAPABILITIES];
 
 export const MEMBER_DASHBOARD_TABS = [
-  'card',
+  'account',
   'catalog',
   'subscription',
   'business',
   'introductions',
-  'profile',
+  'settings',
 ] as const;
 
 export type MemberDashboardTab = (typeof MEMBER_DASHBOARD_TABS)[number];
@@ -129,14 +129,14 @@ export const MEMBER_CAPABILITY_GROUPS = {
 export type MemberCapabilityGroup = keyof typeof MEMBER_CAPABILITY_GROUPS;
 
 export const MEMBER_DASHBOARD_TAB_VISIBILITY = {
-  MEMBER: ['card', 'catalog', 'subscription', 'profile'],
-  VIP: ['card', 'catalog', 'subscription', 'business', 'profile'],
+  MEMBER: ['account', 'catalog', 'subscription', 'settings'],
+  VIP: ['account', 'catalog', 'subscription', 'business', 'settings'],
   VIP_WITH_PUBLISHED_BUSINESS: [
-    'card',
+    'account',
     'catalog',
     'subscription',
     'business',
     'introductions',
-    'profile',
+    'settings',
   ],
 } as const satisfies Record<MemberCapabilityGroup, readonly MemberDashboardTab[]>;

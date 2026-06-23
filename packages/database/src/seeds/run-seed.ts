@@ -206,16 +206,40 @@ async function seedReferenceData(prisma: PrismaClient): Promise<void> {
   }
 
   for (const key of CONFIG_SEED_PLAN.stripePriceKeys) {
+    const priceId = resolveStripePriceIdFromEnv(key);
+
     await prisma.adminConfig.upsert({
       where: { key },
       create: {
         key,
-        value: { stripePriceId: null },
-        description: `Stripe price config placeholder for ${key}`,
+        value: priceId ? { priceId } : {},
+        description: `Stripe price config for ${key}`,
       },
-      update: {},
+      update: priceId ? { value: { priceId } } : {},
     });
   }
+}
+
+function resolveStripePriceIdFromEnv(configKey: string): string | null {
+  const envByKey: Record<string, readonly string[]> = {
+    stripe_price_vip_membership_monthly: [
+      'STRIPE_PRICE_VIP_MEMBERSHIP_MONTHLY',
+      'STRIPE_PRICE_VIP_ANNUAL',
+    ],
+    stripe_price_business_placement_monthly: [
+      'STRIPE_PRICE_BUSINESS_PLACEMENT_MONTHLY',
+      'STRIPE_PRICE_BUSINESS_ANNUAL',
+    ],
+  };
+
+  for (const envKey of envByKey[configKey] ?? []) {
+    const value = process.env[envKey]?.trim();
+    if (value) {
+      return value;
+    }
+  }
+
+  return null;
 }
 
 async function seedBootstrapOwner(prisma: PrismaClient): Promise<void> {

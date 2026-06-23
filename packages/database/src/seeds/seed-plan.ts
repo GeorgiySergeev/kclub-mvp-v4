@@ -92,7 +92,10 @@ export const ADMIN_BOOTSTRAP_PLAN = {
 } as const;
 
 export const CONFIG_SEED_PLAN = {
-  stripePriceKeys: ['vip_membership_monthly', 'business_placement_monthly'] as const,
+  stripePriceKeys: [
+    'stripe_price_vip_membership_monthly',
+    'stripe_price_business_placement_monthly',
+  ] as const,
   initialAdminConfigKeys: ['platform_settings', 'directory_settings'] as const,
 } as const;
 

@@ -1,1085 +1,370 @@
 <!-- @startingPoint section="Web" subtitle="Business Solutions — corporate homepage" viewport="1440x900" -->
 <!-- @dsCard group="Web" viewport="1440x900" subtitle="Full homepage — dark corporate B2B" name="Homepage" -->
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Business Solutions — Homepage</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      @keyframes fadeUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      *,
-      *::before,
-      *::after {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-      }
-      body {
-        font-family: "Barlow", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        background: #1a1a1a;
-        color: #fff;
-        -webkit-font-smoothing: antialiased;
-      }
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-      .container {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 0 clamp(24px, 5vw, 80px);
-      }
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Solutions — Homepage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+<style>
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(20px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+*, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
+body {
+  font-family:'Barlow','Helvetica Neue',Helvetica,Arial,sans-serif;
+  background:#1A1A1A; color:#fff;
+  -webkit-font-smoothing:antialiased;
+}
+a { color:inherit; text-decoration:none; }
+.container { max-width:1280px; margin:0 auto; padding:0 clamp(24px,5vw,80px); }
 
-      /* Nav */
-      nav {
-        position: sticky;
-        top: 0;
-        z-index: 100;
-        background: #111;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-      }
-      .nav-inner {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 60px;
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 0 clamp(24px, 5vw, 80px);
-      }
-      .logo {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-      }
-      .logo-mark {
-        width: 30px;
-        height: 30px;
-        background: #e8192c;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 13px;
-        font-weight: 700;
-        color: #fff;
-        letter-spacing: -0.03em;
-        flex-shrink: 0;
-      }
-      .logo-text {
-        font-size: 11px;
-        font-weight: 600;
-        color: #fff;
-        letter-spacing: 0.06em;
-        line-height: 1.45;
-      }
-      .nav-links {
-        display: flex;
-        align-items: center;
-        gap: 28px;
-      }
-      .nav-links a {
-        font-size: 13px;
-        font-weight: 600;
-        letter-spacing: 0.02em;
-      }
-      .nav-links a.active {
-        color: #fff;
-      }
-      .nav-links a:not(.active) {
-        color: #888;
-      }
-      .nav-utils {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        margin-left: 16px;
-        padding-left: 16px;
-        border-left: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      .nav-utils span {
-        font-size: 13px;
-        color: #888;
-      }
+/* Nav */
+nav { position:sticky;top:0;z-index:100;background:#111;border-bottom:1px solid rgba(255,255,255,.07); }
+.nav-inner { display:flex;align-items:center;justify-content:space-between;height:60px;max-width:1280px;margin:0 auto;padding:0 clamp(24px,5vw,80px); }
+.logo { display:flex;align-items:center;gap:10px; }
+.logo-mark { width:30px;height:30px;background:#E8192C;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;letter-spacing:-.03em;flex-shrink:0; }
+.logo-text { font-size:11px;font-weight:600;color:#fff;letter-spacing:.06em;line-height:1.45; }
+.nav-links { display:flex;align-items:center;gap:28px; }
+.nav-links a { font-size:13px;font-weight:600;letter-spacing:.02em; }
+.nav-links a.active { color:#fff; }
+.nav-links a:not(.active) { color:#888; }
+.nav-utils { display:flex;align-items:center;gap:16px;margin-left:16px;padding-left:16px;border-left:1px solid rgba(255,255,255,.1); }
+.nav-utils span { font-size:13px;color:#888; }
 
-      /* Hero */
-      .hero {
-        position: relative;
-        min-height: 580px;
-        display: flex;
-        align-items: flex-end;
-        overflow: hidden;
-        padding: 0 clamp(24px, 5vw, 80px) 72px;
-      }
-      .hero-bg {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(108deg, #0d0d0d 40%, #262626 100%);
-      }
-      .hero-photo {
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        width: 55%;
-        overflow: hidden;
-      }
-      .hero-photo-inner {
-        position: absolute;
-        inset: 0;
-        background: repeating-linear-gradient(
-          110deg,
-          #222 0,
-          #222 18px,
-          #1c1c1c 18px,
-          #1c1c1c 36px
-        );
-      }
-      .hero-photo-label {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0.15;
-        font-size: 12px;
-        color: #888;
-        font-family: monospace;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        text-align: center;
-      }
-      .hero-fade {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(90deg, #1a1a1a 46%, transparent 74%);
-        z-index: 1;
-      }
-      .hero-content {
-        position: relative;
-        z-index: 2;
-        max-width: 1280px;
-        width: 100%;
-        margin: 0 auto;
-      }
-      .hero h1 {
-        font-family: "Barlow Condensed", "Barlow", sans-serif;
-        font-size: clamp(52px, 8vw, 108px);
-        font-weight: 700;
-        line-height: 1;
-        color: transparent;
-        -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.52);
-        letter-spacing: -0.02em;
-      }
-      .hero p {
-        font-size: 15px;
-        color: #aaaaaa;
-        line-height: 1.7;
-        margin-top: 20px;
-        max-width: 340px;
-      }
-      .hero-ctas {
-        display: flex;
-        align-items: center;
-        gap: 14px;
-        margin-top: 28px;
-      }
+/* Hero */
+.hero { position:relative;min-height:580px;display:flex;align-items:flex-end;overflow:hidden;padding:0 clamp(24px,5vw,80px) 72px; }
+.hero-bg { position:absolute;inset:0;background:linear-gradient(108deg,#0D0D0D 40%,#262626 100%); }
+.hero-photo { position:absolute;right:0;top:0;bottom:0;width:55%;overflow:hidden; }
+.hero-photo-inner { position:absolute;inset:0;background:repeating-linear-gradient(110deg,#222 0,#222 18px,#1C1C1C 18px,#1C1C1C 36px); }
+.hero-photo-label { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:.15;font-size:12px;color:#888;font-family:monospace;letter-spacing:.1em;text-transform:uppercase;text-align:center; }
+.hero-fade { position:absolute;inset:0;background:linear-gradient(90deg,#1A1A1A 46%,transparent 74%);z-index:1; }
+.hero-content { position:relative;z-index:2;max-width:1280px;width:100%;margin:0 auto; }
+.hero h1 { font-family:'Barlow Condensed','Barlow',sans-serif;font-size:clamp(52px,8vw,108px);font-weight:700;line-height:1;color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,.52);letter-spacing:-.02em; }
+.hero p { font-size:15px;color:#AAAAAA;line-height:1.7;margin-top:20px;max-width:340px; }
+.hero-ctas { display:flex;align-items:center;gap:14px;margin-top:28px; }
 
-      /* Buttons */
-      .btn-primary {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        background: #e8192c;
-        color: #fff;
-        font-family: "Barlow", sans-serif;
-        font-size: 14px;
-        font-weight: 600;
-        padding: 12px 22px;
-        letter-spacing: 0.01em;
-        line-height: 1;
-        transition: background 0.15s;
-      }
-      .btn-primary:hover {
-        background: #c41422;
-      }
-      .btn-ghost-text {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        color: #ccc;
-        letter-spacing: 0.01em;
-        transition: color 0.15s;
-      }
-      .btn-ghost-text:hover {
-        color: #fff;
-      }
+/* Buttons */
+.btn-primary { display:inline-flex;align-items:center;gap:8px;background:#E8192C;color:#fff;font-family:'Barlow',sans-serif;font-size:14px;font-weight:600;padding:12px 22px;letter-spacing:.01em;line-height:1;transition:background .15s; }
+.btn-primary:hover { background:#C41422; }
+.btn-ghost-text { display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#CCC;letter-spacing:.01em;transition:color .15s; }
+.btn-ghost-text:hover { color:#fff; }
 
-      /* About */
-      .about {
-        background: #f2f2f0;
-        padding: 96px clamp(24px, 5vw, 80px);
-      }
-      .about-grid {
-        max-width: 1280px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 1fr 400px;
-        gap: 80px;
-        align-items: start;
-      }
-      .section-label {
-        font-size: 11px;
-        font-weight: 600;
-        color: #e8192c;
-        letter-spacing: 0.14em;
-        text-transform: uppercase;
-        margin-bottom: 18px;
-      }
-      .about h2 {
-        font-size: clamp(22px, 3vw, 34px);
-        font-weight: 700;
-        color: #111;
-        line-height: 1.25;
-        margin-bottom: 24px;
-        max-width: 540px;
-      }
-      .about p {
-        font-size: 15px;
-        color: #666;
-        line-height: 1.75;
-        margin-bottom: 32px;
-        max-width: 480px;
-      }
-      .stats-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 16px 40px;
-        margin-bottom: 32px;
-      }
-      .stat-val {
-        font-family: "Barlow Condensed", "Barlow", sans-serif;
-        font-size: 44px;
-        font-weight: 700;
-        color: #e8192c;
-        line-height: 1;
-        letter-spacing: -0.02em;
-      }
-      .stat-lbl {
-        font-size: 13px;
-        color: #999;
-        margin-top: 4px;
-      }
-      .about-img {
-        aspect-ratio: 4/3;
-        background: repeating-linear-gradient(
-          115deg,
-          #e0e0de 0,
-          #e0e0de 18px,
-          #d4d4d2 18px,
-          #d4d4d2 36px
-        );
-        position: relative;
-        overflow: hidden;
-      }
-      .about-img-lbl {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 12px;
-        color: #aaa;
-        font-family: monospace;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        text-align: center;
-        opacity: 0.6;
-      }
-      .play-btn {
-        position: absolute;
-        inset: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-      }
-      .play-circle {
-        width: 52px;
-        height: 52px;
-        background: rgba(232, 25, 44, 0.9);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: background 0.15s;
-      }
-      .play-circle:hover {
-        background: #e8192c;
-      }
-      .play-triangle {
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 10px 0 10px 18px;
-        border-color: transparent transparent transparent #fff;
-        margin-left: 3px;
-      }
+/* About */
+.about { background:#F2F2F0;padding:96px clamp(24px,5vw,80px); }
+.about-grid { max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 400px;gap:80px;align-items:start; }
+.section-label { font-size:11px;font-weight:600;color:#E8192C;letter-spacing:.14em;text-transform:uppercase;margin-bottom:18px; }
+.about h2 { font-size:clamp(22px,3vw,34px);font-weight:700;color:#111;line-height:1.25;margin-bottom:24px;max-width:540px; }
+.about p { font-size:15px;color:#666;line-height:1.75;margin-bottom:32px;max-width:480px; }
+.stats-grid { display:grid;grid-template-columns:1fr 1fr;gap:16px 40px;margin-bottom:32px; }
+.stat-val { font-family:'Barlow Condensed','Barlow',sans-serif;font-size:44px;font-weight:700;color:#E8192C;line-height:1;letter-spacing:-.02em; }
+.stat-lbl { font-size:13px;color:#999;margin-top:4px; }
+.about-img { aspect-ratio:4/3;background:repeating-linear-gradient(115deg,#E0E0DE 0,#E0E0DE 18px,#D4D4D2 18px,#D4D4D2 36px);position:relative;overflow:hidden; }
+.about-img-lbl { position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:12px;color:#AAA;font-family:monospace;letter-spacing:.1em;text-transform:uppercase;text-align:center;opacity:.6; }
+.play-btn { position:absolute;inset:0;display:flex;align-items:center;justify-content:center; }
+.play-circle { width:52px;height:52px;background:rgba(232,25,44,.9);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .15s; }
+.play-circle:hover { background:#E8192C; }
+.play-triangle { width:0;height:0;border-style:solid;border-width:10px 0 10px 18px;border-color:transparent transparent transparent #fff;margin-left:3px; }
 
-      /* Services */
-      .services {
-        background: #1a1a1a;
-        padding: 80px 0 0;
-      }
-      .services-inner {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 0 clamp(24px, 5vw, 80px);
-      }
-      .services h2 {
-        font-size: clamp(22px, 2.5vw, 30px);
-        font-weight: 700;
-        color: #fff;
-        line-height: 1.25;
-      }
-      .tile-row {
-        display: grid;
-        gap: 2px;
-        margin-bottom: 2px;
-      }
-      .tile-row.r1 {
-        grid-template-columns: 2fr repeat(4, 1fr);
-      }
-      .tile-row.r2 {
-        grid-template-columns: repeat(6, 1fr);
-      }
-      .tile-header {
-        background: #222;
-        padding: 32px;
-        display: flex;
-        align-items: flex-end;
-      }
-      .tile {
-        background: #2e2e2e;
-        padding: 24px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        min-height: 128px;
-        cursor: pointer;
-        transition: background 0.2s;
-      }
-      .tile:hover {
-        background: #3a3a3a;
-      }
-      .tile-empty {
-        background: #222;
-        min-height: 128px;
-      }
-      .tile-lbl {
-        font-size: 13px;
-        font-weight: 600;
-        color: #ccc;
-        line-height: 1.3;
-      }
+/* Services */
+.services { background:#1A1A1A;padding:80px 0 0; }
+.services-inner { max-width:1280px;margin:0 auto;padding:0 clamp(24px,5vw,80px); }
+.services h2 { font-size:clamp(22px,2.5vw,30px);font-weight:700;color:#fff;line-height:1.25; }
+.tile-row { display:grid;gap:2px;margin-bottom:2px; }
+.tile-row.r1 { grid-template-columns:2fr repeat(4,1fr); }
+.tile-row.r2 { grid-template-columns:repeat(6,1fr); }
+.tile-header { background:#222;padding:32px;display:flex;align-items:flex-end; }
+.tile { background:#2E2E2E;padding:24px;display:flex;flex-direction:column;justify-content:space-between;min-height:128px;cursor:pointer;transition:background .2s; }
+.tile:hover { background:#3A3A3A; }
+.tile-empty { background:#222;min-height:128px; }
+.tile-lbl { font-size:13px;font-weight:600;color:#CCC;line-height:1.3; }
 
-      /* Cases */
-      .cases {
-        background: #1a1a1a;
-        padding: 80px clamp(24px, 5vw, 80px);
-        border-top: 1px solid rgba(255, 255, 255, 0.06);
-      }
-      .cases-head {
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        margin-bottom: 48px;
-      }
-      .cases h2 {
-        font-size: clamp(24px, 3vw, 36px);
-        font-weight: 700;
-        color: #fff;
-      }
-      .cases-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2px;
-      }
-      .case-card {
-        background: #2e2e2e;
-        padding: 32px;
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        cursor: pointer;
-        transition: background 0.2s;
-      }
-      .case-card:hover {
-        background: #383838;
-      }
-      .case-cat {
-        font-size: 10px;
-        font-weight: 600;
-        color: #e8192c;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-      }
-      .case-title {
-        font-size: 16px;
-        font-weight: 700;
-        color: #e0e0de;
-        line-height: 1.4;
-      }
-      .case-tag {
-        font-size: 11px;
-        font-weight: 600;
-        color: #555;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        margin-top: auto;
-      }
+/* Cases */
+.cases { background:#1A1A1A;padding:80px clamp(24px,5vw,80px);border-top:1px solid rgba(255,255,255,.06); }
+.cases-head { display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:48px; }
+.cases h2 { font-size:clamp(24px,3vw,36px);font-weight:700;color:#fff; }
+.cases-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:2px; }
+.case-card { background:#2E2E2E;padding:32px;display:flex;flex-direction:column;gap:14px;cursor:pointer;transition:background .2s; }
+.case-card:hover { background:#383838; }
+.case-cat { font-size:10px;font-weight:600;color:#E8192C;letter-spacing:.12em;text-transform:uppercase; }
+.case-title { font-size:16px;font-weight:700;color:#E0E0DE;line-height:1.4; }
+.case-tag { font-size:11px;font-weight:600;color:#555;letter-spacing:.08em;text-transform:uppercase;margin-top:auto; }
 
-      /* CTA band */
-      .cta-band {
-        background: #1a1a1a;
-        padding: 2px clamp(24px, 5vw, 80px) 80px;
-      }
-      .cta-inner {
-        max-width: 1280px;
-        margin: 0 auto;
-        background: #222;
-        padding: 64px clamp(32px, 5vw, 80px);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 40px;
-        flex-wrap: wrap;
-      }
-      .cta-inner h2 {
-        font-size: clamp(22px, 3vw, 38px);
-        font-weight: 700;
-        color: #fff;
-        line-height: 1.2;
-        max-width: 460px;
-      }
+/* CTA band */
+.cta-band { background:#1A1A1A;padding:2px clamp(24px,5vw,80px) 80px; }
+.cta-inner { max-width:1280px;margin:0 auto;background:#222;padding:64px clamp(32px,5vw,80px);display:flex;align-items:center;justify-content:space-between;gap:40px;flex-wrap:wrap; }
+.cta-inner h2 { font-size:clamp(22px,3vw,38px);font-weight:700;color:#fff;line-height:1.2;max-width:460px; }
 
-      /* Newsletter */
-      .newsletter {
-        background: #f2f2f0;
-        padding: 80px clamp(24px, 5vw, 80px);
-      }
-      .newsletter-inner {
-        max-width: 600px;
-        margin: 0 auto;
-        text-align: center;
-      }
-      .newsletter h3 {
-        font-size: 20px;
-        font-weight: 700;
-        color: #111;
-        margin-bottom: 10px;
-        line-height: 1.35;
-      }
-      .newsletter p {
-        font-size: 14px;
-        color: #888;
-        margin-bottom: 40px;
-      }
-      .nl-form {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 12px;
-        margin-bottom: 16px;
-        text-align: left;
-      }
-      .nl-label {
-        font-size: 10px;
-        font-weight: 600;
-        color: #999;
-        letter-spacing: 0.1em;
-        text-transform: uppercase;
-        margin-bottom: 6px;
-      }
-      .nl-input {
-        width: 100%;
-        padding: 11px 14px;
-        font-size: 15px;
-        font-family: "Barlow", sans-serif;
-        border: 1px solid rgba(0, 0, 0, 0.15);
-        outline: none;
-        color: #111;
-        background: #fff;
-        transition: border-color 0.15s;
-      }
-      .nl-input:focus {
-        border-color: #e8192c;
-      }
-      .nl-bottom {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        flex-wrap: wrap;
-      }
-      .nl-check {
-        display: flex;
-        align-items: flex-start;
-        gap: 8px;
-        font-size: 13px;
-        color: #888;
-        text-align: left;
-        cursor: pointer;
-      }
-      .nl-check input {
-        margin-top: 2px;
-        accent-color: #e8192c;
-        flex-shrink: 0;
-      }
-      .nl-check a {
-        color: #111;
-        text-decoration: underline;
-      }
+/* Newsletter */
+.newsletter { background:#F2F2F0;padding:80px clamp(24px,5vw,80px); }
+.newsletter-inner { max-width:600px;margin:0 auto;text-align:center; }
+.newsletter h3 { font-size:20px;font-weight:700;color:#111;margin-bottom:10px;line-height:1.35; }
+.newsletter p { font-size:14px;color:#888;margin-bottom:40px; }
+.nl-form { display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;text-align:left; }
+.nl-label { font-size:10px;font-weight:600;color:#999;letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px; }
+.nl-input { width:100%;padding:11px 14px;font-size:15px;font-family:'Barlow',sans-serif;border:1px solid rgba(0,0,0,.15);outline:none;color:#111;background:#fff;transition:border-color .15s; }
+.nl-input:focus { border-color:#E8192C; }
+.nl-bottom { display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap; }
+.nl-check { display:flex;align-items:flex-start;gap:8px;font-size:13px;color:#888;text-align:left;cursor:pointer; }
+.nl-check input { margin-top:2px;accent-color:#E8192C;flex-shrink:0; }
+.nl-check a { color:#111;text-decoration:underline; }
 
-      /* Footer */
-      footer {
-        background: #0d0d0d;
-        padding: 64px clamp(24px, 5vw, 80px) 32px;
-      }
-      .footer-grid {
-        max-width: 1280px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: auto 1fr 1fr 1fr;
-        gap: clamp(32px, 5vw, 80px);
-        margin-bottom: 56px;
-      }
-      .footer-brand h3 {
-        font-size: 17px;
-        font-weight: 700;
-        color: #fff;
-        line-height: 1.35;
-        margin: 20px 0 16px;
-        max-width: 200px;
-      }
-      .footer-col-title {
-        font-size: 11px;
-        font-weight: 600;
-        color: #3a3a3a;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        margin-bottom: 16px;
-      }
-      .footer-col p,
-      .footer-col a {
-        display: block;
-        font-size: 13px;
-        color: #484848;
-        line-height: 2;
-      }
-      .footer-col a:hover {
-        color: #888;
-      }
-      .footer-bottom {
-        max-width: 1280px;
-        margin: 0 auto;
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
-        padding-top: 24px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 12px;
-      }
-      .footer-bottom span {
-        font-size: 12px;
-        color: #2e2e2e;
-      }
-      .footer-legal {
-        display: flex;
-        gap: 20px;
-      }
-      .footer-legal a {
-        font-size: 12px;
-        color: #3a3a3a;
-        transition: color 0.15s;
-      }
-      .footer-legal a:hover {
-        color: #666;
-      }
-    </style>
-  </head>
-  <body>
-    <!-- NAV -->
-    <nav>
-      <div class="nav-inner">
-        <a href="#" class="logo">
-          <div class="logo-mark">bs</div>
-          <div class="logo-text">business<br />solutions</div>
-        </a>
-        <div style="display: flex; align-items: center">
-          <div class="nav-links">
-            <a href="#" class="active"
-              >SOLUTIONS
-              <span style="font-size: 9px; color: #e8192c">▾</span></a
-            >
-            <a href="#">ABOUT US</a>
-            <a href="#">CONTACT</a>
-            <a href="#">SUPPORT</a>
-          </div>
-          <div class="nav-utils">
-            <span style="cursor: pointer">⌕</span>
-            <span style="cursor: pointer">EN ▾</span>
-          </div>
-        </div>
+/* Footer */
+footer { background:#0D0D0D;padding:64px clamp(24px,5vw,80px) 32px; }
+.footer-grid { max-width:1280px;margin:0 auto;display:grid;grid-template-columns:auto 1fr 1fr 1fr;gap:clamp(32px,5vw,80px);margin-bottom:56px; }
+.footer-brand h3 { font-size:17px;font-weight:700;color:#fff;line-height:1.35;margin:20px 0 16px;max-width:200px; }
+.footer-col-title { font-size:11px;font-weight:600;color:#3A3A3A;letter-spacing:.12em;text-transform:uppercase;margin-bottom:16px; }
+.footer-col p, .footer-col a { display:block;font-size:13px;color:#484848;line-height:2; }
+.footer-col a:hover { color:#888; }
+.footer-bottom { max-width:1280px;margin:0 auto;border-top:1px solid rgba(255,255,255,.05);padding-top:24px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px; }
+.footer-bottom span { font-size:12px;color:#2E2E2E; }
+.footer-legal { display:flex;gap:20px; }
+.footer-legal a { font-size:12px;color:#3A3A3A;transition:color .15s; }
+.footer-legal a:hover { color:#666; }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <div class="logo-mark">bs</div>
+      <div class="logo-text">business<br>solutions</div>
+    </a>
+    <div style="display:flex;align-items:center">
+      <div class="nav-links">
+        <a href="#" class="active">SOLUTIONS <span style="font-size:9px;color:#E8192C">▾</span></a>
+        <a href="#">ABOUT US</a>
+        <a href="#">CONTACT</a>
+        <a href="#">SUPPORT</a>
       </div>
-    </nav>
+      <div class="nav-utils">
+        <span style="cursor:pointer">⌕</span>
+        <span style="cursor:pointer">EN ▾</span>
+      </div>
+    </div>
+  </div>
+</nav>
 
-    <!-- HERO -->
-    <section class="hero">
-      <div class="hero-bg"></div>
-      <div class="hero-photo">
-        <div class="hero-photo-inner"></div>
-        <div class="hero-photo-label">office / team photo</div>
-      </div>
-      <div class="hero-fade"></div>
-      <div class="hero-content">
-        <h1>Tailored<br />solutions for<br />your business</h1>
-        <p>
-          At Business Solutions, we offer a wide range of services and solutions
-          to help digitize your entire business.
-        </p>
-        <div class="hero-ctas">
-          <a href="#" class="btn-primary">Solutions →</a>
-          <a href="#" class="btn-ghost-text">Contact us ↗</a>
-        </div>
-      </div>
-    </section>
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-photo">
+    <div class="hero-photo-inner"></div>
+    <div class="hero-photo-label">office / team photo</div>
+  </div>
+  <div class="hero-fade"></div>
+  <div class="hero-content">
+    <h1>Tailored<br>solutions for<br>your business</h1>
+    <p>At Business Solutions, we offer a wide range of services and solutions to help digitize your entire business.</p>
+    <div class="hero-ctas">
+      <a href="#" class="btn-primary">Solutions →</a>
+      <a href="#" class="btn-ghost-text">Contact us ↗</a>
+    </div>
+  </div>
+</section>
 
-    <!-- ABOUT -->
-    <section class="about">
-      <div class="about-grid">
-        <div>
-          <div class="section-label">About Us</div>
-          <h2>
-            We bring together and develop talented, committed, and creative
-            professionals
-          </h2>
-          <p>
-            In our more than 20 years of successful operation, we have
-            implemented, maintained, and advised many large, medium, and small
-            organizations and adapted and developed solutions that helped
-            improve their business results. Business Solutions values were
-            self-formed among the employees and thus gained the actual weight
-            and credibility that such a company needs.
-          </p>
-          <div class="stats-grid">
-            <div>
-              <div class="stat-val">26+</div>
-              <div class="stat-lbl">years of operation</div>
-            </div>
-            <div>
-              <div class="stat-val">700+</div>
-              <div class="stat-lbl">implementations</div>
-            </div>
-            <div>
-              <div class="stat-val">255+</div>
-              <div class="stat-lbl">employees</div>
-            </div>
-            <div>
-              <div class="stat-val">400+</div>
-              <div class="stat-lbl">certificates</div>
-            </div>
-          </div>
-          <a href="#" class="btn-primary">Who we are →</a>
-        </div>
-        <div class="about-img">
-          <div class="about-img-lbl">team / office photo</div>
-          <div class="play-btn">
-            <div class="play-circle"><div class="play-triangle"></div></div>
-          </div>
-        </div>
+<!-- ABOUT -->
+<section class="about">
+  <div class="about-grid">
+    <div>
+      <div class="section-label">About Us</div>
+      <h2>We bring together and develop talented, committed, and creative professionals</h2>
+      <p>In our more than 20 years of successful operation, we have implemented, maintained, and advised many large, medium, and small organizations and adapted and developed solutions that helped improve their business results. Business Solutions values were self-formed among the employees and thus gained the actual weight and credibility that such a company needs.</p>
+      <div class="stats-grid">
+        <div><div class="stat-val">26+</div><div class="stat-lbl">years of operation</div></div>
+        <div><div class="stat-val">700+</div><div class="stat-lbl">implementations</div></div>
+        <div><div class="stat-val">255+</div><div class="stat-lbl">employees</div></div>
+        <div><div class="stat-val">400+</div><div class="stat-lbl">certificates</div></div>
       </div>
-    </section>
+      <a href="#" class="btn-primary">Who we are →</a>
+    </div>
+    <div class="about-img">
+      <div class="about-img-lbl">team / office photo</div>
+      <div class="play-btn">
+        <div class="play-circle"><div class="play-triangle"></div></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- SERVICES -->
-    <section class="services">
-      <div
-        style="
-          max-width: 1280px;
-          margin: 0 auto;
-          padding: 0 clamp(24px, 5vw, 80px);
-        "
-      >
-        <div class="tile-row r1">
-          <div class="tile-header">
-            <h2>Our areas<br />of operation</h2>
-          </div>
-          <div class="tile">
-            <svg
-              width="22"
-              height="22"
-              fill="none"
-              stroke="#fff"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-            >
-              <circle cx="12" cy="12" r="3" />
-              <path
-                d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"
-              />
-            </svg>
-            <div class="tile-lbl">ERP</div>
-          </div>
-          <div class="tile">
-            <svg
-              width="22"
-              height="22"
-              fill="none"
-              stroke="#fff"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-            >
-              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-              <circle cx="9" cy="7" r="4" />
-              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
-            </svg>
-            <div class="tile-lbl">CRM</div>
-          </div>
-          <div class="tile">
-            <svg
-              width="22"
-              height="22"
-              fill="none"
-              stroke="#fff"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
-              />
-              <polyline points="14 2 14 8 20 8" />
-              <line x1="16" y1="13" x2="8" y2="13" />
-              <line x1="16" y1="17" x2="8" y2="17" />
-            </svg>
-            <div class="tile-lbl">DMS</div>
-          </div>
-          <div class="tile">
-            <svg
-              width="22"
-              height="22"
-              fill="none"
-              stroke="#fff"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-            >
-              <line x1="18" y1="20" x2="18" y2="10" />
-              <line x1="12" y1="20" x2="12" y2="4" />
-              <line x1="6" y1="20" x2="6" y2="14" />
-            </svg>
-            <div class="tile-lbl">BI</div>
-          </div>
-        </div>
-        <div class="tile-row r2">
-          <div class="tile">
-            <svg
-              width="22"
-              height="22"
-              fill="none"
-              stroke="#fff"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-            >
-              <rect x="3" y="3" width="18" height="18" rx="2" />
-              <path d="M3 9h18M9 21V9" />
-            </svg>
-            <div class="tile-lbl">Project<br />Management</div>
-          </div>
-          <div class="tile">
-            <svg
-              width="22"
-              height="22"
-              fill="none"
-              stroke="#fff"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-            >
-              <rect x="3" y="3" width="7" height="7" />
-              <rect x="14" y="3" width="7" height="7" />
-              <rect x="3" y="14" width="7" height="7" />
-              <rect x="14" y="14" width="7" height="7" />
-            </svg>
-            <div class="tile-lbl">Office work</div>
-          </div>
-          <div class="tile">
-            <svg
-              width="22"
-              height="22"
-              fill="none"
-              stroke="#fff"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-            >
-              <circle cx="12" cy="12" r="10" />
-              <circle cx="12" cy="12" r="4" />
-              <line x1="21.17" y1="8" x2="12" y2="8" />
-              <line x1="3.95" y1="6.06" x2="8.54" y2="14" />
-              <line x1="10.88" y1="21.94" x2="15.46" y2="14" />
-            </svg>
-            <div class="tile-lbl">Marketing</div>
-          </div>
-          <div class="tile">
-            <svg
-              width="22"
-              height="22"
-              fill="none"
-              stroke="#fff"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-            >
-              <circle cx="9" cy="21" r="1" />
-              <circle cx="20" cy="21" r="1" />
-              <path
-                d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"
-              />
-            </svg>
-            <div class="tile-lbl">Sales</div>
-          </div>
-          <div class="tile">
-            <svg
-              width="22"
-              height="22"
-              fill="none"
-              stroke="#fff"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-            >
-              <rect x="2" y="3" width="20" height="14" rx="2" />
-              <path d="M8 21h8M12 17v4" />
-            </svg>
-            <div class="tile-lbl">Online sales</div>
-          </div>
-          <div class="tile">
-            <svg
-              width="22"
-              height="22"
-              fill="none"
-              stroke="#fff"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-            >
-              <polyline points="16 18 22 12 16 6" />
-              <polyline points="8 6 2 12 8 18" />
-            </svg>
-            <div class="tile-lbl">Web applications</div>
-          </div>
-        </div>
-        <div class="tile-row r2" style="margin-bottom: 0">
-          <div class="tile">
-            <svg
-              width="22"
-              height="22"
-              fill="none"
-              stroke="#fff"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-            >
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-              <circle cx="12" cy="7" r="4" />
-            </svg>
-            <div class="tile-lbl">HRM</div>
-          </div>
-          <div class="tile">
-            <svg
-              width="22"
-              height="22"
-              fill="none"
-              stroke="#fff"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0"
-              />
-              <line x1="12" y1="20" x2="12.01" y2="20" />
-            </svg>
-            <div class="tile-lbl">IoT</div>
-          </div>
-          <div class="tile">
-            <svg
-              width="22"
-              height="22"
-              fill="none"
-              stroke="#fff"
-              stroke-width="1.5"
-              viewBox="0 0 24 24"
-            >
-              <rect x="2" y="2" width="20" height="8" rx="2" />
-              <rect x="2" y="14" width="20" height="8" rx="2" />
-              <line x1="6" y1="6" x2="6.01" y2="6" />
-              <line x1="6" y1="18" x2="6.01" y2="18" />
-            </svg>
-            <div class="tile-lbl">Information<br />infrastructure</div>
-          </div>
-          <div class="tile-empty"></div>
-          <div class="tile-empty"></div>
-          <div class="tile-empty"></div>
-        </div>
+<!-- SERVICES -->
+<section class="services">
+  <div style="max-width:1280px;margin:0 auto;padding:0 clamp(24px,5vw,80px)">
+    <div class="tile-row r1">
+      <div class="tile-header"><h2>Our areas<br>of operation</h2></div>
+      <div class="tile">
+        <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+        <div class="tile-lbl">ERP</div>
       </div>
-    </section>
+      <div class="tile">
+        <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="1.5" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        <div class="tile-lbl">CRM</div>
+      </div>
+      <div class="tile">
+        <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="1.5" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        <div class="tile-lbl">DMS</div>
+      </div>
+      <div class="tile">
+        <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="1.5" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <div class="tile-lbl">BI</div>
+      </div>
+    </div>
+    <div class="tile-row r2">
+      <div class="tile">
+        <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        <div class="tile-lbl">Project<br>Management</div>
+      </div>
+      <div class="tile">
+        <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="1.5" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        <div class="tile-lbl">Office work</div>
+      </div>
+      <div class="tile">
+        <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="21.17" y1="8" x2="12" y2="8"/><line x1="3.95" y1="6.06" x2="8.54" y2="14"/><line x1="10.88" y1="21.94" x2="15.46" y2="14"/></svg>
+        <div class="tile-lbl">Marketing</div>
+      </div>
+      <div class="tile">
+        <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <div class="tile-lbl">Sales</div>
+      </div>
+      <div class="tile">
+        <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+        <div class="tile-lbl">Online sales</div>
+      </div>
+      <div class="tile">
+        <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="1.5" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+        <div class="tile-lbl">Web applications</div>
+      </div>
+    </div>
+    <div class="tile-row r2" style="margin-bottom:0">
+      <div class="tile">
+        <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <div class="tile-lbl">HRM</div>
+      </div>
+      <div class="tile">
+        <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="1.5" viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0 1 14.08 0M1.42 9a16 16 0 0 1 21.16 0M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+        <div class="tile-lbl">IoT</div>
+      </div>
+      <div class="tile">
+        <svg width="22" height="22" fill="none" stroke="#fff" stroke-width="1.5" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
+        <div class="tile-lbl">Information<br>infrastructure</div>
+      </div>
+      <div class="tile-empty"></div>
+      <div class="tile-empty"></div>
+      <div class="tile-empty"></div>
+    </div>
+  </div>
+</section>
 
-    <!-- CASE STUDIES -->
-    <section class="cases">
-      <div style="max-width: 1280px; margin: 0 auto">
-        <div class="cases-head">
-          <div>
-            <div class="section-label">Case Studies</div>
-            <h2>Why do customers trust us</h2>
-          </div>
-          <a
-            href="#"
-            class="btn-primary"
-            style="font-size: 13px; padding: 10px 18px"
-            >More →</a
-          >
-        </div>
-        <div class="cases-grid">
-          <div class="case-card">
-            <div class="case-cat">Instrumentation Technologies</div>
-            <div class="case-title">
-              Instrumentation Technologies achieves significantly higher
-              productivity using Microsoft Teams
-            </div>
-            <div class="case-tag">High technology</div>
-          </div>
-          <div class="case-card">
-            <div class="case-cat">E-Commerce</div>
-            <div class="case-title">
-              How we improved employee productivity by automating the online
-              store via the ERP system
-            </div>
-            <div class="case-tag">B2B</div>
-          </div>
-          <div class="case-card">
-            <div class="case-cat">Custom Software</div>
-            <div class="case-title">
-              Improved business insight for the Slovenian transmission system
-              operator
-            </div>
-            <div class="case-tag">Services</div>
-          </div>
-        </div>
+<!-- CASE STUDIES -->
+<section class="cases">
+  <div style="max-width:1280px;margin:0 auto">
+    <div class="cases-head">
+      <div>
+        <div class="section-label">Case Studies</div>
+        <h2>Why do customers trust us</h2>
       </div>
-    </section>
+      <a href="#" class="btn-primary" style="font-size:13px;padding:10px 18px">More →</a>
+    </div>
+    <div class="cases-grid">
+      <div class="case-card">
+        <div class="case-cat">Instrumentation Technologies</div>
+        <div class="case-title">Instrumentation Technologies achieves significantly higher productivity using Microsoft Teams</div>
+        <div class="case-tag">High technology</div>
+      </div>
+      <div class="case-card">
+        <div class="case-cat">E-Commerce</div>
+        <div class="case-title">How we improved employee productivity by automating the online store via the ERP system</div>
+        <div class="case-tag">B2B</div>
+      </div>
+      <div class="case-card">
+        <div class="case-cat">Custom Software</div>
+        <div class="case-title">Improved business insight for the Slovenian transmission system operator</div>
+        <div class="case-tag">Services</div>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <!-- CTA BAND -->
-    <section class="cta-band">
-      <div class="cta-inner">
-        <h2>Digitalize your entire business with us</h2>
-        <a href="#" class="btn-primary">Let's talk →</a>
-      </div>
-    </section>
+<!-- CTA BAND -->
+<section class="cta-band">
+  <div class="cta-inner">
+    <h2>Digitalize your entire business with us</h2>
+    <a href="#" class="btn-primary">Let's talk →</a>
+  </div>
+</section>
 
-    <!-- NEWSLETTER -->
-    <section class="newsletter">
-      <div class="newsletter-inner">
-        <h3>
-          Do you want to receive news, tricks and tips directly to your e-mail?
-        </h3>
-        <p>
-          Subscribe to the newsletter by entering your name and email in the
-          window below.
-        </p>
-        <div class="nl-form">
-          <div>
-            <div class="nl-label">Name and Surname</div>
-            <input type="text" class="nl-input" placeholder="John Doe" />
-          </div>
-          <div>
-            <div class="nl-label">E-mail</div>
-            <input
-              type="email"
-              class="nl-input"
-              placeholder="john@company.com"
-            />
-          </div>
-        </div>
-        <div class="nl-bottom">
-          <label class="nl-check">
-            <input type="checkbox" />
-            I agree to the <a href="#">Privacy Policy</a> and
-            <a href="#">Terms and Conditions</a>
-          </label>
-          <a
-            href="#"
-            class="btn-primary"
-            style="font-size: 13px; padding: 11px 22px"
-            >Subscribe →</a
-          >
-        </div>
+<!-- NEWSLETTER -->
+<section class="newsletter">
+  <div class="newsletter-inner">
+    <h3>Do you want to receive news, tricks and tips directly to your e-mail?</h3>
+    <p>Subscribe to the newsletter by entering your name and email in the window below.</p>
+    <div class="nl-form">
+      <div>
+        <div class="nl-label">Name and Surname</div>
+        <input type="text" class="nl-input" placeholder="John Doe">
       </div>
-    </section>
+      <div>
+        <div class="nl-label">E-mail</div>
+        <input type="email" class="nl-input" placeholder="john@company.com">
+      </div>
+    </div>
+    <div class="nl-bottom">
+      <label class="nl-check">
+        <input type="checkbox">
+        I agree to the <a href="#">Privacy Policy</a> and <a href="#">Terms and Conditions</a>
+      </label>
+      <a href="#" class="btn-primary" style="font-size:13px;padding:11px 22px">Subscribe →</a>
+    </div>
+  </div>
+</section>
 
-    <!-- FOOTER -->
-    <footer>
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <div class="logo">
-            <div class="logo-mark">bs</div>
-            <div class="logo-text">business<br />solutions</div>
-          </div>
-          <h3>Do you want to take a step forward in your business?</h3>
-          <a
-            href="#"
-            class="btn-primary"
-            style="font-size: 13px; padding: 10px 18px"
-            >Contact us →</a
-          >
-        </div>
-        <div class="footer-col">
-          <div class="footer-col-title">Company</div>
-          <p>Business Solutions d.o.o.</p>
-          <p>Verovškova ulica 55</p>
-          <p>1000 Ljubljana, Slovenia</p>
-          <p style="margin-top: 8px">+386 1 234 5 678</p>
-          <a href="#">Company information</a>
-        </div>
-        <div class="footer-col">
-          <div class="footer-col-title">Navigation</div>
-          <a href="#" style="color: #e8192c !important">Solutions</a>
-          <a href="#">About us</a>
-          <a href="#">Contact</a>
-          <a href="#">Support</a>
-          <a href="#">Glassdoor</a>
-        </div>
-        <div class="footer-col">
-          <div class="footer-col-title">Social</div>
-          <a href="#">LinkedIn</a>
-          <a href="#">Facebook</a>
-          <a href="#">Instagram</a>
-        </div>
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="logo">
+        <div class="logo-mark">bs</div>
+        <div class="logo-text">business<br>solutions</div>
       </div>
-      <div class="footer-bottom">
-        <span>© Business Solutions, All rights reserved.</span>
-        <div class="footer-legal">
-          <a href="#">Privacy policy</a>
-          <a href="#">Cookie policy</a>
-        </div>
-      </div>
-    </footer>
-  </body>
+      <h3>Do you want to take a step forward in your business?</h3>
+      <a href="#" class="btn-primary" style="font-size:13px;padding:10px 18px">Contact us →</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Company</div>
+      <p>Business Solutions d.o.o.</p>
+      <p>Verovškova ulica 55</p>
+      <p>1000 Ljubljana, Slovenia</p>
+      <p style="margin-top:8px">+386 1 234 5 678</p>
+      <a href="#">Company information</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Navigation</div>
+      <a href="#" style="color:#E8192C !important">Solutions</a>
+      <a href="#">About us</a>
+      <a href="#">Contact</a>
+      <a href="#">Support</a>
+      <a href="#">Glassdoor</a>
+    </div>
+    <div class="footer-col">
+      <div class="footer-col-title">Social</div>
+      <a href="#">LinkedIn</a>
+      <a href="#">Facebook</a>
+      <a href="#">Instagram</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© Business Solutions, All rights reserved.</span>
+    <div class="footer-legal">
+      <a href="#">Privacy policy</a>
+      <a href="#">Cookie policy</a>
+    </div>
+  </div>
+</footer>
+
+</body>
 </html>

@@ -16,14 +16,16 @@ export class DashboardPage {
 
   getTab(tabName: string): Locator {
     switch (tabName) {
+      case 'account':
       case 'card':
-        return this.page.locator(SELECTORS.DASHBOARD_TAB_CARD).first();
+      case 'profile':
+        return this.page.locator(SELECTORS.DASHBOARD_TAB_ACCOUNT).first();
       case 'catalog':
         return this.page.locator(SELECTORS.DASHBOARD_TAB_CATALOG).first();
       case 'subscription':
         return this.page.locator(SELECTORS.DASHBOARD_TAB_SUBSCRIPTION).first();
-      case 'profile':
-        return this.page.locator(SELECTORS.DASHBOARD_TAB_PROFILE).first();
+      case 'settings':
+        return this.page.locator(SELECTORS.DASHBOARD_TAB_SETTINGS).first();
       case 'business':
         return this.page.locator(SELECTORS.DASHBOARD_TAB_BUSINESS).first();
       case 'introductions':
@@ -38,7 +40,7 @@ export class DashboardPage {
   }
 
   async getVisibleTabNames(): Promise<string[]> {
-    const tabs = ['card', 'catalog', 'subscription', 'profile', 'business', 'introductions'];
+    const tabs = ['account', 'subscription', 'introductions', 'business', 'settings'];
     const visibleTabs: string[] = [];
 
     for (const tab of tabs) {

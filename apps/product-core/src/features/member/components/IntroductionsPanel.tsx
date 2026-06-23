@@ -10,10 +10,11 @@ import {
   type MemberIntroductionDto,
   type PublicBusinessListItemDto,
 } from '@kclub/contracts';
-import { Badge, Skeleton, Surface } from '@kclub/ui';
+import { Badge, Skeleton, cn } from '@kclub/ui';
 
 import type { Locale } from '@/i18n/routing';
 import { parseAuthResponse } from '@/features/auth/utils/api';
+import { cabinetContentClasses, cabinetFieldLabelClasses, cabinetGridPanelClasses } from '@/features/member/components/cabinet/styles';
 
 const STATUS_LABEL_KEYS: Record<string, string> = {
   SUBMITTED: 'statusSubmitted',
@@ -63,10 +64,10 @@ export function IntroductionsPanel({
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
-  const labelClassName = 'block text-sm font-medium text-zinc-700 dark:text-white/72';
-  const fieldClassName = 'kclub-field mt-1';
+  const labelClassName = cabinetFieldLabelClasses;
+  const fieldClassName = 'kclub-field mt-2 w-full';
   const buttonClassName =
-    'kclub-button-primary rounded-none border-0 px-5 py-3 text-xs tracking-[0.24em] disabled:cursor-not-allowed disabled:opacity-50';
+    'inline-flex items-center bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50';
 
   const publishedOwnBusinesses = ownBusinesses.filter((b) => b.status === 'PUBLISHED');
   const availableTargets = serverPublicBusinesses.filter(
@@ -192,7 +193,7 @@ export function IntroductionsPanel({
 
   if (isLoading) {
     return (
-      <Surface className="kclub-panel max-w-none space-y-6 rounded-none px-6 py-6 shadow-none ring-0">
+      <div className={cn(cabinetContentClasses, 'space-y-6')}>
         <Skeleton className="h-7 w-48" />
         <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-3/4" />
@@ -205,34 +206,21 @@ export function IntroductionsPanel({
           <Skeleton className="h-20" />
           <Skeleton className="h-10 w-32" />
         </div>
-        <div className="space-y-4">
-          <Skeleton className="h-6 w-36" />
-          <Skeleton className="h-24" />
-          <Skeleton className="h-24" />
-        </div>
-      </Surface>
+      </div>
     );
   }
 
   if (publishedOwnBusinesses.length === 0) {
     return (
-      <Surface className="kclub-panel max-w-none rounded-none px-6 py-6 shadow-none ring-0">
-        <h2 className="text-xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
-          {t('title')}
-        </h2>
-        <p className="dark:text-white/66 mt-2 text-sm leading-7 text-zinc-600">
-          {t('noPublishedBusiness')}
-        </p>
-      </Surface>
+      <div className={cabinetContentClasses}>
+        <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">{t('noPublishedBusiness')}</p>
+      </div>
     );
   }
 
   return (
-    <Surface className="kclub-panel max-w-none space-y-6 rounded-none px-6 py-6 shadow-none ring-0">
-      <h2 className="text-xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
-        {t('title')}
-      </h2>
-      <p className="dark:text-white/66 text-sm leading-7 text-zinc-600">{t('description')}</p>
+    <div className={cabinetContentClasses}>
+      <p className="mb-9 max-w-2xl text-sm leading-relaxed text-muted-foreground">{t('description')}</p>
 
       {error && (
         <div className="border border-red-200 bg-red-50 p-3 text-sm text-red-800 dark:border-red-500/30 dark:bg-red-950/40 dark:text-red-200">
@@ -241,9 +229,7 @@ export function IntroductionsPanel({
       )}
 
       <div className="space-y-4">
-        <h3 className="text-lg font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
-          {t('submitTitle')}
-        </h3>
+        <h3 className="text-lg font-semibold text-foreground">{t('submitTitle')}</h3>
 
         <form onSubmit={handleSubmitIntroduction} className="space-y-4">
           {submitError && (
@@ -312,38 +298,31 @@ export function IntroductionsPanel({
       </div>
 
       <div className="space-y-4">
-        <h3 className="text-lg font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
-          {t('listTitle')}
-        </h3>
+        <h3 className="text-lg font-semibold text-foreground">{t('listTitle')}</h3>
 
         {introductions.length === 0 && (
-          <p className="dark:text-white/62 text-sm text-zinc-600">{t('emptyList')}</p>
+          <p className="text-sm text-muted-foreground">{t('emptyList')}</p>
         )}
 
-        <div className="space-y-3">
+        <div className="space-y-0.5">
           {introductions.map((intro) => (
-            <Surface
-              key={intro.id}
-              className="kclub-panel-soft max-w-none space-y-3 rounded-none p-4 shadow-none ring-0"
-            >
+            <div key={intro.id} className={cn(cabinetGridPanelClasses, 'space-y-3')}>
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
-                  <p className="text-sm text-zinc-950 dark:text-white">
+                  <p className="text-sm text-foreground">
                     <span className="font-medium">{intro.requesterBusinessName}</span>
                     {' -> '}
                     <span className="font-medium">{intro.targetBusinessName}</span>
                   </p>
                   {intro.message && (
-                    <p className="dark:text-white/64 text-sm text-zinc-600">{intro.message}</p>
+                    <p className="text-sm text-muted-foreground">{intro.message}</p>
                   )}
                   {intro.rejectionReason && (
                     <p className="text-sm text-red-600 dark:text-red-400">
                       {t('rejectionReasonLabel')}: {intro.rejectionReason}
                     </p>
                   )}
-                  <p className="dark:text-white/42 text-xs text-zinc-500">
-                    {new Date(intro.createdAt).toLocaleDateString()}
-                  </p>
+                  <p className="text-xs text-muted">{new Date(intro.createdAt).toLocaleDateString()}</p>
                 </div>
                 <div className="flex flex-col items-end gap-2">
                   <Badge variant={getStatusBadgeVariant(intro.status)}>
@@ -360,10 +339,10 @@ export function IntroductionsPanel({
                   )}
                 </div>
               </div>
-            </Surface>
+            </div>
           ))}
         </div>
       </div>
-    </Surface>
+    </div>
   );
 }

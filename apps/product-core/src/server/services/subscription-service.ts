@@ -10,6 +10,11 @@ import { hasActiveVipAccess } from '@kclub/domain';
 import { AppError } from '@/server/errors';
 import { getPrismaClient } from '@/server/db';
 import { getStripeClient } from '@/server/stripe/client';
+import { rethrowStripeCheckoutError } from '@/server/stripe/errors';
+import {
+  parseAdminConfigPriceId,
+  resolveStripePriceIdFromEnv,
+} from '@/server/stripe/price-config';
 import type { RequestContext } from '@/server/context';
 import { createDbAuditService } from '@/server/audit';
 
@@ -41,20 +46,15 @@ function buildCancelUrl(appUrl: string, locale: Locale): string {
 async function getPriceIdForKey(key: string): Promise<string> {
   const prisma = getPrismaClient();
   const config = await prisma.adminConfig.findUnique({ where: { key } });
+  const priceId =
+    parseAdminConfigPriceId(config?.value) ?? resolveStripePriceIdFromEnv(key);
 
-  if (!config) {
-    throw new AppError({
-      code: ERROR_CODES.STRIPE_CONFIG_MISSING,
-      message: `Stripe price not configured: ${key}`,
-      status: 500,
-    });
-  }
-
-  const priceId = (config.value as { priceId?: string })?.priceId;
   if (!priceId) {
     throw new AppError({
       code: ERROR_CODES.STRIPE_CONFIG_MISSING,
-      message: `Stripe price ID is empty for: ${key}`,
+      message: config
+        ? `Stripe price ID is empty for: ${key}`
+        : `Stripe price not configured: ${key}`,
       status: 500,
     });
   }
@@ -93,14 +93,19 @@ export async function startVipCheckout(
 
   const priceId = await getPriceIdForKey('stripe_price_vip_membership_monthly');
 
-  const session = await stripe.checkout.sessions.create({
-    mode: 'subscription',
-    line_items: [{ price: priceId, quantity: 1 }],
-    metadata: buildVipMetadata(userId),
-    client_reference_id: userId,
-    success_url: buildSuccessUrl(appUrl, locale),
-    cancel_url: buildCancelUrl(appUrl, locale),
-  });
+  let session;
+  try {
+    session = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      line_items: [{ price: priceId, quantity: 1 }],
+      metadata: buildVipMetadata(userId),
+      client_reference_id: userId,
+      success_url: buildSuccessUrl(appUrl, locale),
+      cancel_url: buildCancelUrl(appUrl, locale),
+    });
+  } catch (error) {
+    rethrowStripeCheckoutError(error);
+  }
 
   if (!session.url) {
     throw new AppError({
@@ -158,14 +163,19 @@ export async function startPlacementCheckout(
 
   const priceId = await getPriceIdForKey('stripe_price_business_placement_monthly');
 
-  const session = await stripe.checkout.sessions.create({
-    mode: 'subscription',
-    line_items: [{ price: priceId, quantity: 1 }],
-    metadata: buildPlacementMetadata(userId, businessId),
-    client_reference_id: userId,
-    success_url: buildSuccessUrl(appUrl, locale),
-    cancel_url: buildCancelUrl(appUrl, locale),
-  });
+  let session;
+  try {
+    session = await stripe.checkout.sessions.create({
+      mode: 'subscription',
+      line_items: [{ price: priceId, quantity: 1 }],
+      metadata: buildPlacementMetadata(userId, businessId),
+      client_reference_id: userId,
+      success_url: buildSuccessUrl(appUrl, locale),
+      cancel_url: buildCancelUrl(appUrl, locale),
+    });
+  } catch (error) {
+    rethrowStripeCheckoutError(error);
+  }
 
   if (!session.url) {
     throw new AppError({

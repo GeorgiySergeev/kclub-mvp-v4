@@ -90,10 +90,10 @@ describe('centralized constants', () => {
     );
 
     expect(MEMBER_DASHBOARD_TAB_VISIBILITY.MEMBER).toEqual([
-      'card',
+      'account',
       'catalog',
       'subscription',
-      'profile',
+      'settings',
     ]);
     expect(MEMBER_DASHBOARD_TAB_VISIBILITY.VIP).not.toContain('introductions');
     expect(MEMBER_DASHBOARD_TAB_VISIBILITY.VIP_WITH_PUBLISHED_BUSINESS).toContain('introductions');

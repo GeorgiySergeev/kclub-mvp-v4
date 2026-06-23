@@ -58,7 +58,10 @@ export function DigitalClubCard({
       </div>
 
       <div className="flex flex-1 items-center justify-center">
-        <p className="font-mono text-[clamp(1.125rem,4vw,1.5rem)] tracking-[0.22em] text-zinc-900">
+        <p
+          data-testid="card-number"
+          className="font-mono text-[clamp(1.125rem,4vw,1.5rem)] tracking-[0.22em] text-zinc-900"
+        >
           {maskedNumber}
         </p>
       </div>
