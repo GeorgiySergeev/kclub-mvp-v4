@@ -7,7 +7,6 @@ import {
 
 export const IMPLEMENTED_MEMBER_DASHBOARD_TABS = [
   'card',
-  'catalog',
   'subscription',
   'profile',
   'business',

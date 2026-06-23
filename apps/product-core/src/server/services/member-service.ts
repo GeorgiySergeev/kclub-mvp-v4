@@ -19,6 +19,10 @@ export type UserRecord = {
   membership_tier: string;
   status: string;
   terms_accepted_at: Date | null;
+  country: string | null;
+  city: string | null;
+  about: string | null;
+  avatar_url: string | null;
   created_at: Date;
   updated_at: Date;
 };
@@ -53,15 +57,20 @@ export function toCurrentMemberProfileDto(user: UserRecord): CurrentMemberProfil
     termsAcceptedAt: user.terms_accepted_at?.toISOString() ?? null,
     createdAt: user.created_at.toISOString(),
     updatedAt: user.updated_at.toISOString(),
+    country: user.country,
+    city: user.city,
+    about: user.about,
+    avatarUrl: user.avatar_url,
   };
 }
 
 export async function getMemberBySupabaseUserId(supabaseUserId: string): Promise<UserRecord> {
   const prisma = getPrismaClient();
 
-  const user = await prisma.user.findUnique({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const user = await (prisma.user.findUnique as any)({
     where: { supabase_auth_user_id: supabaseUserId },
-  });
+  }) as UserRecord | null;
 
   if (!user) {
     throw new AppError({
@@ -90,15 +99,20 @@ export async function updateMemberProfile(
 
   const user = await getMemberBySupabaseUserId(supabaseUserId);
 
-  const data: Record<string, string> = {};
+  const data: Record<string, string | null> = {};
 
   if (input.displayName !== undefined) data.display_name = input.displayName;
   if (input.localePreference !== undefined) data.locale_preference = input.localePreference;
+  if (input.country !== undefined) data.country = input.country ?? null;
+  if (input.city !== undefined) data.city = input.city ?? null;
+  if (input.about !== undefined) data.about = input.about ?? null;
+  if (input.avatarUrl !== undefined) data.avatar_url = input.avatarUrl ?? null;
 
-  const updated = await prisma.user.update({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const updated = await (prisma.user.update as any)({
     where: { id: user.id },
     data,
-  });
+  }) as UserRecord;
 
   return updated;
 }
@@ -119,14 +133,15 @@ export async function completeMemberOnboarding(
     });
   }
 
-  const updated = await prisma.user.update({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const updated = await (prisma.user.update as any)({
     where: { id: user.id },
     data: {
       display_name: input.displayName,
       locale_preference: input.localePreference,
       terms_accepted_at: new Date(),
     },
-  });
+  }) as UserRecord;
 
   return updated;
 }

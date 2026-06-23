@@ -151,6 +151,10 @@ export type CurrentMemberProfileDto = {
   termsAcceptedAt: IsoDateTime | null;
   createdAt: IsoDateTime;
   updatedAt: IsoDateTime;
+  country: string | null;
+  city: string | null;
+  about: string | null;
+  avatarUrl: string | null;
 };
 
 export type PublicCardVerificationDto = {

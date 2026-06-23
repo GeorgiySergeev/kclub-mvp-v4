@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 40" width="128" height="40" role="img" aria-label="Business Solutions">
+  
+  <rect x="0" y="4" width="32" height="32" fill="#E8192C"></rect>
+  <text x="16" y="25.5" font-family="&#39;Barlow&#39;,&#39;Helvetica Neue&#39;,Helvetica,Arial,sans-serif" font-size="15" font-weight="700" fill="#FFFFFF" text-anchor="middle" letter-spacing="-0.5">bs</text>
+  
+  <text x="42" y="18" font-family="&#39;Barlow&#39;,&#39;Helvetica Neue&#39;,Helvetica,Arial,sans-serif" font-size="11" font-weight="600" fill="#FFFFFF" letter-spacing="0.6">business</text>
+  <text x="42" y="31" font-family="&#39;Barlow&#39;,&#39;Helvetica Neue&#39;,Helvetica,Arial,sans-serif" font-size="11" font-weight="600" fill="#FFFFFF" letter-spacing="0.6">solutions</text>
+</svg>

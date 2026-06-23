@@ -1,0 +1,93 @@
+import { type NextRequest } from 'next/server';
+
+import { ERROR_CODES } from '@kclub/contracts';
+
+import { createSupabaseServerClient, createSupabaseServiceClient } from '@/server/auth';
+import { jsonSuccess, jsonError, jsonErrorFromUnknown } from '@/server/api';
+import {
+  getMemberBySupabaseUserId,
+  toCurrentMemberProfileDto,
+} from '@/server/services';
+import { getPrismaClient } from '@/server/db';
+
+const AVATAR_BUCKET = 'avatars';
+const MAX_BYTES = 5 * 1024 * 1024; // 5 MB
+
+export async function POST(request: NextRequest) {
+  try {
+    const supabase = await createSupabaseServerClient();
+    const {
+      data: { user: supabaseUser },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (error || !supabaseUser) {
+      return jsonError(
+        { code: ERROR_CODES.AUTH_SESSION_REQUIRED, message: 'Authentication required' },
+        undefined,
+        { status: 401 },
+      );
+    }
+
+    const formData = await request.formData();
+    const file = formData.get('file') as File | null;
+
+    if (!file) {
+      return jsonError(
+        { code: ERROR_CODES.VALIDATION_INVALID_INPUT, message: 'No file provided' },
+        undefined,
+        { status: 400 },
+      );
+    }
+
+    if (!file.type.startsWith('image/')) {
+      return jsonError(
+        { code: ERROR_CODES.VALIDATION_INVALID_INPUT, message: 'File must be an image' },
+        undefined,
+        { status: 400 },
+      );
+    }
+
+    if (file.size > MAX_BYTES) {
+      return jsonError(
+        { code: ERROR_CODES.VALIDATION_INVALID_INPUT, message: 'Image must be smaller than 5 MB' },
+        undefined,
+        { status: 400 },
+      );
+    }
+
+    const localUser = await getMemberBySupabaseUserId(supabaseUser.id);
+    const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg';
+    const storagePath = `${localUser.id}/avatar.${ext}`;
+
+    const bytes = await file.arrayBuffer();
+    const serviceClient = createSupabaseServiceClient();
+
+    const { error: uploadError } = await serviceClient.storage
+      .from(AVATAR_BUCKET)
+      .upload(storagePath, bytes, { contentType: file.type, upsert: true });
+
+    if (uploadError) {
+      return jsonError(
+        { code: ERROR_CODES.VALIDATION_INVALID_INPUT, message: uploadError.message },
+        undefined,
+        { status: 500 },
+      );
+    }
+
+    const {
+      data: { publicUrl },
+    } = serviceClient.storage.from(AVATAR_BUCKET).getPublicUrl(storagePath);
+
+    const prisma = getPrismaClient();
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const updated = await (prisma.user.update as any)({
+      where: { id: localUser.id },
+      data: { avatar_url: publicUrl },
+    });
+
+    return jsonSuccess(toCurrentMemberProfileDto(updated));
+  } catch (err) {
+    return jsonErrorFromUnknown(err);
+  }
+}

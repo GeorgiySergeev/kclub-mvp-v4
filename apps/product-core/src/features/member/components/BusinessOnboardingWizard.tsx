@@ -1,0 +1,486 @@
+'use client';
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { Check } from 'lucide-react';
+
+import { MEMBER_API_ROUTES } from '@kclub/contracts';
+import { FieldError, Spinner } from '@kclub/ui';
+
+import type { Locale } from '@/i18n/routing';
+import { parseAuthResponse } from '@/features/auth/utils/api';
+import type { TaxonomyOption } from './BusinessPanel';
+
+type WizardData = {
+  name: string;
+  categoryId: string;
+  representativeName: string;
+  representativeEmail: string;
+  representativePhone: string;
+  countryId: string;
+  cityId: string;
+  websiteUrl: string;
+  socialUrl: string;
+  briefDescription: string;
+  confirmAuthority: boolean;
+  acceptLegal: boolean;
+};
+
+type Props = {
+  locale: Locale;
+  countryOptions: TaxonomyOption[];
+  cityOptions: TaxonomyOption[];
+  categoryOptions: TaxonomyOption[];
+};
+
+const TOTAL_STEPS = 4;
+
+export function BusinessOnboardingWizard({
+  locale,
+  countryOptions,
+  cityOptions,
+  categoryOptions,
+}: Props) {
+  const t = useTranslations('member.businessOnboarding');
+  const router = useRouter();
+
+  const [step, setStep] = useState(1);
+  const [data, setData] = useState<WizardData>({
+    name: '',
+    categoryId: '',
+    representativeName: '',
+    representativeEmail: '',
+    representativePhone: '',
+    countryId: '',
+    cityId: '',
+    websiteUrl: '',
+    socialUrl: '',
+    briefDescription: '',
+    confirmAuthority: false,
+    acceptLegal: false,
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const labelClass =
+    'block text-xs font-semibold uppercase tracking-[0.14em] text-zinc-500 dark:text-white/48 mb-2';
+  const fieldClass = 'kclub-field w-full';
+
+  const filteredCities = data.countryId
+    ? cityOptions
+    : [];
+
+  const set = <K extends keyof WizardData>(key: K, value: WizardData[K]) =>
+    setData((prev) => ({ ...prev, [key]: value }));
+
+  const stepTitles = [t('step1Title'), t('step2Title'), t('step3Title'), t('step4Title')];
+  const stepDescriptions = [
+    t('step1Description'),
+    t('step2Description'),
+    t('step3Description'),
+    t('step4Description'),
+  ];
+
+  const handleNext = () => {
+    setError(null);
+    setStep((s) => Math.min(s + 1, TOTAL_STEPS));
+  };
+
+  const handleBack = () => {
+    setError(null);
+    setStep((s) => Math.max(s - 1, 1));
+  };
+
+  const handleSubmit = async () => {
+    setIsSubmitting(true);
+    setError(null);
+
+    try {
+      const body: Record<string, unknown> = {
+        name: data.name,
+        representativeName: data.representativeName,
+        representativeEmail: data.representativeEmail,
+        representativePhone: data.representativePhone,
+        countryId: data.countryId,
+        cityId: data.cityId,
+        categoryId: data.categoryId,
+      };
+      if (data.websiteUrl) body.websiteUrl = data.websiteUrl;
+      if (data.socialUrl) body.socialUrl = data.socialUrl;
+      if (data.briefDescription) body.briefDescription = data.briefDescription;
+
+      const response = await fetch(MEMBER_API_ROUTES.BUSINESSES, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      });
+
+      const result = await parseAuthResponse(response);
+
+      if (!result.success) {
+        setError(t('submitError'));
+        return;
+      }
+
+      router.push(`/${locale}/m/dashboard?tab=business`);
+      router.refresh();
+    } catch {
+      setError(t('submitError'));
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="space-y-8">
+      {/* Step indicator */}
+      <div className="space-y-3">
+        <p className="text-xs text-zinc-500 dark:text-white/40">
+          {t('step', { current: step, total: TOTAL_STEPS })}
+        </p>
+        <div className="flex items-center gap-2">
+          {Array.from({ length: TOTAL_STEPS }, (_, i) => {
+            const n = i + 1;
+            const done = n < step;
+            const active = n === step;
+            return (
+              <div key={n} className="flex items-center gap-2">
+                {i > 0 && (
+                  <div
+                    className={`h-px w-8 transition-colors ${
+                      done
+                        ? 'bg-zinc-950 dark:bg-white'
+                        : 'bg-zinc-200 dark:bg-white/15'
+                    }`}
+                  />
+                )}
+                <div
+                  className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold transition-colors ${
+                    done
+                      ? 'bg-zinc-950 text-white dark:bg-white dark:text-zinc-950'
+                      : active
+                        ? 'ring-2 ring-zinc-950 text-zinc-950 dark:ring-white dark:text-white'
+                        : 'bg-zinc-100 text-zinc-400 dark:bg-white/10 dark:text-white/30'
+                  }`}
+                >
+                  {done ? <Check size={13} strokeWidth={2.5} /> : n}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+        <div>
+          <h2 className="text-lg font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
+            {stepTitles[step - 1]}
+          </h2>
+          <p className="mt-1 text-sm text-zinc-500 dark:text-white/56">
+            {stepDescriptions[step - 1]}
+          </p>
+        </div>
+      </div>
+
+      {/* Step 1 — Business info */}
+      {step === 1 && (
+        <div className="space-y-5">
+          <div>
+            <label htmlFor="name" className={labelClass}>
+              {t('businessName')}
+            </label>
+            <input
+              id="name"
+              type="text"
+              required
+              minLength={2}
+              maxLength={100}
+              placeholder={t('businessNamePlaceholder')}
+              value={data.name}
+              onChange={(e) => set('name', e.target.value)}
+              className={fieldClass}
+            />
+          </div>
+          <div>
+            <label htmlFor="categoryId" className={labelClass}>
+              {t('category')}
+            </label>
+            <select
+              id="categoryId"
+              required
+              value={data.categoryId}
+              onChange={(e) => set('categoryId', e.target.value)}
+              className={fieldClass}
+            >
+              <option value="">{t('selectPlaceholder')}</option>
+              {categoryOptions.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      )}
+
+      {/* Step 2 — Contact person */}
+      {step === 2 && (
+        <div className="space-y-5">
+          <div>
+            <label htmlFor="representativeName" className={labelClass}>
+              {t('representativeName')}
+            </label>
+            <input
+              id="representativeName"
+              type="text"
+              required
+              minLength={2}
+              maxLength={100}
+              placeholder={t('representativeNamePlaceholder')}
+              value={data.representativeName}
+              onChange={(e) => set('representativeName', e.target.value)}
+              className={fieldClass}
+            />
+          </div>
+          <div>
+            <label htmlFor="representativeEmail" className={labelClass}>
+              {t('email')}
+            </label>
+            <input
+              id="representativeEmail"
+              type="email"
+              required
+              placeholder={t('emailPlaceholder')}
+              value={data.representativeEmail}
+              onChange={(e) => set('representativeEmail', e.target.value)}
+              className={fieldClass}
+            />
+          </div>
+          <div>
+            <label htmlFor="representativePhone" className={labelClass}>
+              {t('phone')}
+            </label>
+            <input
+              id="representativePhone"
+              type="tel"
+              required
+              placeholder={t('phonePlaceholder')}
+              value={data.representativePhone}
+              onChange={(e) => set('representativePhone', e.target.value)}
+              className={fieldClass}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Step 3 — Location */}
+      {step === 3 && (
+        <div className="space-y-5">
+          <div>
+            <label htmlFor="countryId" className={labelClass}>
+              {t('country')}
+            </label>
+            <select
+              id="countryId"
+              required
+              value={data.countryId}
+              onChange={(e) => {
+                set('countryId', e.target.value);
+                set('cityId', '');
+              }}
+              className={fieldClass}
+            >
+              <option value="">{t('selectPlaceholder')}</option>
+              {countryOptions.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="cityId" className={labelClass}>
+              {t('city')}
+            </label>
+            <select
+              id="cityId"
+              required
+              value={data.cityId}
+              onChange={(e) => set('cityId', e.target.value)}
+              disabled={!data.countryId}
+              className={`${fieldClass} disabled:cursor-not-allowed disabled:opacity-50`}
+            >
+              <option value="">{t('selectPlaceholder')}</option>
+              {filteredCities.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label htmlFor="websiteUrl" className={labelClass}>
+              {t('websiteUrl')}
+            </label>
+            <input
+              id="websiteUrl"
+              type="url"
+              placeholder={t('websiteUrlPlaceholder')}
+              value={data.websiteUrl}
+              onChange={(e) => set('websiteUrl', e.target.value)}
+              className={fieldClass}
+            />
+          </div>
+          <div>
+            <label htmlFor="socialUrl" className={labelClass}>
+              {t('socialUrl')}
+            </label>
+            <input
+              id="socialUrl"
+              type="url"
+              placeholder={t('socialUrlPlaceholder')}
+              value={data.socialUrl}
+              onChange={(e) => set('socialUrl', e.target.value)}
+              className={fieldClass}
+            />
+          </div>
+          <div>
+            <label htmlFor="briefDescription" className={labelClass}>
+              {t('briefDescription')}
+            </label>
+            <textarea
+              id="briefDescription"
+              rows={3}
+              maxLength={500}
+              placeholder={t('briefDescriptionPlaceholder')}
+              value={data.briefDescription}
+              onChange={(e) => set('briefDescription', e.target.value)}
+              className={fieldClass}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Step 4 — Review */}
+      {step === 4 && (
+        <div className="space-y-6">
+          {/* Summary */}
+          <div className="kclub-panel-soft space-y-4 p-5">
+            <SummaryRow label={t('summaryBusiness')}>
+              <p className="text-sm font-medium text-zinc-950 dark:text-white">{data.name}</p>
+              <p className="text-xs text-zinc-500 dark:text-white/48">
+                {categoryOptions.find((c) => c.id === data.categoryId)?.name ?? data.categoryId}
+              </p>
+            </SummaryRow>
+            <SummaryRow label={t('summaryContact')}>
+              <p className="text-sm font-medium text-zinc-950 dark:text-white">
+                {data.representativeName}
+              </p>
+              <p className="text-xs text-zinc-500 dark:text-white/48">
+                {data.representativeEmail} · {data.representativePhone}
+              </p>
+            </SummaryRow>
+            <SummaryRow label={t('summaryLocation')}>
+              <p className="text-sm font-medium text-zinc-950 dark:text-white">
+                {cityOptions.find((c) => c.id === data.cityId)?.name ?? '—'},{' '}
+                {countryOptions.find((c) => c.id === data.countryId)?.name ?? '—'}
+              </p>
+              {(data.websiteUrl || data.socialUrl) && (
+                <p className="text-xs text-zinc-500 dark:text-white/48">
+                  {data.websiteUrl || data.socialUrl}
+                </p>
+              )}
+            </SummaryRow>
+          </div>
+
+          {/* Checkboxes */}
+          <div className="space-y-3">
+            <label className="flex cursor-pointer items-start gap-3">
+              <input
+                type="checkbox"
+                checked={data.confirmAuthority}
+                onChange={(e) => set('confirmAuthority', e.target.checked)}
+                className="kclub-checkbox mt-0.5 shrink-0"
+              />
+              <span className="text-sm text-zinc-700 dark:text-white/72">
+                {t('confirmAuthority')}
+              </span>
+            </label>
+            <label className="flex cursor-pointer items-start gap-3">
+              <input
+                type="checkbox"
+                checked={data.acceptLegal}
+                onChange={(e) => set('acceptLegal', e.target.checked)}
+                className="kclub-checkbox mt-0.5 shrink-0"
+              />
+              <span className="text-sm text-zinc-700 dark:text-white/72">{t('acceptLegal')}</span>
+            </label>
+          </div>
+
+          {error && <FieldError>{error}</FieldError>}
+        </div>
+      )}
+
+      {/* Navigation */}
+      <div className="flex items-center justify-between gap-4 border-t border-zinc-200 pt-6 dark:border-white/10">
+        <button
+          type="button"
+          onClick={handleBack}
+          disabled={step === 1 || isSubmitting}
+          className="text-xs font-semibold uppercase tracking-[0.14em] text-zinc-500 transition hover:text-zinc-950 disabled:invisible dark:text-white/48 dark:hover:text-white"
+        >
+          ← {t('back')}
+        </button>
+
+        {step < TOTAL_STEPS ? (
+          <button
+            type="button"
+            onClick={handleNext}
+            disabled={!canAdvance(step, data)}
+            className="inline-flex items-center gap-2 rounded-none border-0 bg-zinc-950 px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100"
+          >
+            {t('continue')} →
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={isSubmitting || !data.confirmAuthority || !data.acceptLegal}
+            className="inline-flex items-center gap-2 rounded-none border-0 bg-zinc-950 px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-100"
+          >
+            {isSubmitting && <Spinner size={13} />}
+            {isSubmitting ? t('submitting') : t('submit')}
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function SummaryRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <p className="mb-1 text-xs uppercase tracking-[0.14em] text-zinc-400 dark:text-white/30">
+        {label}
+      </p>
+      {children}
+    </div>
+  );
+}
+
+function canAdvance(step: number, data: WizardData): boolean {
+  if (step === 1) return !!data.name.trim() && !!data.categoryId;
+  if (step === 2)
+    return (
+      !!data.representativeName.trim() &&
+      !!data.representativeEmail.trim() &&
+      !!data.representativePhone.trim()
+    );
+  if (step === 3)
+    return !!data.countryId && !!data.cityId && !!(data.websiteUrl || data.socialUrl);
+  return true;
+}

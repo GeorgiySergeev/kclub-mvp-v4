@@ -67,6 +67,10 @@ describe('toCurrentMemberProfileDto', () => {
     membership_tier: 'MEMBER',
     status: 'ACTIVE',
     terms_accepted_at: new Date('2026-06-15T10:00:00.000Z'),
+    country: null,
+    city: null,
+    about: null,
+    avatar_url: null,
     created_at: new Date('2026-06-14T10:00:00.000Z'),
     updated_at: new Date('2026-06-15T10:00:00.000Z'),
   };
@@ -85,6 +89,10 @@ describe('toCurrentMemberProfileDto', () => {
       termsAcceptedAt: '2026-06-15T10:00:00.000Z',
       createdAt: '2026-06-14T10:00:00.000Z',
       updatedAt: '2026-06-15T10:00:00.000Z',
+      country: null,
+      city: null,
+      about: null,
+      avatarUrl: null,
     });
   });
 
@@ -124,6 +132,10 @@ describe('assertMemberOnboardingComplete', () => {
     membership_tier: 'MEMBER',
     status: 'ACTIVE',
     terms_accepted_at: new Date('2026-06-15T10:00:00.000Z'),
+    country: null,
+    city: null,
+    about: null,
+    avatar_url: null,
     created_at: new Date('2026-06-14T10:00:00.000Z'),
     updated_at: new Date('2026-06-15T10:00:00.000Z'),
   };

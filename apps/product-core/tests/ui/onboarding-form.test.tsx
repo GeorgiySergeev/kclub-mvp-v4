@@ -32,6 +32,10 @@ const incompleteProfile: CurrentMemberProfileDto = {
   termsAcceptedAt: null,
   createdAt: '2026-06-16T00:00:00.000Z',
   updatedAt: '2026-06-16T00:00:00.000Z',
+  country: null,
+  city: null,
+  about: null,
+  avatarUrl: null,
 };
 
 describe('OnboardingForm', () => {

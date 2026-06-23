@@ -1,0 +1,59 @@
+/* ──────────────────────────────────────────
+   Business Solutions — Typography Tokens
+   ────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap');
+
+:root {
+  /* ── Font families ── */
+  --font-sans:           'Barlow', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  --font-sans-condensed: 'Barlow Condensed', 'Helvetica Neue Condensed', Arial Narrow, sans-serif;
+
+  /* ── Type scale ── */
+  --text-xs:    11px;
+  --text-sm:    13px;
+  --text-base:  15px;
+  --text-md:    16px;
+  --text-lg:    18px;
+  --text-xl:    22px;
+  --text-2xl:   28px;
+  --text-3xl:   36px;
+  --text-4xl:   48px;
+  --text-5xl:   64px;
+  --text-6xl:   84px;
+  --text-hero: 108px;
+
+  /* ── Line heights ── */
+  --leading-none:    1;
+  --leading-tight:   1.1;
+  --leading-snug:    1.25;
+  --leading-normal:  1.5;
+  --leading-relaxed: 1.65;
+
+  /* ── Letter spacing ── */
+  --tracking-tight:   -0.03em;
+  --tracking-snug:    -0.015em;
+  --tracking-normal:   0em;
+  --tracking-wide:     0.04em;
+  --tracking-wider:    0.08em;
+  --tracking-widest:   0.14em;
+
+  /* ── Font weights ── */
+  --weight-regular:  400;
+  --weight-medium:   500;
+  --weight-semibold: 600;
+  --weight-bold:     700;
+
+  /* ── Composite roles ── */
+  --type-display:        var(--weight-bold)   var(--text-hero) / var(--leading-tight)  var(--font-sans-condensed);
+  --type-h1:             var(--weight-bold)   var(--text-5xl)  / var(--leading-tight)  var(--font-sans);
+  --type-h2:             var(--weight-bold)   var(--text-4xl)  / var(--leading-snug)   var(--font-sans);
+  --type-h3:             var(--weight-bold)   var(--text-3xl)  / var(--leading-snug)   var(--font-sans);
+  --type-h4:             var(--weight-semibold) var(--text-2xl) / var(--leading-snug)  var(--font-sans);
+  --type-h5:             var(--weight-semibold) var(--text-xl)  / var(--leading-normal) var(--font-sans);
+  --type-body-lg:        var(--weight-regular) var(--text-lg)  / var(--leading-relaxed) var(--font-sans);
+  --type-body:           var(--weight-regular) var(--text-base) / var(--leading-relaxed) var(--font-sans);
+  --type-body-sm:        var(--weight-regular) var(--text-sm)  / var(--leading-normal) var(--font-sans);
+  --type-label:          var(--weight-semibold) var(--text-xs)  / var(--leading-none)  var(--font-sans);
+  --type-stat:           var(--weight-bold)   var(--text-4xl)  / var(--leading-tight)  var(--font-sans-condensed);
+}
