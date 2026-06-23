@@ -1,150 +1,149 @@
 import Link from 'next/link';
 import { getTranslations } from 'next-intl/server';
-import { Check } from 'lucide-react';
+import { Check, Minus } from 'lucide-react';
 
 import type { CurrentMemberProfileDto } from '@kclub/contracts';
-import { Badge, Surface } from '@kclub/ui';
+import { cn } from '@kclub/ui';
 
 import type { Locale } from '@/i18n/routing';
+import { cabinetContentClasses, cabinetGridPanelClasses } from '@/features/member/components/cabinet/styles';
 import { getOwnSubscriptions } from '@/server/services/subscription-service';
+
 import { UpgradeToVipButton } from './UpgradeToVipButton';
 
-type Props = {
+type SubscriptionUpgradePanelProps = {
   locale: Locale;
   profile: CurrentMemberProfileDto;
 };
 
-export async function SubscriptionUpgradePanel({ locale, profile }: Props) {
+export async function SubscriptionUpgradePanel({ locale, profile }: SubscriptionUpgradePanelProps) {
   const t = await getTranslations({ locale, namespace: 'member.dashboard.subscription' });
 
   const subscriptions =
     profile.membershipTier === 'VIP' ? await getOwnSubscriptions(profile.id) : [];
 
   const activeSubscription = subscriptions.find(
-    (s) => s.status === 'ACTIVE' || s.status === 'PAST_DUE',
+    (subscription) => subscription.status === 'ACTIVE' || subscription.status === 'PAST_DUE',
   );
 
-  const vipFeatures = [t('vipFeature1'), t('vipFeature2'), t('vipFeature3'), t('vipFeature4')];
+  const isVip = profile.membershipTier === 'VIP';
+  const vipFeatures = [
+    { label: t('vipFeature1'), included: true },
+    { label: t('vipFeature2'), included: true },
+    { label: t('vipFeature3'), included: true },
+    { label: t('vipFeature4'), included: true },
+    { label: t('vipFeature5'), included: false },
+    { label: t('vipFeature6'), included: false },
+  ];
   const businessFeatures = [
-    t('businessFeature1'),
-    t('businessFeature2'),
-    t('businessFeature3'),
-    t('businessFeature4'),
+    { label: t('businessFeature1'), included: true },
+    { label: t('businessFeature2'), included: true },
+    { label: t('businessFeature3'), included: true },
+    { label: t('businessFeature4'), included: true },
+    { label: t('businessFeature5'), included: true },
+    { label: t('businessFeature6'), included: true },
   ];
 
   return (
-    <Surface className="kclub-panel max-w-none space-y-8 rounded-none px-6 py-6 shadow-none ring-0">
-      <h2 className="text-xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
-        {t('title')}
-      </h2>
+    <div className={cabinetContentClasses}>
+      <p className="mb-10 max-w-2xl text-sm leading-relaxed text-muted-foreground">{t('intro')}</p>
 
-      {/* Current plan */}
-      <div>
-        <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500 dark:text-white/48">
-          {t('currentPlan')}
-        </p>
-        <div className="kclub-panel-soft flex items-center justify-between gap-4 p-4">
-          <div>
-            <p className="text-sm font-black uppercase tracking-[0.04em] text-zinc-950 dark:text-white">
-              {profile.membershipTier}
+      {activeSubscription ? (
+        <div className="mb-8 border border-border bg-surface-muted p-4 text-sm text-muted-foreground">
+          {activeSubscription.currentPeriodEnd ? (
+            <p>
+              {t('renewalDate', {
+                date: new Date(activeSubscription.currentPeriodEnd).toLocaleDateString(locale),
+              })}
             </p>
-            <p className="mt-0.5 text-xs text-zinc-500 dark:text-white/56">
-              {profile.membershipTier === 'VIP' ? t('vipDescription') : t('memberDescription')}
+          ) : null}
+          {activeSubscription.status === 'PAST_DUE' ? (
+            <p className="text-yellow-700 dark:text-yellow-300">{t('statusPastDue')}</p>
+          ) : null}
+        </div>
+      ) : null}
+
+      <div className="grid gap-0.5 lg:grid-cols-2">
+        <div
+          className={cn(
+            cabinetGridPanelClasses,
+            isVip && 'border-accent/25 border-t-2 border-t-accent bg-surface',
+          )}
+        >
+          {isVip ? (
+            <p className="mb-4 text-[9px] font-semibold uppercase tracking-[0.14em] text-accent">
+              {t('currentPlanBadge')}
             </p>
+          ) : (
+            <div className="mb-4 h-6" />
+          )}
+          <p className="mb-3.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">VIP</p>
+          <div className="mb-1 flex items-baseline gap-1">
+            <span className="text-5xl font-bold leading-none text-foreground">$19</span>
+            <span className="self-start pt-2 text-xl font-semibold text-foreground">.99</span>
+            <span className="ml-1 text-sm text-muted-foreground">{t('vipPeriod')}</span>
           </div>
-          <Badge variant={profile.membershipTier === 'VIP' ? 'success' : 'outline'}>
-            {profile.membershipTier === 'VIP' ? t('statusActive') : 'FREE'}
-          </Badge>
+          <p className="mb-8 text-xs tracking-wide text-muted">{t('billingNote')}</p>
+          <ul className="mb-9 space-y-3">
+            {vipFeatures.map((feature) => (
+              <li
+                key={feature.label}
+                className={cn(
+                  'flex items-start gap-2.5 text-sm',
+                  feature.included ? 'text-muted-foreground' : 'text-muted',
+                )}
+              >
+                {feature.included ? (
+                  <Check size={14} className="mt-0.5 shrink-0 text-accent" aria-hidden />
+                ) : (
+                  <Minus size={14} className="mt-0.5 shrink-0 text-muted" aria-hidden />
+                )}
+                {feature.label}
+              </li>
+            ))}
+          </ul>
+          {isVip ? (
+            <button
+              type="button"
+              disabled
+              className="w-full bg-surface-muted px-6 py-3.5 text-sm font-semibold text-muted"
+            >
+              {t('currentPlanCta')}
+            </button>
+          ) : (
+            <UpgradeToVipButton locale={locale} />
+          )}
         </div>
 
-        {activeSubscription && (
-          <div className="mt-3 space-y-1 text-xs text-zinc-500 dark:text-white/48">
-            {activeSubscription.currentPeriodEnd && (
-              <p>
-                {t('renewalDate', {
-                  date: new Date(activeSubscription.currentPeriodEnd).toLocaleDateString(locale),
-                })}
-              </p>
-            )}
-            {activeSubscription.status === 'PAST_DUE' && (
-              <p className="text-amber-600 dark:text-amber-400">{t('statusPastDue')}</p>
-            )}
-          </div>
-        )}
+        <div className={cn(cabinetGridPanelClasses)}>
+          <div className="mb-4 h-6" />
+          <p className="mb-3.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">
+            Business
+          </p>
+          <p className="mb-2.5 text-2xl font-bold text-foreground">{t('businessPrice')}</p>
+          <p className="mb-8 text-sm leading-relaxed text-muted">{t('businessPriceHint')}</p>
+          <ul className="mb-9 space-y-3">
+            {businessFeatures.map((feature) => (
+              <li key={feature.label} className="flex items-start gap-2.5 text-sm text-muted-foreground">
+                <Check size={14} className="mt-0.5 shrink-0 text-accent" aria-hidden />
+                {feature.label}
+              </li>
+            ))}
+          </ul>
+          <Link
+            href={`/${locale}/m/business/onboarding`}
+            className="inline-flex w-full items-center justify-center bg-accent px-6 py-3.5 text-sm font-semibold text-accent-foreground transition hover:bg-accent-hover"
+          >
+            {t('businessCta')}
+          </Link>
+        </div>
       </div>
 
-      {/* Upgrade cards — MEMBER tier only */}
-      {profile.membershipTier === 'MEMBER' && (
-        <div>
-          <p className="mb-4 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-500 dark:text-white/48">
-            {t('upgradeTitle')}
-          </p>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {/* VIP plan card */}
-            <div className="kclub-panel-soft flex flex-col gap-5 p-5">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
-                  VIP
-                </p>
-                <div className="mt-2 flex items-baseline gap-0.5">
-                  <span className="text-2xl font-black text-zinc-950 dark:text-white">
-                    {t('vipPrice')}
-                  </span>
-                  <span className="text-sm text-zinc-500 dark:text-white/48">{t('vipPeriod')}</span>
-                </div>
-              </div>
-              <ul className="flex-1 space-y-2.5">
-                {vipFeatures.map((f) => (
-                  <li
-                    key={f}
-                    className="flex items-start gap-2 text-xs text-zinc-600 dark:text-white/66"
-                  >
-                    <Check size={12} className="mt-0.5 shrink-0 text-emerald-500" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <UpgradeToVipButton locale={locale} />
-            </div>
-
-            {/* Business plan card */}
-            <div className="kclub-panel-soft flex flex-col gap-5 p-5">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-zinc-400 dark:text-white/40">
-                  BUSINESS
-                </p>
-                <div className="mt-2">
-                  <span className="text-2xl font-black text-zinc-950 dark:text-white">
-                    {t('businessPrice')}
-                  </span>
-                </div>
-              </div>
-              <ul className="flex-1 space-y-2.5">
-                {businessFeatures.map((f) => (
-                  <li
-                    key={f}
-                    className="flex items-start gap-2 text-xs text-zinc-600 dark:text-white/66"
-                  >
-                    <Check size={12} className="mt-0.5 shrink-0 text-zinc-400" />
-                    {f}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href={`/${locale}/m/business/onboarding`}
-                className="inline-flex w-full items-center justify-center rounded-none border border-zinc-300 px-5 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-zinc-950 transition hover:border-zinc-950 hover:bg-zinc-950 hover:text-white dark:border-white/20 dark:text-white dark:hover:border-white dark:hover:bg-white dark:hover:text-zinc-950 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
-              >
-                {t('businessCta')}
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* VIP active confirmation */}
-      {profile.membershipTier === 'VIP' && (
-        <p className="text-sm text-emerald-600 dark:text-emerald-400">{t('alreadyVip')}</p>
-      )}
-    </Surface>
+      {!isVip ? (
+        <p className="mt-6 text-center">
+          <span className="text-xs tracking-wide text-muted">{t('continueFree')}</span>
+        </p>
+      ) : null}
+    </div>
   );
 }

@@ -42,12 +42,14 @@ export const SELECTORS = {
   ONBOARDING_SUBMIT: 'button[type="submit"]',
 
   // Dashboard
-  DASHBOARD_TAB_CARD: 'a[href$="/dashboard"], button',
-  DASHBOARD_TAB_CATALOG: 'a[href$="/dashboard/catalog"], button',
-  DASHBOARD_TAB_SUBSCRIPTION: 'a[href$="/dashboard/subscription"], button',
-  DASHBOARD_TAB_PROFILE: 'a[href$="/dashboard/profile"], button',
-  DASHBOARD_TAB_BUSINESS: 'a[href$="/dashboard/business"], button',
-  DASHBOARD_TAB_INTRODUCTIONS: 'a[href$="/dashboard/introductions"], button',
+  DASHBOARD_TAB_ACCOUNT: 'a[href*="tab=account"]',
+  DASHBOARD_TAB_CATALOG: 'a[href$="/dashboard/catalog"], a[href*="tab=catalog"]',
+  DASHBOARD_TAB_SUBSCRIPTION: 'a[href*="tab=subscription"]',
+  DASHBOARD_TAB_SETTINGS: 'a[href*="tab=settings"]',
+  DASHBOARD_TAB_BUSINESS: 'a[href*="tab=business"]',
+  DASHBOARD_TAB_INTRODUCTIONS: 'a[href*="tab=introductions"]',
+  DASHBOARD_TAB_CARD: 'a[href*="tab=account"], a[href*="tab=card"]',
+  DASHBOARD_TAB_PROFILE: 'a[href*="tab=account"], a[href*="tab=profile"]',
 
   // Card display
   CARD_NUMBER: 'body',

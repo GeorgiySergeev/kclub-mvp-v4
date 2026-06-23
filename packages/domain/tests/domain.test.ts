@@ -162,10 +162,10 @@ describe('member capability policies', () => {
     };
 
     expect(getVisibleDashboardTabs(memberContext)).toEqual([
-      'card',
+      'account',
       'catalog',
       'subscription',
-      'profile',
+      'settings',
     ]);
     expect(canAccessDashboardTab(memberContext, 'business')).toBe(false);
     expect(canAccessDashboardTab(vipContext, 'business')).toBe(true);

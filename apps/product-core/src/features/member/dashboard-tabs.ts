@@ -6,16 +6,21 @@ import {
 } from '@kclub/contracts';
 
 export const IMPLEMENTED_MEMBER_DASHBOARD_TABS = [
-  'card',
+  'account',
   'subscription',
-  'profile',
-  'business',
   'introductions',
+  'business',
+  'settings',
 ] as const satisfies readonly MemberDashboardTab[];
 
 export type ImplementedMemberDashboardTab = (typeof IMPLEMENTED_MEMBER_DASHBOARD_TABS)[number];
 
-const DEFAULT_TAB: ImplementedMemberDashboardTab = 'card';
+const DEFAULT_TAB: ImplementedMemberDashboardTab = 'account';
+
+const LEGACY_TAB_ALIASES: Record<string, ImplementedMemberDashboardTab> = {
+  card: 'account',
+  profile: 'account',
+};
 
 function getMemberCapabilityGroupForDashboard(
   profile: Pick<CurrentMemberProfileDto, 'membershipTier'> & { hasPublishedBusiness?: boolean },
@@ -32,17 +37,52 @@ function getMemberCapabilityGroupForDashboard(
 export function getImplementedDashboardTabs(
   profile: Pick<CurrentMemberProfileDto, 'membershipTier'> & { hasPublishedBusiness?: boolean },
 ): readonly ImplementedMemberDashboardTab[] {
-  const group = getMemberCapabilityGroupForDashboard(profile);
-  return MEMBER_DASHBOARD_TAB_VISIBILITY[group].filter((tab) =>
-    IMPLEMENTED_MEMBER_DASHBOARD_TABS.includes(tab as ImplementedMemberDashboardTab),
-  ) as readonly ImplementedMemberDashboardTab[];
+  return IMPLEMENTED_MEMBER_DASHBOARD_TABS.filter((tab) => {
+    if (tab === 'introductions' || tab === 'business') {
+      return true;
+    }
+
+    const group = getMemberCapabilityGroupForDashboard(profile);
+    return MEMBER_DASHBOARD_TAB_VISIBILITY[group].includes(tab);
+  });
+}
+
+export function isDashboardTabLocked(
+  profile: Pick<CurrentMemberProfileDto, 'membershipTier'>,
+  tab: ImplementedMemberDashboardTab,
+): boolean {
+  if (tab === 'introductions') {
+    return profile.membershipTier !== 'VIP';
+  }
+
+  if (tab === 'business') {
+    return profile.membershipTier !== 'VIP';
+  }
+
+  return false;
+}
+
+export function getDashboardTabLockLabel(
+  tab: ImplementedMemberDashboardTab,
+): 'VIP' | 'BIZ' | null {
+  if (tab === 'introductions') {
+    return 'VIP';
+  }
+
+  if (tab === 'business') {
+    return 'BIZ';
+  }
+
+  return null;
 }
 
 export function normalizeDashboardTab(
   tab: string | string[] | undefined,
   visibleTabs: readonly ImplementedMemberDashboardTab[],
 ): ImplementedMemberDashboardTab {
-  const value = Array.isArray(tab) ? tab[0] : tab;
+  const raw = Array.isArray(tab) ? tab[0] : tab;
+  const value = raw ? (LEGACY_TAB_ALIASES[raw] ?? raw) : undefined;
+
   if (value && visibleTabs.includes(value as ImplementedMemberDashboardTab)) {
     return value as ImplementedMemberDashboardTab;
   }

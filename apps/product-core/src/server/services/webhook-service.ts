@@ -134,25 +134,31 @@ async function handleCheckoutCompleted(session: Record<string, unknown>): Promis
     orderBy: { created_at: 'desc' },
   });
 
-  if (existing) {
-    await prisma.vipSubscription.update({
-      where: { id: existing.id },
-      data: {
-        status: 'ACTIVE',
-        stripe_customer_id: customerId ?? existing.stripe_customer_id,
-        stripe_subscription_id: subscriptionId,
-      },
-    });
-  } else {
-    await prisma.vipSubscription.create({
-      data: {
-        user_id: userId,
-        status: 'ACTIVE',
-        stripe_customer_id: customerId,
-        stripe_subscription_id: subscriptionId,
-      },
-    });
-  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const userUpgrade = (prisma.user as any).update({
+    where: { id: userId },
+    data: { membership_tier: 'VIP' },
+  });
+
+  const subUpsert = existing
+    ? prisma.vipSubscription.update({
+        where: { id: existing.id },
+        data: {
+          status: 'ACTIVE',
+          stripe_customer_id: customerId ?? existing.stripe_customer_id,
+          stripe_subscription_id: subscriptionId,
+        },
+      })
+    : prisma.vipSubscription.create({
+        data: {
+          user_id: userId,
+          status: 'ACTIVE',
+          stripe_customer_id: customerId,
+          stripe_subscription_id: subscriptionId,
+        },
+      });
+
+  await prisma.$transaction([userUpgrade, subUpsert]);
 
   await auditService.log(
     {
@@ -440,14 +446,23 @@ async function handleSubscriptionDeleted(subscription: Record<string, unknown>):
 
   const previousStatus = localSub.status;
 
-  await prisma.vipSubscription.update({
-    where: { id: localSub.id },
-    data: {
-      status: 'EXPIRED',
-      expires_at: new Date(),
-      cancel_at_period_end: false,
-    },
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const userDowngrade = (prisma.user as any).update({
+    where: { id: localSub.user_id },
+    data: { membership_tier: 'MEMBER' },
   });
+
+  await prisma.$transaction([
+    userDowngrade,
+    prisma.vipSubscription.update({
+      where: { id: localSub.id },
+      data: {
+        status: 'EXPIRED',
+        expires_at: new Date(),
+        cancel_at_period_end: false,
+      },
+    }),
+  ]);
 
   await auditService.log(
     {

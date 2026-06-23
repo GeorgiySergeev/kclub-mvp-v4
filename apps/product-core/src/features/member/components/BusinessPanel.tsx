@@ -1,9 +1,10 @@
 import { getTranslations } from 'next-intl/server';
 
 import type { CurrentMemberProfileDto, MemberBusinessProfileDto } from '@kclub/contracts';
-import { Badge, Surface } from '@kclub/ui';
+import { Badge, cn } from '@kclub/ui';
 
 import type { Locale } from '@/i18n/routing';
+import { cabinetContentClasses, cabinetGridPanelClasses } from '@/features/member/components/cabinet/styles';
 import { getOwnBusinesses } from '@/server/services/business-service';
 import { getPrismaClient } from '@/server/db';
 import { BusinessForm } from './BusinessForm';
@@ -73,11 +74,8 @@ export async function BusinessPanel({
   const editBusiness = canEditBusiness ? activeBusiness : (rejectedBusiness ?? null);
 
   return (
-    <Surface className="kclub-panel max-w-none space-y-6 rounded-none px-6 py-6 shadow-none ring-0">
-      <h2 className="text-xl font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
-        {t('title')}
-      </h2>
-      <p className="dark:text-white/66 text-sm leading-7 text-zinc-600">{t('description')}</p>
+    <div className={cabinetContentClasses}>
+      <p className="mb-9 max-w-2xl text-sm leading-relaxed text-muted-foreground">{t('description')}</p>
 
       {ownBusinesses.length > 0 && (
         <div className="space-y-4">
@@ -89,9 +87,7 @@ export async function BusinessPanel({
 
       {canSubmit && (
         <div className="space-y-4">
-          <h3 className="text-lg font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
-            {t('submitTitle')}
-          </h3>
+          <h3 className="text-lg font-semibold text-foreground">{t('submitTitle')}</h3>
           <BusinessForm
             locale={locale}
             business={null}
@@ -104,9 +100,7 @@ export async function BusinessPanel({
 
       {editBusiness && (
         <div className="space-y-4">
-          <h3 className="text-lg font-black uppercase tracking-[0.01em] text-zinc-950 dark:text-white">
-            {t('editTitle')}
-          </h3>
+          <h3 className="text-lg font-semibold text-foreground">{t('editTitle')}</h3>
           {editBusiness.status === 'REJECTED' && editBusiness.rejectionReason && (
             <div className="border border-red-200 bg-red-50 p-4 text-sm text-red-800 dark:border-red-500/30 dark:bg-red-950/40 dark:text-red-200">
               <strong>{t('rejectionReasonLabel')}:</strong> {editBusiness.rejectionReason}
@@ -123,11 +117,11 @@ export async function BusinessPanel({
       )}
 
       {!canSubmit && !editBusiness && (
-        <div className="kclub-panel-soft dark:text-white/62 p-4 text-sm text-zinc-600">
+        <div className={cn(cabinetGridPanelClasses, 'text-sm text-muted-foreground')}>
           {t('noEditAvailable')}
         </div>
       )}
-    </Surface>
+    </div>
   );
 }
 
@@ -141,13 +135,11 @@ async function BusinessStatusCard({
   const t = await getTranslations({ locale, namespace: 'member.dashboard.business' });
 
   return (
-    <Surface className="kclub-panel-soft max-w-none space-y-3 rounded-none p-4 shadow-none ring-0">
+    <div className={cn(cabinetGridPanelClasses, 'space-y-3')}>
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h4 className="font-semibold uppercase tracking-[0.02em] text-zinc-950 dark:text-white">
-            {business.name}
-          </h4>
-          <p className="dark:text-white/62 mt-1 text-sm text-zinc-600">
+          <h4 className="font-semibold text-foreground">{business.name}</h4>
+          <p className="mt-1 text-sm text-muted-foreground">
             {business.categoryName} &middot; {business.cityName}, {business.countryName}
           </p>
         </div>
@@ -155,6 +147,6 @@ async function BusinessStatusCard({
           {t(STATUS_LABEL_KEYS[business.status] ?? business.status)}
         </Badge>
       </div>
-    </Surface>
+    </div>
   );
 }

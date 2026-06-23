@@ -143,15 +143,15 @@ describe('permission fixtures', () => {
 
   test('exposes member capability fixtures and stable dashboard tabs', () => {
     expect(MEMBER_PERMISSION_FIXTURES.MEMBER.visibleTabs).toEqual([
-      'card',
+      'account',
       'catalog',
       'subscription',
-      'profile',
+      'settings',
     ]);
     expect(MEMBER_PERMISSION_FIXTURES.VIP.capabilities).toContain('BUSINESS_SUBMIT');
     expect(MEMBER_PERMISSION_FIXTURES.VIP_WITH_PUBLISHED_BUSINESS.visibleTabs).toContain(
       'introductions',
     );
-    expect(ALL_MEMBER_DASHBOARD_TABS_FIXTURE).toContain('profile');
+    expect(ALL_MEMBER_DASHBOARD_TABS_FIXTURE).toContain('settings');
   });
 });
