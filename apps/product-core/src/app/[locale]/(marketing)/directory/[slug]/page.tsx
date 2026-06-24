@@ -7,7 +7,16 @@ import { Badge } from '@kclub/ui';
 import { getBusinessLocation, getPrimaryBusinessUrl } from '@/features/public/public-page-helpers';
 import { Locale } from '@/i18n/routing';
 import { AppError } from '@/server/errors';
-import { getPublicBusinessBySlug } from '@/server/services/business-service';
+import { getCachedPublicBusinessBySlug } from '@/server/cache/business-cache';
+
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  const { getPublicBusinesses } = await import('@/server/services/business-service');
+  const businesses = await getPublicBusinesses();
+  const locales = ['en', 'ru', 'uk'];
+  return locales.flatMap((locale) => businesses.map((b) => ({ locale, slug: b.slug })));
+}
 
 type Params = {
   params: Promise<{ locale: Locale; slug: string }>;
@@ -130,7 +139,7 @@ export default async function BusinessDetailPage({ params }: Params) {
 
 async function getPublishedBusinessOrNull(slug: string) {
   try {
-    return await getPublicBusinessBySlug(slug);
+    return await getCachedPublicBusinessBySlug(slug);
   } catch (error) {
     if (error instanceof AppError && error.status === 404) {
       return null;

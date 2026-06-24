@@ -86,18 +86,16 @@ export function BusinessForm({
 
       const method = isEdit ? 'PATCH' : 'POST';
 
-      const body: Record<string, unknown> = isEdit
-        ? { name, representativeName, representativeEmail, representativePhone, briefDescription }
-        : {
-            name,
-            representativeName,
-            representativeEmail,
-            representativePhone,
-            countryId,
-            cityId,
-            categoryId,
-            briefDescription,
-          };
+      const body: Record<string, unknown> = {
+        name,
+        representativeName,
+        representativeEmail,
+        representativePhone,
+        countryId,
+        cityId,
+        categoryId,
+        briefDescription,
+      };
 
       if (categoryId) body.categoryId = categoryId;
       if (countryId) body.countryId = countryId;
@@ -194,8 +192,7 @@ export function BusinessForm({
         </div>
       </div>
 
-      {!isEdit && (
-        <div className="grid gap-4 sm:grid-cols-3">
+      <div className="grid gap-4 sm:grid-cols-3">
           <div>
             <label className={labelClassName}>{t('countryLabel')}</label>
             <select
@@ -248,7 +245,6 @@ export function BusinessForm({
             </select>
           </div>
         </div>
-      )}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>

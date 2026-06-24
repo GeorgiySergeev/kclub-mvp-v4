@@ -6,7 +6,6 @@ import { useTranslations } from 'next-intl';
 import {
   MEMBER_API_ROUTES,
   type CurrentMemberProfileDto,
-  type MemberBusinessProfileDto,
   type MemberIntroductionDto,
   type PublicBusinessListItemDto,
 } from '@kclub/contracts';
@@ -52,13 +51,13 @@ export function IntroductionsPanel({
   const t = useTranslations('member.dashboard.introductions');
   const tCommon = useTranslations('member.common');
 
-  const [ownBusinesses, setOwnBusinesses] = useState<MemberBusinessProfileDto[]>([]);
   const [introductions, setIntroductions] = useState<MemberIntroductionDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [selectedRequesterBusinessId, setSelectedRequesterBusinessId] = useState('');
   const [selectedTargetBusinessId, setSelectedTargetBusinessId] = useState('');
+  const [clientName, setClientName] = useState('');
+  const [clientContact, setClientContact] = useState('');
   const [message, setMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -69,10 +68,7 @@ export function IntroductionsPanel({
   const buttonClassName =
     'inline-flex items-center bg-accent px-5 py-3 text-sm font-semibold text-accent-foreground transition hover:bg-accent-hover disabled:cursor-not-allowed disabled:opacity-50';
 
-  const publishedOwnBusinesses = ownBusinesses.filter((b) => b.status === 'PUBLISHED');
-  const availableTargets = serverPublicBusinesses.filter(
-    (pb) => !ownBusinesses.some((ob) => ob.id === pb.id),
-  );
+  const availableTargets = serverPublicBusinesses;
 
   useEffect(() => {
     let isMounted = true;
@@ -80,36 +76,12 @@ export function IntroductionsPanel({
     async function loadData() {
       setIsLoading(true);
       setError(null);
-
       try {
-        const [introsRes, bizRes] = await Promise.all([
-          fetch(MEMBER_API_ROUTES.INTRODUCTIONS),
-          fetch(MEMBER_API_ROUTES.BUSINESSES),
-        ]);
-
+        const introsRes = await fetch(MEMBER_API_ROUTES.INTRODUCTIONS);
         const introsResult = await parseAuthResponse<MemberIntroductionDto[]>(introsRes);
-        const bizResult = await parseAuthResponse<MemberBusinessProfileDto[]>(bizRes);
-
         if (!isMounted) return;
-
-        if (!introsResult.success) {
-          setError(tCommon('genericError'));
-          return;
-        }
-
-        if (!bizResult.success) {
-          setError(tCommon('genericError'));
-          return;
-        }
-
+        if (!introsResult.success) { setError(tCommon('genericError')); return; }
         setIntroductions(introsResult.data ?? []);
-        const businesses = bizResult.data ?? [];
-        setOwnBusinesses(businesses);
-
-        if (businesses.filter((b) => b.status === 'PUBLISHED').length > 0) {
-          const firstPublished = businesses.find((b) => b.status === 'PUBLISHED');
-          if (firstPublished) setSelectedRequesterBusinessId(firstPublished.id);
-        }
       } catch {
         if (isMounted) setError(tCommon('genericError'));
       } finally {
@@ -135,8 +107,9 @@ export function IntroductionsPanel({
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          requesterBusinessId: selectedRequesterBusinessId,
           targetBusinessId: selectedTargetBusinessId,
+          clientName,
+          clientContact,
           message: message || null,
         }),
       });
@@ -152,6 +125,8 @@ export function IntroductionsPanel({
       }
 
       setSubmitSuccess(true);
+      setClientName('');
+      setClientContact('');
       setMessage('');
       setSelectedTargetBusinessId('');
 
@@ -210,14 +185,6 @@ export function IntroductionsPanel({
     );
   }
 
-  if (publishedOwnBusinesses.length === 0) {
-    return (
-      <div className={cabinetContentClasses}>
-        <p className="max-w-2xl text-sm leading-relaxed text-muted-foreground">{t('noPublishedBusiness')}</p>
-      </div>
-    );
-  }
-
   return (
     <div className={cabinetContentClasses}>
       <p className="mb-9 max-w-2xl text-sm leading-relaxed text-muted-foreground">{t('description')}</p>
@@ -244,38 +211,46 @@ export function IntroductionsPanel({
             </div>
           )}
 
+          <div>
+            <label className={labelClassName}>{t('targetBusinessLabel')}</label>
+            <select
+              value={selectedTargetBusinessId}
+              onChange={(e) => setSelectedTargetBusinessId(e.target.value)}
+              required
+              className={fieldClassName}
+            >
+              <option value="">{t('selectPlaceholder')}</option>
+              {availableTargets.map((b) => (
+                <option key={b.id} value={b.id}>
+                  {b.name} — {b.countryName}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="grid gap-4 sm:grid-cols-2">
             <div>
-              <label className={labelClassName}>{t('requesterBusinessLabel')}</label>
-              <select
-                value={selectedRequesterBusinessId}
-                onChange={(e) => setSelectedRequesterBusinessId(e.target.value)}
+              <label className={labelClassName}>{t('clientNameLabel')}</label>
+              <input
+                type="text"
+                value={clientName}
+                onChange={(e) => setClientName(e.target.value)}
                 required
+                maxLength={200}
                 className={fieldClassName}
-              >
-                {publishedOwnBusinesses.map((b) => (
-                  <option key={b.id} value={b.id}>
-                    {b.name}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
-
             <div>
-              <label className={labelClassName}>{t('targetBusinessLabel')}</label>
-              <select
-                value={selectedTargetBusinessId}
-                onChange={(e) => setSelectedTargetBusinessId(e.target.value)}
+              <label className={labelClassName}>{t('clientContactLabel')}</label>
+              <input
+                type="text"
+                value={clientContact}
+                onChange={(e) => setClientContact(e.target.value)}
                 required
+                maxLength={255}
+                placeholder={t('clientContactPlaceholder')}
                 className={fieldClassName}
-              >
-                <option value="">{t('selectPlaceholder')}</option>
-                {availableTargets.map((b) => (
-                  <option key={b.id} value={b.id}>
-                    {b.name} - {b.countryName}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
           </div>
 
@@ -310,10 +285,13 @@ export function IntroductionsPanel({
               <div className="flex items-start justify-between gap-4">
                 <div className="space-y-1">
                   <p className="text-sm text-foreground">
-                    <span className="font-medium">{intro.requesterBusinessName}</span>
-                    {' -> '}
+                    <span className="font-medium">{intro.clientName}</span>
+                    {' → '}
                     <span className="font-medium">{intro.targetBusinessName}</span>
                   </p>
+                  {intro.clientContact && (
+                    <p className="text-xs text-muted-foreground">{intro.clientContact}</p>
+                  )}
                   {intro.message && (
                     <p className="text-sm text-muted-foreground">{intro.message}</p>
                   )}

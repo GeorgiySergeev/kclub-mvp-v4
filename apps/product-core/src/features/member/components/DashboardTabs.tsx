@@ -1,50 +1,51 @@
 import { getTranslations } from 'next-intl/server';
 
-import type { CurrentMemberProfileDto } from '@kclub/contracts';
-import { cn } from '@kclub/ui';
+import type { CurrentMemberProfileDto, PublicBusinessListItemDto, UserContext } from '@kclub/contracts';
 
 import type { Locale } from '@/i18n/routing';
 import type { ImplementedMemberDashboardTab } from '@/features/member/dashboard-tabs';
-import { isDashboardTabLocked } from '@/features/member/dashboard-tabs';
-import { getPublicBusinesses } from '@/server/services/business-service';
-import { CabinetLockedPanel } from '@/features/member/components/cabinet/CabinetLockedPanel';
 import { MemberCabinetShell } from '@/features/member/components/cabinet/MemberCabinetShell';
-import { cabinetContentClasses } from '@/features/member/components/cabinet/styles';
 
 import { AccountPanel } from './AccountPanel';
 import { BusinessPanel } from './BusinessPanel';
 import { IntroductionsPanel } from './IntroductionsPanel';
+import { CardPanel } from './CardPanel';
+import { PermissionsPanel } from './PermissionsPanel';
+import { AuditPanel } from './AuditPanel';
 import { SettingsPanel } from './SettingsPanel';
 import { SubscriptionUpgradePanel } from './SubscriptionUpgradePanel';
 
 type DashboardTabsProps = {
   locale: Locale;
   profile: CurrentMemberProfileDto;
+  userContext: UserContext;
   activeTab: ImplementedMemberDashboardTab;
   visibleTabs: readonly ImplementedMemberDashboardTab[];
+  serverPublicBusinesses: PublicBusinessListItemDto[];
 };
 
 export async function DashboardTabs({
   locale,
   profile,
+  userContext,
   activeTab,
   visibleTabs,
+  serverPublicBusinesses,
 }: DashboardTabsProps) {
   const t = await getTranslations({ locale, namespace: 'member.dashboard' });
-  const publicBusinesses = activeTab === 'introductions' ? await getPublicBusinesses() : [];
 
-  const tabLabels = {
-    account: t('tabs.account'),
+  const tabLabels: Record<ImplementedMemberDashboardTab, string> = {
+    details: t('tabs.details'),
+    card: t('tabs.card'),
     subscription: t('tabs.subscription'),
-    introductions: t('tabs.introductions'),
     business: t('tabs.business'),
+    introductions: t('tabs.introductions'),
+    audit: t('tabs.audit'),
+    permissions: t('tabs.permissions'),
     settings: t('tabs.settings'),
-  } as const;
+  };
 
-  const lockLabels = {
-    VIP: t('locks.vip'),
-    BIZ: t('locks.biz'),
-  } as const;
+  const memberName = profile.displayName ?? profile.phone;
 
   return (
     <MemberCabinetShell
@@ -56,48 +57,27 @@ export async function DashboardTabs({
       pageTitle={t(`tabs.${activeTab}`)}
       contactLine={profile.phone}
       tabsAriaLabel={t('tabsLabel')}
-      lockLabels={lockLabels}
     >
-      {activeTab === 'account' ? <AccountPanel locale={locale} profile={profile} /> : null}
+      {activeTab === 'details' ? <AccountPanel locale={locale} profile={profile} /> : null}
+
+      {activeTab === 'card' ? (
+        <CardPanel locale={locale} memberName={memberName} />
+      ) : null}
 
       {activeTab === 'subscription' ? (
         <SubscriptionUpgradePanel locale={locale} profile={profile} />
       ) : null}
 
+      {activeTab === 'business' ? <BusinessPanel locale={locale} profile={profile} /> : null}
+
       {activeTab === 'introductions' ? (
-        isDashboardTabLocked(profile, 'introductions') ? (
-          <div className={cabinetContentClasses}>
-            <CabinetLockedPanel
-              locale={locale}
-              eyebrow={t('introductionsLocked.eyebrow')}
-              title={t('introductionsLocked.title')}
-              description={t('introductionsLocked.description')}
-              ctaLabel={t('introductionsLocked.cta')}
-            />
-          </div>
-        ) : (
-          <IntroductionsPanel
-            locale={locale}
-            profile={profile}
-            serverPublicBusinesses={publicBusinesses}
-          />
-        )
+        <IntroductionsPanel locale={locale} profile={profile} serverPublicBusinesses={serverPublicBusinesses} />
       ) : null}
 
-      {activeTab === 'business' ? (
-        isDashboardTabLocked(profile, 'business') ? (
-          <div className={cabinetContentClasses}>
-            <CabinetLockedPanel
-              locale={locale}
-              eyebrow={t('businessLocked.eyebrow')}
-              title={t('businessLocked.title')}
-              description={t('businessLocked.description')}
-              ctaLabel={t('businessLocked.cta')}
-            />
-          </div>
-        ) : (
-          <BusinessPanel locale={locale} profile={profile} />
-        )
+      {activeTab === 'audit' ? <AuditPanel locale={locale} /> : null}
+
+      {activeTab === 'permissions' ? (
+        <PermissionsPanel locale={locale} userContext={userContext} />
       ) : null}
 
       {activeTab === 'settings' ? <SettingsPanel locale={locale} profile={profile} /> : null}

@@ -12184,6 +12184,8 @@ export namespace Prisma {
     requester_business_id: string | null
     target_business_id: string | null
     status: $Enums.IntroductionStatus | null
+    client_name: string | null
+    client_contact: string | null
     message: string | null
     rejection_reason: string | null
     created_at: Date | null
@@ -12196,6 +12198,8 @@ export namespace Prisma {
     requester_business_id: string | null
     target_business_id: string | null
     status: $Enums.IntroductionStatus | null
+    client_name: string | null
+    client_contact: string | null
     message: string | null
     rejection_reason: string | null
     created_at: Date | null
@@ -12208,6 +12212,8 @@ export namespace Prisma {
     requester_business_id: number
     target_business_id: number
     status: number
+    client_name: number
+    client_contact: number
     message: number
     rejection_reason: number
     created_at: number
@@ -12222,6 +12228,8 @@ export namespace Prisma {
     requester_business_id?: true
     target_business_id?: true
     status?: true
+    client_name?: true
+    client_contact?: true
     message?: true
     rejection_reason?: true
     created_at?: true
@@ -12234,6 +12242,8 @@ export namespace Prisma {
     requester_business_id?: true
     target_business_id?: true
     status?: true
+    client_name?: true
+    client_contact?: true
     message?: true
     rejection_reason?: true
     created_at?: true
@@ -12246,6 +12256,8 @@ export namespace Prisma {
     requester_business_id?: true
     target_business_id?: true
     status?: true
+    client_name?: true
+    client_contact?: true
     message?: true
     rejection_reason?: true
     created_at?: true
@@ -12328,9 +12340,11 @@ export namespace Prisma {
   export type BusinessIntroductionGroupByOutputType = {
     id: string
     requester_user_id: string
-    requester_business_id: string
+    requester_business_id: string | null
     target_business_id: string
     status: $Enums.IntroductionStatus
+    client_name: string
+    client_contact: string
     message: string | null
     rejection_reason: string | null
     created_at: Date
@@ -12360,12 +12374,14 @@ export namespace Prisma {
     requester_business_id?: boolean
     target_business_id?: boolean
     status?: boolean
+    client_name?: boolean
+    client_contact?: boolean
     message?: boolean
     rejection_reason?: boolean
     created_at?: boolean
     updated_at?: boolean
     requester_user?: boolean | UserDefaultArgs<ExtArgs>
-    requester_business?: boolean | BusinessProfileDefaultArgs<ExtArgs>
+    requester_business?: boolean | BusinessIntroduction$requester_businessArgs<ExtArgs>
     target_business?: boolean | BusinessProfileDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["businessIntroduction"]>
 
@@ -12375,12 +12391,14 @@ export namespace Prisma {
     requester_business_id?: boolean
     target_business_id?: boolean
     status?: boolean
+    client_name?: boolean
+    client_contact?: boolean
     message?: boolean
     rejection_reason?: boolean
     created_at?: boolean
     updated_at?: boolean
     requester_user?: boolean | UserDefaultArgs<ExtArgs>
-    requester_business?: boolean | BusinessProfileDefaultArgs<ExtArgs>
+    requester_business?: boolean | BusinessIntroduction$requester_businessArgs<ExtArgs>
     target_business?: boolean | BusinessProfileDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["businessIntroduction"]>
 
@@ -12390,12 +12408,14 @@ export namespace Prisma {
     requester_business_id?: boolean
     target_business_id?: boolean
     status?: boolean
+    client_name?: boolean
+    client_contact?: boolean
     message?: boolean
     rejection_reason?: boolean
     created_at?: boolean
     updated_at?: boolean
     requester_user?: boolean | UserDefaultArgs<ExtArgs>
-    requester_business?: boolean | BusinessProfileDefaultArgs<ExtArgs>
+    requester_business?: boolean | BusinessIntroduction$requester_businessArgs<ExtArgs>
     target_business?: boolean | BusinessProfileDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["businessIntroduction"]>
 
@@ -12405,26 +12425,28 @@ export namespace Prisma {
     requester_business_id?: boolean
     target_business_id?: boolean
     status?: boolean
+    client_name?: boolean
+    client_contact?: boolean
     message?: boolean
     rejection_reason?: boolean
     created_at?: boolean
     updated_at?: boolean
   }
 
-  export type BusinessIntroductionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "requester_user_id" | "requester_business_id" | "target_business_id" | "status" | "message" | "rejection_reason" | "created_at" | "updated_at", ExtArgs["result"]["businessIntroduction"]>
+  export type BusinessIntroductionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "requester_user_id" | "requester_business_id" | "target_business_id" | "status" | "client_name" | "client_contact" | "message" | "rejection_reason" | "created_at" | "updated_at", ExtArgs["result"]["businessIntroduction"]>
   export type BusinessIntroductionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     requester_user?: boolean | UserDefaultArgs<ExtArgs>
-    requester_business?: boolean | BusinessProfileDefaultArgs<ExtArgs>
+    requester_business?: boolean | BusinessIntroduction$requester_businessArgs<ExtArgs>
     target_business?: boolean | BusinessProfileDefaultArgs<ExtArgs>
   }
   export type BusinessIntroductionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     requester_user?: boolean | UserDefaultArgs<ExtArgs>
-    requester_business?: boolean | BusinessProfileDefaultArgs<ExtArgs>
+    requester_business?: boolean | BusinessIntroduction$requester_businessArgs<ExtArgs>
     target_business?: boolean | BusinessProfileDefaultArgs<ExtArgs>
   }
   export type BusinessIntroductionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     requester_user?: boolean | UserDefaultArgs<ExtArgs>
-    requester_business?: boolean | BusinessProfileDefaultArgs<ExtArgs>
+    requester_business?: boolean | BusinessIntroduction$requester_businessArgs<ExtArgs>
     target_business?: boolean | BusinessProfileDefaultArgs<ExtArgs>
   }
 
@@ -12432,15 +12454,17 @@ export namespace Prisma {
     name: "BusinessIntroduction"
     objects: {
       requester_user: Prisma.$UserPayload<ExtArgs>
-      requester_business: Prisma.$BusinessProfilePayload<ExtArgs>
+      requester_business: Prisma.$BusinessProfilePayload<ExtArgs> | null
       target_business: Prisma.$BusinessProfilePayload<ExtArgs>
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       requester_user_id: string
-      requester_business_id: string
+      requester_business_id: string | null
       target_business_id: string
       status: $Enums.IntroductionStatus
+      client_name: string
+      client_contact: string
       message: string | null
       rejection_reason: string | null
       created_at: Date
@@ -12840,7 +12864,7 @@ export namespace Prisma {
   export interface Prisma__BusinessIntroductionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     requester_user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    requester_business<T extends BusinessProfileDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BusinessProfileDefaultArgs<ExtArgs>>): Prisma__BusinessProfileClient<$Result.GetResult<Prisma.$BusinessProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    requester_business<T extends BusinessIntroduction$requester_businessArgs<ExtArgs> = {}>(args?: Subset<T, BusinessIntroduction$requester_businessArgs<ExtArgs>>): Prisma__BusinessProfileClient<$Result.GetResult<Prisma.$BusinessProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     target_business<T extends BusinessProfileDefaultArgs<ExtArgs> = {}>(args?: Subset<T, BusinessProfileDefaultArgs<ExtArgs>>): Prisma__BusinessProfileClient<$Result.GetResult<Prisma.$BusinessProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -12876,6 +12900,8 @@ export namespace Prisma {
     readonly requester_business_id: FieldRef<"BusinessIntroduction", 'String'>
     readonly target_business_id: FieldRef<"BusinessIntroduction", 'String'>
     readonly status: FieldRef<"BusinessIntroduction", 'IntroductionStatus'>
+    readonly client_name: FieldRef<"BusinessIntroduction", 'String'>
+    readonly client_contact: FieldRef<"BusinessIntroduction", 'String'>
     readonly message: FieldRef<"BusinessIntroduction", 'String'>
     readonly rejection_reason: FieldRef<"BusinessIntroduction", 'String'>
     readonly created_at: FieldRef<"BusinessIntroduction", 'DateTime'>
@@ -13273,6 +13299,25 @@ export namespace Prisma {
      * Limit how many BusinessIntroductions to delete.
      */
     limit?: number
+  }
+
+  /**
+   * BusinessIntroduction.requester_business
+   */
+  export type BusinessIntroduction$requester_businessArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the BusinessProfile
+     */
+    select?: BusinessProfileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the BusinessProfile
+     */
+    omit?: BusinessProfileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: BusinessProfileInclude<ExtArgs> | null
+    where?: BusinessProfileWhereInput
   }
 
   /**
@@ -20139,6 +20184,8 @@ export namespace Prisma {
     requester_business_id: 'requester_business_id',
     target_business_id: 'target_business_id',
     status: 'status',
+    client_name: 'client_name',
+    client_contact: 'client_contact',
     message: 'message',
     rejection_reason: 'rejection_reason',
     created_at: 'created_at',
@@ -21274,24 +21321,28 @@ export namespace Prisma {
     NOT?: BusinessIntroductionWhereInput | BusinessIntroductionWhereInput[]
     id?: UuidFilter<"BusinessIntroduction"> | string
     requester_user_id?: UuidFilter<"BusinessIntroduction"> | string
-    requester_business_id?: UuidFilter<"BusinessIntroduction"> | string
+    requester_business_id?: UuidNullableFilter<"BusinessIntroduction"> | string | null
     target_business_id?: UuidFilter<"BusinessIntroduction"> | string
     status?: EnumIntroductionStatusFilter<"BusinessIntroduction"> | $Enums.IntroductionStatus
+    client_name?: StringFilter<"BusinessIntroduction"> | string
+    client_contact?: StringFilter<"BusinessIntroduction"> | string
     message?: StringNullableFilter<"BusinessIntroduction"> | string | null
     rejection_reason?: StringNullableFilter<"BusinessIntroduction"> | string | null
     created_at?: DateTimeFilter<"BusinessIntroduction"> | Date | string
     updated_at?: DateTimeFilter<"BusinessIntroduction"> | Date | string
     requester_user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    requester_business?: XOR<BusinessProfileScalarRelationFilter, BusinessProfileWhereInput>
+    requester_business?: XOR<BusinessProfileNullableScalarRelationFilter, BusinessProfileWhereInput> | null
     target_business?: XOR<BusinessProfileScalarRelationFilter, BusinessProfileWhereInput>
   }
 
   export type BusinessIntroductionOrderByWithRelationInput = {
     id?: SortOrder
     requester_user_id?: SortOrder
-    requester_business_id?: SortOrder
+    requester_business_id?: SortOrderInput | SortOrder
     target_business_id?: SortOrder
     status?: SortOrder
+    client_name?: SortOrder
+    client_contact?: SortOrder
     message?: SortOrderInput | SortOrder
     rejection_reason?: SortOrderInput | SortOrder
     created_at?: SortOrder
@@ -21307,24 +21358,28 @@ export namespace Prisma {
     OR?: BusinessIntroductionWhereInput[]
     NOT?: BusinessIntroductionWhereInput | BusinessIntroductionWhereInput[]
     requester_user_id?: UuidFilter<"BusinessIntroduction"> | string
-    requester_business_id?: UuidFilter<"BusinessIntroduction"> | string
+    requester_business_id?: UuidNullableFilter<"BusinessIntroduction"> | string | null
     target_business_id?: UuidFilter<"BusinessIntroduction"> | string
     status?: EnumIntroductionStatusFilter<"BusinessIntroduction"> | $Enums.IntroductionStatus
+    client_name?: StringFilter<"BusinessIntroduction"> | string
+    client_contact?: StringFilter<"BusinessIntroduction"> | string
     message?: StringNullableFilter<"BusinessIntroduction"> | string | null
     rejection_reason?: StringNullableFilter<"BusinessIntroduction"> | string | null
     created_at?: DateTimeFilter<"BusinessIntroduction"> | Date | string
     updated_at?: DateTimeFilter<"BusinessIntroduction"> | Date | string
     requester_user?: XOR<UserScalarRelationFilter, UserWhereInput>
-    requester_business?: XOR<BusinessProfileScalarRelationFilter, BusinessProfileWhereInput>
+    requester_business?: XOR<BusinessProfileNullableScalarRelationFilter, BusinessProfileWhereInput> | null
     target_business?: XOR<BusinessProfileScalarRelationFilter, BusinessProfileWhereInput>
   }, "id">
 
   export type BusinessIntroductionOrderByWithAggregationInput = {
     id?: SortOrder
     requester_user_id?: SortOrder
-    requester_business_id?: SortOrder
+    requester_business_id?: SortOrderInput | SortOrder
     target_business_id?: SortOrder
     status?: SortOrder
+    client_name?: SortOrder
+    client_contact?: SortOrder
     message?: SortOrderInput | SortOrder
     rejection_reason?: SortOrderInput | SortOrder
     created_at?: SortOrder
@@ -21340,9 +21395,11 @@ export namespace Prisma {
     NOT?: BusinessIntroductionScalarWhereWithAggregatesInput | BusinessIntroductionScalarWhereWithAggregatesInput[]
     id?: UuidWithAggregatesFilter<"BusinessIntroduction"> | string
     requester_user_id?: UuidWithAggregatesFilter<"BusinessIntroduction"> | string
-    requester_business_id?: UuidWithAggregatesFilter<"BusinessIntroduction"> | string
+    requester_business_id?: UuidNullableWithAggregatesFilter<"BusinessIntroduction"> | string | null
     target_business_id?: UuidWithAggregatesFilter<"BusinessIntroduction"> | string
     status?: EnumIntroductionStatusWithAggregatesFilter<"BusinessIntroduction"> | $Enums.IntroductionStatus
+    client_name?: StringWithAggregatesFilter<"BusinessIntroduction"> | string
+    client_contact?: StringWithAggregatesFilter<"BusinessIntroduction"> | string
     message?: StringNullableWithAggregatesFilter<"BusinessIntroduction"> | string | null
     rejection_reason?: StringNullableWithAggregatesFilter<"BusinessIntroduction"> | string | null
     created_at?: DateTimeWithAggregatesFilter<"BusinessIntroduction"> | Date | string
@@ -22712,21 +22769,25 @@ export namespace Prisma {
   export type BusinessIntroductionCreateInput = {
     id?: string
     status?: $Enums.IntroductionStatus
+    client_name?: string
+    client_contact?: string
     message?: string | null
     rejection_reason?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     requester_user: UserCreateNestedOneWithoutRequested_introsInput
-    requester_business: BusinessProfileCreateNestedOneWithoutOutgoing_introductionsInput
+    requester_business?: BusinessProfileCreateNestedOneWithoutOutgoing_introductionsInput
     target_business: BusinessProfileCreateNestedOneWithoutIncoming_introductionsInput
   }
 
   export type BusinessIntroductionUncheckedCreateInput = {
     id?: string
     requester_user_id: string
-    requester_business_id: string
+    requester_business_id?: string | null
     target_business_id: string
     status?: $Enums.IntroductionStatus
+    client_name?: string
+    client_contact?: string
     message?: string | null
     rejection_reason?: string | null
     created_at?: Date | string
@@ -22736,21 +22797,25 @@ export namespace Prisma {
   export type BusinessIntroductionUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumIntroductionStatusFieldUpdateOperationsInput | $Enums.IntroductionStatus
+    client_name?: StringFieldUpdateOperationsInput | string
+    client_contact?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     requester_user?: UserUpdateOneRequiredWithoutRequested_introsNestedInput
-    requester_business?: BusinessProfileUpdateOneRequiredWithoutOutgoing_introductionsNestedInput
+    requester_business?: BusinessProfileUpdateOneWithoutOutgoing_introductionsNestedInput
     target_business?: BusinessProfileUpdateOneRequiredWithoutIncoming_introductionsNestedInput
   }
 
   export type BusinessIntroductionUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
     requester_user_id?: StringFieldUpdateOperationsInput | string
-    requester_business_id?: StringFieldUpdateOperationsInput | string
+    requester_business_id?: NullableStringFieldUpdateOperationsInput | string | null
     target_business_id?: StringFieldUpdateOperationsInput | string
     status?: EnumIntroductionStatusFieldUpdateOperationsInput | $Enums.IntroductionStatus
+    client_name?: StringFieldUpdateOperationsInput | string
+    client_contact?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22760,9 +22825,11 @@ export namespace Prisma {
   export type BusinessIntroductionCreateManyInput = {
     id?: string
     requester_user_id: string
-    requester_business_id: string
+    requester_business_id?: string | null
     target_business_id: string
     status?: $Enums.IntroductionStatus
+    client_name?: string
+    client_contact?: string
     message?: string | null
     rejection_reason?: string | null
     created_at?: Date | string
@@ -22772,6 +22839,8 @@ export namespace Prisma {
   export type BusinessIntroductionUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumIntroductionStatusFieldUpdateOperationsInput | $Enums.IntroductionStatus
+    client_name?: StringFieldUpdateOperationsInput | string
+    client_contact?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -22781,9 +22850,11 @@ export namespace Prisma {
   export type BusinessIntroductionUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
     requester_user_id?: StringFieldUpdateOperationsInput | string
-    requester_business_id?: StringFieldUpdateOperationsInput | string
+    requester_business_id?: NullableStringFieldUpdateOperationsInput | string | null
     target_business_id?: StringFieldUpdateOperationsInput | string
     status?: EnumIntroductionStatusFieldUpdateOperationsInput | $Enums.IntroductionStatus
+    client_name?: StringFieldUpdateOperationsInput | string
+    client_contact?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -24105,6 +24176,8 @@ export namespace Prisma {
     requester_business_id?: SortOrder
     target_business_id?: SortOrder
     status?: SortOrder
+    client_name?: SortOrder
+    client_contact?: SortOrder
     message?: SortOrder
     rejection_reason?: SortOrder
     created_at?: SortOrder
@@ -24117,6 +24190,8 @@ export namespace Prisma {
     requester_business_id?: SortOrder
     target_business_id?: SortOrder
     status?: SortOrder
+    client_name?: SortOrder
+    client_contact?: SortOrder
     message?: SortOrder
     rejection_reason?: SortOrder
     created_at?: SortOrder
@@ -24129,6 +24204,8 @@ export namespace Prisma {
     requester_business_id?: SortOrder
     target_business_id?: SortOrder
     status?: SortOrder
+    client_name?: SortOrder
+    client_contact?: SortOrder
     message?: SortOrder
     rejection_reason?: SortOrder
     created_at?: SortOrder
@@ -25236,10 +25313,12 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutRequested_introsInput, UserUpdateWithoutRequested_introsInput>, UserUncheckedUpdateWithoutRequested_introsInput>
   }
 
-  export type BusinessProfileUpdateOneRequiredWithoutOutgoing_introductionsNestedInput = {
+  export type BusinessProfileUpdateOneWithoutOutgoing_introductionsNestedInput = {
     create?: XOR<BusinessProfileCreateWithoutOutgoing_introductionsInput, BusinessProfileUncheckedCreateWithoutOutgoing_introductionsInput>
     connectOrCreate?: BusinessProfileCreateOrConnectWithoutOutgoing_introductionsInput
     upsert?: BusinessProfileUpsertWithoutOutgoing_introductionsInput
+    disconnect?: BusinessProfileWhereInput | boolean
+    delete?: BusinessProfileWhereInput | boolean
     connect?: BusinessProfileWhereUniqueInput
     update?: XOR<XOR<BusinessProfileUpdateToOneWithWhereWithoutOutgoing_introductionsInput, BusinessProfileUpdateWithoutOutgoing_introductionsInput>, BusinessProfileUncheckedUpdateWithoutOutgoing_introductionsInput>
   }
@@ -26096,19 +26175,23 @@ export namespace Prisma {
   export type BusinessIntroductionCreateWithoutRequester_userInput = {
     id?: string
     status?: $Enums.IntroductionStatus
+    client_name?: string
+    client_contact?: string
     message?: string | null
     rejection_reason?: string | null
     created_at?: Date | string
     updated_at?: Date | string
-    requester_business: BusinessProfileCreateNestedOneWithoutOutgoing_introductionsInput
+    requester_business?: BusinessProfileCreateNestedOneWithoutOutgoing_introductionsInput
     target_business: BusinessProfileCreateNestedOneWithoutIncoming_introductionsInput
   }
 
   export type BusinessIntroductionUncheckedCreateWithoutRequester_userInput = {
     id?: string
-    requester_business_id: string
+    requester_business_id?: string | null
     target_business_id: string
     status?: $Enums.IntroductionStatus
+    client_name?: string
+    client_contact?: string
     message?: string | null
     rejection_reason?: string | null
     created_at?: Date | string
@@ -26300,9 +26383,11 @@ export namespace Prisma {
     NOT?: BusinessIntroductionScalarWhereInput | BusinessIntroductionScalarWhereInput[]
     id?: UuidFilter<"BusinessIntroduction"> | string
     requester_user_id?: UuidFilter<"BusinessIntroduction"> | string
-    requester_business_id?: UuidFilter<"BusinessIntroduction"> | string
+    requester_business_id?: UuidNullableFilter<"BusinessIntroduction"> | string | null
     target_business_id?: UuidFilter<"BusinessIntroduction"> | string
     status?: EnumIntroductionStatusFilter<"BusinessIntroduction"> | $Enums.IntroductionStatus
+    client_name?: StringFilter<"BusinessIntroduction"> | string
+    client_contact?: StringFilter<"BusinessIntroduction"> | string
     message?: StringNullableFilter<"BusinessIntroduction"> | string | null
     rejection_reason?: StringNullableFilter<"BusinessIntroduction"> | string | null
     created_at?: DateTimeFilter<"BusinessIntroduction"> | Date | string
@@ -27307,6 +27392,8 @@ export namespace Prisma {
   export type BusinessIntroductionCreateWithoutRequester_businessInput = {
     id?: string
     status?: $Enums.IntroductionStatus
+    client_name?: string
+    client_contact?: string
     message?: string | null
     rejection_reason?: string | null
     created_at?: Date | string
@@ -27320,6 +27407,8 @@ export namespace Prisma {
     requester_user_id: string
     target_business_id: string
     status?: $Enums.IntroductionStatus
+    client_name?: string
+    client_contact?: string
     message?: string | null
     rejection_reason?: string | null
     created_at?: Date | string
@@ -27339,19 +27428,23 @@ export namespace Prisma {
   export type BusinessIntroductionCreateWithoutTarget_businessInput = {
     id?: string
     status?: $Enums.IntroductionStatus
+    client_name?: string
+    client_contact?: string
     message?: string | null
     rejection_reason?: string | null
     created_at?: Date | string
     updated_at?: Date | string
     requester_user: UserCreateNestedOneWithoutRequested_introsInput
-    requester_business: BusinessProfileCreateNestedOneWithoutOutgoing_introductionsInput
+    requester_business?: BusinessProfileCreateNestedOneWithoutOutgoing_introductionsInput
   }
 
   export type BusinessIntroductionUncheckedCreateWithoutTarget_businessInput = {
     id?: string
     requester_user_id: string
-    requester_business_id: string
+    requester_business_id?: string | null
     status?: $Enums.IntroductionStatus
+    client_name?: string
+    client_contact?: string
     message?: string | null
     rejection_reason?: string | null
     created_at?: Date | string
@@ -28550,9 +28643,11 @@ export namespace Prisma {
 
   export type BusinessIntroductionCreateManyRequester_userInput = {
     id?: string
-    requester_business_id: string
+    requester_business_id?: string | null
     target_business_id: string
     status?: $Enums.IntroductionStatus
+    client_name?: string
+    client_contact?: string
     message?: string | null
     rejection_reason?: string | null
     created_at?: Date | string
@@ -28787,19 +28882,23 @@ export namespace Prisma {
   export type BusinessIntroductionUpdateWithoutRequester_userInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumIntroductionStatusFieldUpdateOperationsInput | $Enums.IntroductionStatus
+    client_name?: StringFieldUpdateOperationsInput | string
+    client_contact?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
-    requester_business?: BusinessProfileUpdateOneRequiredWithoutOutgoing_introductionsNestedInput
+    requester_business?: BusinessProfileUpdateOneWithoutOutgoing_introductionsNestedInput
     target_business?: BusinessProfileUpdateOneRequiredWithoutIncoming_introductionsNestedInput
   }
 
   export type BusinessIntroductionUncheckedUpdateWithoutRequester_userInput = {
     id?: StringFieldUpdateOperationsInput | string
-    requester_business_id?: StringFieldUpdateOperationsInput | string
+    requester_business_id?: NullableStringFieldUpdateOperationsInput | string | null
     target_business_id?: StringFieldUpdateOperationsInput | string
     status?: EnumIntroductionStatusFieldUpdateOperationsInput | $Enums.IntroductionStatus
+    client_name?: StringFieldUpdateOperationsInput | string
+    client_contact?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -28808,9 +28907,11 @@ export namespace Prisma {
 
   export type BusinessIntroductionUncheckedUpdateManyWithoutRequester_userInput = {
     id?: StringFieldUpdateOperationsInput | string
-    requester_business_id?: StringFieldUpdateOperationsInput | string
+    requester_business_id?: NullableStringFieldUpdateOperationsInput | string | null
     target_business_id?: StringFieldUpdateOperationsInput | string
     status?: EnumIntroductionStatusFieldUpdateOperationsInput | $Enums.IntroductionStatus
+    client_name?: StringFieldUpdateOperationsInput | string
+    client_contact?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29230,6 +29331,8 @@ export namespace Prisma {
     requester_user_id: string
     target_business_id: string
     status?: $Enums.IntroductionStatus
+    client_name?: string
+    client_contact?: string
     message?: string | null
     rejection_reason?: string | null
     created_at?: Date | string
@@ -29239,8 +29342,10 @@ export namespace Prisma {
   export type BusinessIntroductionCreateManyTarget_businessInput = {
     id?: string
     requester_user_id: string
-    requester_business_id: string
+    requester_business_id?: string | null
     status?: $Enums.IntroductionStatus
+    client_name?: string
+    client_contact?: string
     message?: string | null
     rejection_reason?: string | null
     created_at?: Date | string
@@ -29298,6 +29403,8 @@ export namespace Prisma {
   export type BusinessIntroductionUpdateWithoutRequester_businessInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumIntroductionStatusFieldUpdateOperationsInput | $Enums.IntroductionStatus
+    client_name?: StringFieldUpdateOperationsInput | string
+    client_contact?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29311,6 +29418,8 @@ export namespace Prisma {
     requester_user_id?: StringFieldUpdateOperationsInput | string
     target_business_id?: StringFieldUpdateOperationsInput | string
     status?: EnumIntroductionStatusFieldUpdateOperationsInput | $Enums.IntroductionStatus
+    client_name?: StringFieldUpdateOperationsInput | string
+    client_contact?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29322,6 +29431,8 @@ export namespace Prisma {
     requester_user_id?: StringFieldUpdateOperationsInput | string
     target_business_id?: StringFieldUpdateOperationsInput | string
     status?: EnumIntroductionStatusFieldUpdateOperationsInput | $Enums.IntroductionStatus
+    client_name?: StringFieldUpdateOperationsInput | string
+    client_contact?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29331,19 +29442,23 @@ export namespace Prisma {
   export type BusinessIntroductionUpdateWithoutTarget_businessInput = {
     id?: StringFieldUpdateOperationsInput | string
     status?: EnumIntroductionStatusFieldUpdateOperationsInput | $Enums.IntroductionStatus
+    client_name?: StringFieldUpdateOperationsInput | string
+    client_contact?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
     updated_at?: DateTimeFieldUpdateOperationsInput | Date | string
     requester_user?: UserUpdateOneRequiredWithoutRequested_introsNestedInput
-    requester_business?: BusinessProfileUpdateOneRequiredWithoutOutgoing_introductionsNestedInput
+    requester_business?: BusinessProfileUpdateOneWithoutOutgoing_introductionsNestedInput
   }
 
   export type BusinessIntroductionUncheckedUpdateWithoutTarget_businessInput = {
     id?: StringFieldUpdateOperationsInput | string
     requester_user_id?: StringFieldUpdateOperationsInput | string
-    requester_business_id?: StringFieldUpdateOperationsInput | string
+    requester_business_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumIntroductionStatusFieldUpdateOperationsInput | $Enums.IntroductionStatus
+    client_name?: StringFieldUpdateOperationsInput | string
+    client_contact?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -29353,8 +29468,10 @@ export namespace Prisma {
   export type BusinessIntroductionUncheckedUpdateManyWithoutTarget_businessInput = {
     id?: StringFieldUpdateOperationsInput | string
     requester_user_id?: StringFieldUpdateOperationsInput | string
-    requester_business_id?: StringFieldUpdateOperationsInput | string
+    requester_business_id?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumIntroductionStatusFieldUpdateOperationsInput | $Enums.IntroductionStatus
+    client_name?: StringFieldUpdateOperationsInput | string
+    client_contact?: StringFieldUpdateOperationsInput | string
     message?: NullableStringFieldUpdateOperationsInput | string | null
     rejection_reason?: NullableStringFieldUpdateOperationsInput | string | null
     created_at?: DateTimeFieldUpdateOperationsInput | Date | string

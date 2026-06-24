@@ -5,21 +5,15 @@ import { cn } from '@kclub/ui';
 
 import type { Locale } from '@/i18n/routing';
 import type { ImplementedMemberDashboardTab } from '@/features/member/dashboard-tabs';
-import {
-  getDashboardTabLockLabel,
-  isDashboardTabLocked,
-} from '@/features/member/dashboard-tabs';
 
 import { CabinetSignOut } from './CabinetSignOut';
 import {
-  cabinetLockTagClasses,
-  cabinetMobileNavClasses,
-  cabinetNavItemActiveClasses,
-  cabinetNavItemClasses,
-  cabinetNavItemInactiveClasses,
-  cabinetNavItemLockedClasses,
   cabinetRootClasses,
-  cabinetSidebarClasses,
+  cabinetTopTabsNavClasses,
+  cabinetTopTabItemClasses,
+  cabinetTopTabItemActiveClasses,
+  cabinetTopTabItemInactiveClasses,
+  cabinetUserBarClasses,
 } from './styles';
 
 type MemberCabinetShellProps = {
@@ -31,7 +25,6 @@ type MemberCabinetShellProps = {
   pageTitle: string;
   contactLine: string;
   tabsAriaLabel: string;
-  lockLabels: Record<'VIP' | 'BIZ', string>;
   children: React.ReactNode;
 };
 
@@ -49,23 +42,17 @@ function getPlanLabel(tier: CurrentMemberProfileDto['membershipTier']): string {
   return tier === 'VIP' ? 'VIP' : 'MEMBER';
 }
 
-function renderNavItem({
+function renderTabItem({
   tab,
   locale,
   activeTab,
   tabLabels,
-  profile,
-  lockLabels,
 }: {
   tab: ImplementedMemberDashboardTab;
   locale: Locale;
   activeTab: ImplementedMemberDashboardTab;
   tabLabels: Record<ImplementedMemberDashboardTab, string>;
-  profile: CurrentMemberProfileDto;
-  lockLabels: Record<'VIP' | 'BIZ', string>;
 }) {
-  const locked = isDashboardTabLocked(profile, tab);
-  const lockLabel = getDashboardTabLockLabel(tab);
   const isActive = activeTab === tab;
 
   return (
@@ -73,16 +60,12 @@ function renderNavItem({
       key={tab}
       href={`/${locale}/m/dashboard?tab=${tab}`}
       className={cn(
-        cabinetNavItemClasses,
-        isActive ? cabinetNavItemActiveClasses : cabinetNavItemInactiveClasses,
-        locked && !isActive && cabinetNavItemLockedClasses,
+        cabinetTopTabItemClasses,
+        isActive ? cabinetTopTabItemActiveClasses : cabinetTopTabItemInactiveClasses,
       )}
       aria-current={isActive ? 'page' : undefined}
     >
-      <span>{tabLabels[tab]}</span>
-      {locked && lockLabel ? (
-        <span className={cabinetLockTagClasses}>{lockLabels[lockLabel]}</span>
-      ) : null}
+      {tabLabels[tab]}
     </Link>
   );
 }
@@ -96,7 +79,6 @@ export function MemberCabinetShell({
   pageTitle,
   contactLine,
   tabsAriaLabel,
-  lockLabels,
   children,
 }: MemberCabinetShellProps) {
   const displayName = profile.displayName ?? profile.phone;
@@ -104,57 +86,34 @@ export function MemberCabinetShell({
 
   return (
     <div className={cabinetRootClasses}>
-      <nav aria-label={tabsAriaLabel} className={cabinetMobileNavClasses}>
-        {visibleTabs.map((tab) => renderNavItem({ tab, locale, activeTab, tabLabels, profile, lockLabels }))}
-      </nav>
-
-      <aside className={cabinetSidebarClasses}>
-        <Link
-          href={`/${locale}`}
-          className="flex shrink-0 items-center gap-2.5 border-b border-border px-6 py-5"
-        >
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center bg-accent text-xs font-bold text-accent-foreground">
-            KC
-          </span>
-          <span className="text-[11px] font-semibold uppercase leading-snug tracking-widest text-foreground">
-            Kylyvnyk
-            <br />
-            Club
-          </span>
-        </Link>
-
-        <div className="shrink-0 border-b border-border px-6 py-5">
-          <div className="flex items-center gap-3">
-            <div
-              className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-accent/30 bg-surface-muted text-sm font-bold text-accent"
-              aria-hidden="true"
-            >
-              {getInitials(displayName)}
-            </div>
-            <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-foreground">{displayName}</p>
-              <p className="mt-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-accent">
-                {planLabel}
-              </p>
-            </div>
+      <div className={cabinetUserBarClasses}>
+        <div className="flex items-center gap-3">
+          <div
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-accent/30 bg-surface-muted text-sm font-bold text-accent"
+            aria-hidden="true"
+          >
+            {getInitials(displayName)}
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-semibold text-foreground">{displayName}</span>
+            <span className="border border-accent/50 px-1.5 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-accent">
+              {planLabel}
+            </span>
           </div>
         </div>
-
-        <nav aria-label={tabsAriaLabel} className="flex-1 space-y-0 py-2">
-          {visibleTabs.map((tab) => renderNavItem({ tab, locale, activeTab, tabLabels, profile, lockLabels }))}
-        </nav>
-
-        <div className="shrink-0 border-t border-border px-6 py-5">
+        <div className="flex items-center gap-4">
+          <span className="hidden text-sm text-muted sm:block">{contactLine}</span>
           <CabinetSignOut locale={locale} />
         </div>
-      </aside>
+      </div>
 
-      <div className="flex min-w-0 flex-1 flex-col">
-        <header className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-border bg-surface px-6 py-6 sm:px-12">
-          <h1 className="text-xl font-semibold text-foreground sm:text-2xl">{pageTitle}</h1>
-          <p className="hidden text-sm text-muted sm:block">{contactLine}</p>
-        </header>
-        <div className="flex-1">{children}</div>
+      <nav aria-label={tabsAriaLabel} className={cabinetTopTabsNavClasses}>
+        {visibleTabs.map((tab) => renderTabItem({ tab, locale, activeTab, tabLabels }))}
+      </nav>
+
+      <div className="flex-1">
+        <h1 className="sr-only">{pageTitle}</h1>
+        {children}
       </div>
     </div>
   );

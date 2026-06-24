@@ -40,6 +40,12 @@ function ProfileSection({ user }: { user: AdminUserDetailDto }) {
           <span>
             <StatusBadge status={user.membershipTier} />
           </span>
+          <span className="text-muted-foreground">Country</span>
+          <span>{user.country ?? '—'}</span>
+          <span className="text-muted-foreground">City</span>
+          <span>{user.city ?? '—'}</span>
+          <span className="text-muted-foreground">About</span>
+          <span className="break-words">{user.about ?? '—'}</span>
           <span className="text-muted-foreground">Locale preference</span>
           <span>{user.localePreference ?? '—'}</span>
           <span className="text-muted-foreground">Onboarding complete</span>

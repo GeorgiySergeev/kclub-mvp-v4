@@ -30,15 +30,15 @@ export const MEMBER_PERMISSION_FIXTURES = {
     capabilities: getMemberCapabilities({ subscriptionStatus: 'ACTIVE' }),
     visibleTabs: MEMBER_DASHBOARD_TAB_VISIBILITY.VIP,
   },
-  VIP_WITH_PUBLISHED_BUSINESS: {
+  HAS_BUSINESS: {
     capabilities: getMemberCapabilities({
       subscriptionStatus: 'ACTIVE',
-      businessStatus: 'PUBLISHED',
+      businessStatus: 'UNDER_REVIEW',
     }),
-    visibleTabs: MEMBER_DASHBOARD_TAB_VISIBILITY.VIP_WITH_PUBLISHED_BUSINESS,
+    visibleTabs: MEMBER_DASHBOARD_TAB_VISIBILITY.HAS_BUSINESS,
   },
 } as const satisfies Record<
-  'MEMBER' | 'VIP' | 'VIP_WITH_PUBLISHED_BUSINESS',
+  'MEMBER' | 'VIP' | 'HAS_BUSINESS',
   {
     capabilities: readonly string[];
     visibleTabs: readonly MemberDashboardTab[];
