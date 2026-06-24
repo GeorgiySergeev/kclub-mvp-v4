@@ -6,6 +6,7 @@ import {
   type SubscriptionStatus,
 } from '@kclub/contracts';
 import { canTransitionBusinessStatus, hasActiveVipAccess } from '@kclub/domain';
+import { revalidateTag } from 'next/cache';
 
 import { AppError } from '@/server/errors';
 import { getPrismaClient } from '@/server/db';
@@ -365,7 +366,11 @@ export async function handlePlacementCheckoutCompleted(
     }
   });
 
-  // 6. Audit log after transaction
+  // 6. Revalidate public business cache
+  revalidateTag('businesses');
+  revalidateTag('public-businesses');
+
+  // 7. Audit log after transaction
   await auditService.log(
     {
       action: 'BUSINESS_PUBLISHED',

@@ -252,6 +252,8 @@ exports.Prisma.BusinessIntroductionScalarFieldEnum = {
   requester_business_id: 'requester_business_id',
   target_business_id: 'target_business_id',
   status: 'status',
+  client_name: 'client_name',
+  client_contact: 'client_contact',
   message: 'message',
   rejection_reason: 'rejection_reason',
   created_at: 'created_at',

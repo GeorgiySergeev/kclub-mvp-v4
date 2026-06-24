@@ -62,6 +62,7 @@ import type {
   StaffDeactivateInput,
   StaffRoleUpdateInput,
 } from '@kclub/validation';
+import { revalidateTag } from 'next/cache';
 
 import { AppError } from '@/server/errors';
 import { getPrismaClient } from '@/server/db';
@@ -590,7 +591,16 @@ export async function approveBusiness(
     context,
   );
 
-  return toAdminBusinessDetail(updated);
+  revalidateTag('businesses');
+  revalidateTag('public-businesses');
+
+  const auditEntries = await prisma.auditLog.findMany({
+    where: { entity_type: 'BusinessProfile', entity_id: businessId },
+    orderBy: { created_at: 'desc' },
+    take: 50,
+  });
+
+  return toAdminBusinessDetail(updated, auditEntries);
 }
 
 export async function rejectBusiness(
@@ -640,6 +650,9 @@ export async function rejectBusiness(
     },
     context,
   );
+
+  revalidateTag('businesses');
+  revalidateTag('public-businesses');
 
   return toAdminBusinessDetail(updated);
 }
@@ -696,6 +709,9 @@ export async function hideBusiness(
     },
     context,
   );
+
+  revalidateTag('businesses');
+  revalidateTag('public-businesses');
 
   return toAdminBusinessDetail(updated);
 }
@@ -823,6 +839,9 @@ export async function updateBusinessFeatured(
     },
     context,
   );
+
+  revalidateTag('businesses');
+  revalidateTag('public-businesses');
 
   return toAdminBusinessDetail(updated);
 }
@@ -1020,6 +1039,7 @@ export async function createCategory(input: CategoryCreateInput): Promise<Catego
       is_active: input.isActive ?? true,
     },
   });
+  revalidateTag('categories');
   return toCategoryDto(category);
 }
 
@@ -1046,6 +1066,7 @@ export async function updateCategory(
       ...(input.isActive !== undefined ? { is_active: input.isActive } : {}),
     },
   });
+  revalidateTag('categories');
   return toCategoryDto(category);
 }
 
@@ -1060,6 +1081,7 @@ export async function deleteCategory(categoryId: string): Promise<void> {
     });
   }
   await prisma.category.delete({ where: { id: categoryId } });
+  revalidateTag('categories');
 }
 
 export async function listCountries(): Promise<CountryDto[]> {
@@ -1607,6 +1629,10 @@ function toAdminUserDetail(
     onboardingComplete: !!(user.display_name && user.locale_preference && user.terms_accepted_at),
     termsAcceptedAt: user.terms_accepted_at?.toISOString() ?? null,
     updatedAt: user.updated_at.toISOString(),
+    country: user.country ?? null,
+    city: user.city ?? null,
+    about: user.about ?? null,
+    avatarUrl: user.avatar_url ?? null,
     cards: (cards ?? []).map(toMemberCardDto),
     subscriptions: (subscriptions ?? []).map(toSubscriptionDto),
     auditEntries: (auditEntries ?? []).map((log: any) => ({
@@ -1713,9 +1739,11 @@ function toIntroductionDto(intro: any): IntroductionDto {
   return {
     id: intro.id,
     requesterUserId: intro.requester_user_id,
-    requesterBusinessId: intro.requester_business_id,
+    requesterBusinessId: intro.requester_business_id ?? null,
     targetBusinessId: intro.target_business_id,
     status: intro.status as IntroductionStatus,
+    clientName: intro.client_name ?? '',
+    clientContact: intro.client_contact ?? '',
     message: intro.message,
     rejectionReason: intro.rejection_reason,
     createdAt: intro.created_at.toISOString(),

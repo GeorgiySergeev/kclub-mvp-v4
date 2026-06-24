@@ -256,18 +256,19 @@ model BusinessIntroduction {
   id                    String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   requester_user_id     String             @db.Uuid
   requester_user        User               @relation("requester_user", fields: [requester_user_id], references: [id], onDelete: Cascade)
-  requester_business_id String             @db.Uuid
-  requester_business    BusinessProfile    @relation("requester_business", fields: [requester_business_id], references: [id], onDelete: Cascade)
+  requester_business_id String?            @db.Uuid
+  requester_business    BusinessProfile?   @relation("requester_business", fields: [requester_business_id], references: [id], onDelete: Cascade)
   target_business_id    String             @db.Uuid
   target_business       BusinessProfile    @relation("target_business", fields: [target_business_id], references: [id], onDelete: Cascade)
   status                IntroductionStatus @default(SUBMITTED)
+  client_name           String             @default("") @db.VarChar(200)
+  client_contact        String             @default("") @db.VarChar(255)
   message               String?            @db.Text
   rejection_reason      String?            @db.Text
   created_at            DateTime           @default(now())
   updated_at            DateTime           @updatedAt
 
   @@index([requester_user_id, status, created_at])
-  @@index([requester_business_id, target_business_id, status, created_at])
   @@index([target_business_id, status, created_at])
   @@map("business_introductions")
 }

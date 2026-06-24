@@ -6,85 +6,60 @@ import {
   isDashboardTabLocked,
   normalizeDashboardTab,
 } from '@/features/member/dashboard-tabs';
-import type { CurrentMemberProfileDto } from '@kclub/contracts';
+import type { UserContext } from '@kclub/contracts';
 
-const memberProfile: CurrentMemberProfileDto = {
-  id: 'member-1',
-  phone: '+15551234567',
-  displayName: 'Member One',
-  localePreference: 'en',
-  membershipTier: 'MEMBER',
-  status: 'ACTIVE',
-  onboardingComplete: true,
-  termsAcceptedAt: '2026-06-16T00:00:00.000Z',
-  createdAt: '2026-06-16T00:00:00.000Z',
-  updatedAt: '2026-06-16T00:00:00.000Z',
-  country: null,
-  city: null,
-  about: null,
-  avatarUrl: null,
-};
+const memberCtx: UserContext = { isVip: false, hasBusiness: false, businessPublished: false };
+const vipCtx: UserContext = { isVip: true, hasBusiness: false, businessPublished: false };
+const businessCtx: UserContext = { isVip: false, hasBusiness: true, businessPublished: true };
+const vipBusinessCtx: UserContext = { isVip: true, hasBusiness: true, businessPublished: true };
 
-const vipProfile: CurrentMemberProfileDto = {
-  ...memberProfile,
-  id: 'vip-1',
-  membershipTier: 'VIP',
-};
-
-const vipWithPublishedProfile: CurrentMemberProfileDto = {
-  ...vipProfile,
-  id: 'vip-published-1',
-};
+const BASE_TABS = ['details', 'card', 'subscription', 'audit', 'permissions', 'settings'] as const;
 
 describe('member dashboard tabs', () => {
-  test('MEMBER sees account, subscription, introductions, business, settings', () => {
-    const tabs = getImplementedDashboardTabs(memberProfile);
-
-    expect(tabs).toEqual(['account', 'subscription', 'introductions', 'business', 'settings']);
-    expect(isDashboardTabLocked(memberProfile, 'introductions')).toBe(true);
-    expect(isDashboardTabLocked(memberProfile, 'business')).toBe(true);
+  test('plain member sees base 6 tabs', () => {
+    expect(getImplementedDashboardTabs(memberCtx)).toEqual(BASE_TABS);
   });
 
-  test('VIP unlocks business and introductions tabs', () => {
-    const tabs = getImplementedDashboardTabs(vipProfile);
-
-    expect(tabs).toContain('business');
-    expect(tabs).toContain('introductions');
-    expect(isDashboardTabLocked(vipProfile, 'business')).toBe(false);
-    expect(isDashboardTabLocked(vipProfile, 'introductions')).toBe(false);
+  test('VIP sees base tabs + introductions', () => {
+    expect(getImplementedDashboardTabs(vipCtx)).toEqual([...BASE_TABS, 'introductions']);
   });
 
-  test('VIP with published business keeps full tab set', () => {
-    const tabs = getImplementedDashboardTabs({
-      ...vipWithPublishedProfile,
-      hasPublishedBusiness: true,
-    });
-
-    expect(tabs).toHaveLength(5);
+  test('member with business sees base tabs + introductions + business', () => {
+    expect(getImplementedDashboardTabs(businessCtx)).toEqual([...BASE_TABS, 'introductions', 'business']);
   });
 
-  test('normalizes invalid tab to first visible tab', () => {
-    const tabs = getImplementedDashboardTabs(memberProfile);
-
-    expect(normalizeDashboardTab('catalog', tabs)).toBe('account');
-    expect(normalizeDashboardTab(undefined, tabs)).toBe('account');
+  test('VIP with business sees base tabs + introductions + business', () => {
+    expect(getImplementedDashboardTabs(vipBusinessCtx)).toEqual([...BASE_TABS, 'introductions', 'business']);
   });
 
-  test('maps legacy card and profile tabs to account', () => {
-    const tabs = getImplementedDashboardTabs(memberProfile);
+  test('no tab is locked', () => {
+    expect(isDashboardTabLocked(memberCtx, 'details')).toBe(false);
+    expect(isDashboardTabLocked(memberCtx, 'card')).toBe(false);
+    expect(isDashboardTabLocked(memberCtx, 'audit')).toBe(false);
+    expect(isDashboardTabLocked(memberCtx, 'permissions')).toBe(false);
+  });
 
-    expect(normalizeDashboardTab('card', tabs)).toBe('account');
-    expect(normalizeDashboardTab('profile', tabs)).toBe('account');
+  test('normalizes invalid tab to first visible tab (details)', () => {
+    const tabs = getImplementedDashboardTabs(memberCtx);
+    expect(normalizeDashboardTab('catalog', tabs)).toBe('details');
+    expect(normalizeDashboardTab(undefined, tabs)).toBe('details');
+  });
+
+  test('maps legacy account and profile tabs to details', () => {
+    const tabs = getImplementedDashboardTabs(memberCtx);
+    expect(normalizeDashboardTab('account', tabs)).toBe('details');
+    expect(normalizeDashboardTab('profile', tabs)).toBe('details');
   });
 
   test('keeps visible tab selection', () => {
-    const tabs = getImplementedDashboardTabs(memberProfile);
-
+    const tabs = getImplementedDashboardTabs(memberCtx);
     expect(normalizeDashboardTab('settings', tabs)).toBe('settings');
+    expect(normalizeDashboardTab('card', tabs)).toBe('card');
+    expect(normalizeDashboardTab('audit', tabs)).toBe('audit');
   });
 
   test('builds alias redirect hrefs', () => {
-    expect(getDashboardAliasHref('en', 'account')).toBe('/en/m/dashboard?tab=account');
+    expect(getDashboardAliasHref('en', 'details')).toBe('/en/m/dashboard?tab=details');
     expect(getDashboardAliasHref('uk', 'subscription')).toBe('/uk/m/dashboard?tab=subscription');
   });
 });

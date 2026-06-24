@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Camera } from 'lucide-react';
 
-import type { CurrentMemberProfileDto, MemberCardDto } from '@kclub/contracts';
+import type { CurrentMemberProfileDto } from '@kclub/contracts';
 import { MEMBER_API_ROUTES } from '@kclub/contracts';
 import { FieldError, Spinner } from '@kclub/ui';
 
@@ -13,8 +13,6 @@ import type { Locale } from '@/i18n/routing';
 import { locales } from '@/i18n/routing';
 import { parseAuthResponse } from '@/features/auth/utils/api';
 import { cabinetContentClasses, cabinetFieldLabelClasses } from '@/features/member/components/cabinet/styles';
-
-import { DigitalClubCard } from './DigitalClubCard';
 
 type AccountPanelProps = {
   locale: Locale;
@@ -41,7 +39,6 @@ function getPlanLabel(tier: CurrentMemberProfileDto['membershipTier']): string {
 
 export function AccountPanel({ locale, profile }: AccountPanelProps) {
   const t = useTranslations('member.dashboard.account');
-  const tCard = useTranslations('member.dashboard.card');
   const tCommon = useTranslations('member.common');
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -52,11 +49,9 @@ export function AccountPanel({ locale, profile }: AccountPanelProps) {
   const [city, setCity] = useState(profile.city ?? '');
   const [about, setAbout] = useState(profile.about ?? '');
   const [avatarUrl, setAvatarUrl] = useState(profile.avatarUrl ?? '');
-  const [card, setCard] = useState<MemberCardDto | null>(null);
 
   const [isSaving, setIsSaving] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
-  const [isLoadingCard, setIsLoadingCard] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [avatarError, setAvatarError] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -67,32 +62,6 @@ export function AccountPanel({ locale, profile }: AccountPanelProps) {
     day: 'numeric',
     year: 'numeric',
   });
-
-  useEffect(() => {
-    let isMounted = true;
-
-    async function loadCard() {
-      setIsLoadingCard(true);
-
-      try {
-        const response = await fetch(MEMBER_API_ROUTES.CARDS);
-        const result = await parseAuthResponse<MemberCardDto | null>(response);
-        if (isMounted && result.success) {
-          setCard(result.data ?? null);
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoadingCard(false);
-        }
-      }
-    }
-
-    void loadCard();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   const handleAvatarClick = () => fileInputRef.current?.click();
 
@@ -165,70 +134,44 @@ export function AccountPanel({ locale, profile }: AccountPanelProps) {
 
   return (
     <div className={cabinetContentClasses}>
-      <div className="mb-10 flex flex-col gap-8 border-b border-border pb-10 lg:flex-row lg:items-start lg:justify-between">
-        <div className="flex min-w-0 flex-1 items-start gap-6">
-          <div className="shrink-0">
-            <button
-              type="button"
-              onClick={handleAvatarClick}
-              aria-label={t('avatar')}
-              className="group relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-accent/25 bg-surface-muted text-2xl font-bold text-accent"
-            >
-              {avatarUrl ? (
-                <img src={avatarUrl} alt={memberName} className="h-full w-full object-cover" />
+      <div className="mb-10 flex items-start gap-6 border-b border-border pb-10">
+        <div className="shrink-0">
+          <button
+            type="button"
+            onClick={handleAvatarClick}
+            aria-label={t('avatar')}
+            className="group relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-accent/25 bg-surface-muted text-2xl font-bold text-accent"
+          >
+            {avatarUrl ? (
+              <img src={avatarUrl} alt={memberName} className="h-full w-full object-cover" />
+            ) : (
+              getInitials(displayName || profile.displayName, profile.phone)
+            )}
+            <span className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition group-hover:opacity-100">
+              {isUploadingAvatar ? (
+                <Spinner size={18} className="text-white" />
               ) : (
-                getInitials(displayName || profile.displayName, profile.phone)
+                <Camera size={18} className="text-white" />
               )}
-              <span className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition group-hover:opacity-100">
-                {isUploadingAvatar ? (
-                  <Spinner size={18} className="text-white" />
-                ) : (
-                  <Camera size={18} className="text-white" />
-                )}
-              </span>
-            </button>
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleAvatarChange}
-            />
-          </div>
-
-          <div className="min-w-0 pt-1">
-            <div className="mb-1.5 flex flex-wrap items-center gap-2.5">
-              <span className="text-2xl font-semibold text-foreground">{memberName}</span>
-              <span className="border border-accent/50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-accent">
-                {getPlanLabel(profile.membershipTier)}
-              </span>
-            </div>
-            <p className="text-sm text-muted-foreground">{t('memberSince', { date: regDate })}</p>
-          </div>
+            </span>
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            className="hidden"
+            onChange={handleAvatarChange}
+          />
         </div>
 
-        <div className="w-full max-w-md shrink-0">
-          {isLoadingCard ? (
-            <div className="flex aspect-[1.586/1] items-center justify-center border border-border bg-surface-muted">
-              <Spinner size={24} />
-            </div>
-          ) : card ? (
-            <DigitalClubCard
-              cardNumber={card.cardNumber}
-              memberName={memberName}
-              membershipTier={card.membershipTier}
-              status={card.status}
-              expiresAt={card.expiresAt}
-              locale={locale}
-              validThruLabel={tCard('validThru')}
-              tierLabel={tCard('tier')}
-              className="max-w-none rounded-none shadow-none"
-            />
-          ) : (
-            <div className="border border-border bg-surface-muted p-6 text-sm text-muted-foreground">
-              {tCard('emptyDescription')}
-            </div>
-          )}
+        <div className="min-w-0 pt-1">
+          <div className="mb-1.5 flex flex-wrap items-center gap-2.5">
+            <span className="text-2xl font-semibold text-foreground">{memberName}</span>
+            <span className="border border-accent/50 px-2 py-0.5 text-[9px] font-semibold uppercase tracking-[0.14em] text-accent">
+              {getPlanLabel(profile.membershipTier)}
+            </span>
+          </div>
+          <p className="text-sm text-muted-foreground">{t('memberSince', { date: regDate })}</p>
         </div>
       </div>
 

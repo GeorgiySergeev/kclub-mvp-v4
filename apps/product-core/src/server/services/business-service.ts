@@ -5,7 +5,6 @@ import {
   type PublicBusinessDetailDto,
   type PublicBusinessListItemDto,
 } from '@kclub/contracts';
-import { hasActiveVipAccess } from '@kclub/domain';
 import type {
   BusinessProfileSubmitInput,
   BusinessProfileEditableFieldsInput,
@@ -44,21 +43,7 @@ export async function submitBusiness(
     });
   }
 
-  // 1. Check VIP Capability
-  const vipSubs = await prisma.vipSubscription.findMany({
-    where: { user_id: userId },
-  });
-  const isVip = vipSubs.some((sub) => hasActiveVipAccess(sub.status));
-
-  if (!isVip) {
-    throw new AppError({
-      code: ERROR_CODES.VIP_REQUIRED,
-      message: 'VIP membership is required to submit a business',
-      status: 403,
-    });
-  }
-
-  // 2. Check duplicate active business
+  // Check duplicate active business
   const existingActiveBusiness = await prisma.businessProfile.findFirst({
     where: {
       user_id: userId,
@@ -182,10 +167,10 @@ export async function updateBusiness(
     });
   }
 
-  if (business.status !== 'UNDER_REVIEW' && business.status !== 'REJECTED') {
+  if (business.status === 'HIDDEN') {
     throw new AppError({
       code: ERROR_CODES.BUSINESS_INVALID_STATUS_TRANSITION,
-      message: 'Business can only be edited while under review or rejected',
+      message: 'Cannot edit a hidden business',
       status: 409,
     });
   }
@@ -249,10 +234,9 @@ export async function updateBusiness(
   if (input.representativePhone !== undefined)
     dataToUpdate.representative_phone = input.representativePhone;
 
-  // Re-submit if rejected
-  if (business.status === 'REJECTED') {
-    dataToUpdate.status = 'UNDER_REVIEW';
-  }
+  // Always reset to UNDER_REVIEW so admin re-approves after any edit
+  dataToUpdate.status = 'UNDER_REVIEW';
+  dataToUpdate.approved_at = null;
 
   const updatedBusiness = await prisma.businessProfile.update({
     where: { id: businessId },

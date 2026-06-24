@@ -7,7 +7,13 @@ import { EmptyState } from '@kclub/ui';
 import { BusinessCard } from '@/features/public/components/BusinessCard';
 import { getFeaturedBusinessGroups } from '@/features/public/public-page-helpers';
 import { Locale } from '@/i18n/routing';
-import { getPublicBusinesses } from '@/server/services/business-service';
+import { getCachedPublicBusinesses } from '@/server/cache/business-cache';
+
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  return [{ locale: 'en' }, { locale: 'ru' }, { locale: 'uk' }];
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
@@ -22,7 +28,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 export default async function DirectoryPage({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'directory' });
-  const businesses = await getPublicBusinesses();
+  const businesses = await getCachedPublicBusinesses();
   const { top, recommended } = getFeaturedBusinessGroups(businesses);
 
   return (
@@ -112,7 +118,7 @@ function DirectorySection({
   featuredLabel,
 }: {
   title: string;
-  businesses: Awaited<ReturnType<typeof getPublicBusinesses>>;
+  businesses: Awaited<ReturnType<typeof getCachedPublicBusinesses>>;
   locale: Locale;
   actionLabel: string;
   externalLabel: string;

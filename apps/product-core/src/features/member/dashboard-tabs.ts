@@ -1,78 +1,44 @@
-import {
-  MEMBER_DASHBOARD_TAB_VISIBILITY,
-  type CurrentMemberProfileDto,
-  type MemberCapabilityGroup,
-  type MemberDashboardTab,
-} from '@kclub/contracts';
+import { type MemberDashboardTab, type UserContext } from '@kclub/contracts';
+import { getVisibleDashboardTabs } from '@kclub/domain';
 
 export const IMPLEMENTED_MEMBER_DASHBOARD_TABS = [
-  'account',
+  'details',
+  'card',
   'subscription',
-  'introductions',
   'business',
+  'introductions',
+  'audit',
+  'permissions',
   'settings',
 ] as const satisfies readonly MemberDashboardTab[];
 
 export type ImplementedMemberDashboardTab = (typeof IMPLEMENTED_MEMBER_DASHBOARD_TABS)[number];
 
-const DEFAULT_TAB: ImplementedMemberDashboardTab = 'account';
+const DEFAULT_TAB: ImplementedMemberDashboardTab = 'details';
 
 const LEGACY_TAB_ALIASES: Record<string, ImplementedMemberDashboardTab> = {
-  card: 'account',
-  profile: 'account',
+  account: 'details',
+  profile: 'details',
 };
 
-function getMemberCapabilityGroupForDashboard(
-  profile: Pick<CurrentMemberProfileDto, 'membershipTier'> & { hasPublishedBusiness?: boolean },
-): MemberCapabilityGroup {
-  if (profile.membershipTier === 'VIP' && profile.hasPublishedBusiness) {
-    return 'VIP_WITH_PUBLISHED_BUSINESS';
-  }
-  if (profile.membershipTier === 'VIP') {
-    return 'VIP';
-  }
-  return 'MEMBER';
-}
-
 export function getImplementedDashboardTabs(
-  profile: Pick<CurrentMemberProfileDto, 'membershipTier'> & { hasPublishedBusiness?: boolean },
+  ctx: UserContext,
 ): readonly ImplementedMemberDashboardTab[] {
-  return IMPLEMENTED_MEMBER_DASHBOARD_TABS.filter((tab) => {
-    if (tab === 'introductions' || tab === 'business') {
-      return true;
-    }
+  const visibleContractTabs = getVisibleDashboardTabs(ctx);
 
-    const group = getMemberCapabilityGroupForDashboard(profile);
-    return MEMBER_DASHBOARD_TAB_VISIBILITY[group].includes(tab);
-  });
+  return visibleContractTabs.filter((tab): tab is ImplementedMemberDashboardTab =>
+    (IMPLEMENTED_MEMBER_DASHBOARD_TABS as readonly string[]).includes(tab),
+  );
 }
 
 export function isDashboardTabLocked(
-  profile: Pick<CurrentMemberProfileDto, 'membershipTier'>,
-  tab: ImplementedMemberDashboardTab,
+  _ctx: UserContext,
+  _tab: ImplementedMemberDashboardTab,
 ): boolean {
-  if (tab === 'introductions') {
-    return profile.membershipTier !== 'VIP';
-  }
-
-  if (tab === 'business') {
-    return profile.membershipTier !== 'VIP';
-  }
-
   return false;
 }
 
-export function getDashboardTabLockLabel(
-  tab: ImplementedMemberDashboardTab,
-): 'VIP' | 'BIZ' | null {
-  if (tab === 'introductions') {
-    return 'VIP';
-  }
-
-  if (tab === 'business') {
-    return 'BIZ';
-  }
-
+export function getDashboardTabLockLabel(_tab: ImplementedMemberDashboardTab): null {
   return null;
 }
 

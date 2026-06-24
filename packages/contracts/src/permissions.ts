@@ -99,44 +99,16 @@ export const MEMBER_DASHBOARD_TABS = [
   'business',
   'introductions',
   'settings',
+  'details',
+  'card',
+  'audit',
+  'permissions',
 ] as const;
 
 export type MemberDashboardTab = (typeof MEMBER_DASHBOARD_TABS)[number];
 
-export const MEMBER_CAPABILITY_GROUPS = {
-  MEMBER: [
-    MEMBER_CAPABILITIES.DIGITAL_CARD_READ,
-    MEMBER_CAPABILITIES.DIRECTORY_READ,
-    MEMBER_CAPABILITIES.VIP_UPGRADE,
-  ],
-  VIP: [
-    MEMBER_CAPABILITIES.DIGITAL_CARD_READ,
-    MEMBER_CAPABILITIES.DIRECTORY_READ,
-    MEMBER_CAPABILITIES.VIP_SUBSCRIPTION_MANAGE,
-    MEMBER_CAPABILITIES.BUSINESS_SUBMIT,
-    MEMBER_CAPABILITIES.BUSINESS_MANAGE_OWN,
-  ],
-  VIP_WITH_PUBLISHED_BUSINESS: [
-    MEMBER_CAPABILITIES.DIGITAL_CARD_READ,
-    MEMBER_CAPABILITIES.DIRECTORY_READ,
-    MEMBER_CAPABILITIES.VIP_SUBSCRIPTION_MANAGE,
-    MEMBER_CAPABILITIES.BUSINESS_SUBMIT,
-    MEMBER_CAPABILITIES.BUSINESS_MANAGE_OWN,
-    MEMBER_CAPABILITIES.INTRODUCTIONS_SUBMIT,
-  ],
-} as const;
-
-export type MemberCapabilityGroup = keyof typeof MEMBER_CAPABILITY_GROUPS;
-
-export const MEMBER_DASHBOARD_TAB_VISIBILITY = {
-  MEMBER: ['account', 'catalog', 'subscription', 'settings'],
-  VIP: ['account', 'catalog', 'subscription', 'business', 'settings'],
-  VIP_WITH_PUBLISHED_BUSINESS: [
-    'account',
-    'catalog',
-    'subscription',
-    'business',
-    'introductions',
-    'settings',
-  ],
-} as const satisfies Record<MemberCapabilityGroup, readonly MemberDashboardTab[]>;
+export type UserContext = {
+  isVip: boolean;
+  hasBusiness: boolean;
+  businessPublished: boolean;
+};
