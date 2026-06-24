@@ -1,3 +1,5 @@
+'use client';
+
 import Link from 'next/link';
 
 import type { CurrentMemberProfileDto } from '@kclub/contracts';
@@ -32,6 +34,7 @@ type MemberCabinetShellProps = {
   contactLine: string;
   tabsAriaLabel: string;
   lockLabels: Record<'VIP' | 'BIZ', string>;
+  onTabChange: (tab: ImplementedMemberDashboardTab) => void;
   children: React.ReactNode;
 };
 
@@ -51,27 +54,28 @@ function getPlanLabel(tier: CurrentMemberProfileDto['membershipTier']): string {
 
 function renderNavItem({
   tab,
-  locale,
   activeTab,
   tabLabels,
   profile,
   lockLabels,
+  onTabChange,
 }: {
   tab: ImplementedMemberDashboardTab;
-  locale: Locale;
   activeTab: ImplementedMemberDashboardTab;
   tabLabels: Record<ImplementedMemberDashboardTab, string>;
   profile: CurrentMemberProfileDto;
   lockLabels: Record<'VIP' | 'BIZ', string>;
+  onTabChange: (tab: ImplementedMemberDashboardTab) => void;
 }) {
   const locked = isDashboardTabLocked(profile, tab);
   const lockLabel = getDashboardTabLockLabel(tab);
   const isActive = activeTab === tab;
 
   return (
-    <Link
+    <button
       key={tab}
-      href={`/${locale}/m/dashboard?tab=${tab}`}
+      type="button"
+      onClick={() => onTabChange(tab)}
       className={cn(
         cabinetNavItemClasses,
         isActive ? cabinetNavItemActiveClasses : cabinetNavItemInactiveClasses,
@@ -83,7 +87,7 @@ function renderNavItem({
       {locked && lockLabel ? (
         <span className={cabinetLockTagClasses}>{lockLabels[lockLabel]}</span>
       ) : null}
-    </Link>
+    </button>
   );
 }
 
@@ -97,6 +101,7 @@ export function MemberCabinetShell({
   contactLine,
   tabsAriaLabel,
   lockLabels,
+  onTabChange,
   children,
 }: MemberCabinetShellProps) {
   const displayName = profile.displayName ?? profile.phone;
@@ -105,7 +110,7 @@ export function MemberCabinetShell({
   return (
     <div className={cabinetRootClasses}>
       <nav aria-label={tabsAriaLabel} className={cabinetMobileNavClasses}>
-        {visibleTabs.map((tab) => renderNavItem({ tab, locale, activeTab, tabLabels, profile, lockLabels }))}
+        {visibleTabs.map((tab) => renderNavItem({ tab, activeTab, tabLabels, profile, lockLabels, onTabChange }))}
       </nav>
 
       <aside className={cabinetSidebarClasses}>
@@ -141,7 +146,7 @@ export function MemberCabinetShell({
         </div>
 
         <nav aria-label={tabsAriaLabel} className="flex-1 space-y-0 py-2">
-          {visibleTabs.map((tab) => renderNavItem({ tab, locale, activeTab, tabLabels, profile, lockLabels }))}
+          {visibleTabs.map((tab) => renderNavItem({ tab, activeTab, tabLabels, profile, lockLabels, onTabChange }))}
         </nav>
 
         <div className="shrink-0 border-t border-border px-6 py-5">
