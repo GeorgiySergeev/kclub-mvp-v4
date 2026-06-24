@@ -9,5 +9,5 @@ export default async function ProfileAliasPage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
-  redirect(getDashboardAliasHref(locale, 'account'));
+  redirect(getDashboardAliasHref(locale, 'details'));
 }

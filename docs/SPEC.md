@@ -79,14 +79,14 @@ Runtime decision:
 
 ### 5.1 Member Capabilities
 
-| Capability                      | MEMBER  |  VIP   | VIP + published business |
-| ------------------------------- | :-----: | :----: | :----------------------: |
-| Digital club card               |   Yes   |  Yes   |           Yes            |
-| Public partner directory access |   Yes   |  Yes   |           Yes            |
-| VIP subscription management     | Upgrade | Manage |          Manage          |
-| Submit business profile         |   No    |  Yes   |           Yes            |
-| Manage own business profile     |   No    |  Yes   |           Yes            |
-| Business Introductions          |   No    |   No   |           Yes            |
+| Capability                      | MEMBER  |  VIP   | Has submitted business |
+| ------------------------------- | :-----: | :----: | :--------------------: |
+| Digital club card               |   Yes   |  Yes   |           Yes          |
+| Public partner directory access |   Yes   |  Yes   |           Yes          |
+| VIP subscription management     | Upgrade | Manage |           No           |
+| Submit business profile         |   No    |  Yes   |           No           |
+| Manage own business profile     |   No    |  No    |           Yes          |
+| Business Introductions          |   No    |   No   |           No           |
 
 ### 5.2 Staff Roles
 
@@ -192,14 +192,16 @@ All public localized routes use `/{locale}` where locale is `en`, `ru`, or `uk`.
 
 ### 7.2 Member Dashboard Tabs
 
-| Tab             | MEMBER | VIP | VIP + published business |
-| --------------- | :----: | :-: | :----------------------: |
-| `card`          |  Yes   | Yes |           Yes            |
-| `catalog`       |  Yes   | Yes |           Yes            |
-| `subscription`  |  Yes   | Yes |           Yes            |
-| `business`      |   No   | Yes |           Yes            |
-| `introductions` |   No   | No  |           Yes            |
-| `profile`       |  Yes   | Yes |           Yes            |
+| Tab             | MEMBER | VIP | Has submitted business |
+| --------------- | :----: | :-: | :--------------------: |
+| `account`       |  Yes   | Yes |           Yes          |
+| `catalog`       |  Yes   | Yes |           Yes          |
+| `subscription`  |  Yes   | Yes |           No           |
+| `business`      |   No   | No  |           Yes          |
+| `introductions` |   No   | Yes |           No           |
+| `settings`      |  Yes   | Yes |           Yes          |
+
+VIP upgrade is initiated from the Subscription tab. Business onboarding is initiated from the Subscription tab and opens a multi-step wizard at `/{locale}/m/business/onboarding`. After a business application is submitted (`UNDER_REVIEW` or later), the Subscription and Introductions tabs are hidden until product rules say otherwise; the Business tab shows application status.
 
 Hidden tabs are not rendered and are also denied at data/API level.
 

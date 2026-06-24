@@ -9,5 +9,5 @@ export default async function IntroduceAliasPage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
-  redirect(getDashboardAliasHref(locale, 'introductions'));
+  redirect(getDashboardAliasHref(locale, 'details'));
 }

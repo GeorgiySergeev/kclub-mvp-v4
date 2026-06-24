@@ -29,7 +29,7 @@ import {
   getCardLifecycleState,
   getFeaturedSlotsRemaining,
   getMemberCapabilities,
-  getMemberCapabilityGroup,
+  getUserContext,
   getVisibleDashboardTabs,
   hasActiveVipAccess,
   hasMemberCapability,
@@ -142,52 +142,69 @@ describe('member capability policies', () => {
     expect(hasActiveVipAccess('NONE')).toBe(false);
   });
 
-  test('member capability groups match subscription and business status', () => {
-    expect(getMemberCapabilityGroup({ subscriptionStatus: 'NONE' })).toBe('MEMBER');
-    expect(getMemberCapabilityGroup({ subscriptionStatus: 'ACTIVE' })).toBe('VIP');
-    expect(
-      getMemberCapabilityGroup({
-        subscriptionStatus: 'CANCELED',
-        businessStatus: 'PUBLISHED',
-      }),
-    ).toBe('VIP_WITH_PUBLISHED_BUSINESS');
+  test('getUserContext derives correct flags from subscription and business status', () => {
+    expect(getUserContext({ subscriptionStatus: 'NONE' })).toEqual({
+      isVip: false,
+      hasBusiness: false,
+      businessPublished: false,
+    });
+    expect(getUserContext({ subscriptionStatus: 'ACTIVE' })).toEqual({
+      isVip: true,
+      hasBusiness: false,
+      businessPublished: false,
+    });
+    expect(getUserContext({ subscriptionStatus: 'CANCELED', businessStatus: 'UNDER_REVIEW' })).toEqual({
+      isVip: true,
+      hasBusiness: true,
+      businessPublished: false,
+    });
+    expect(getUserContext({ subscriptionStatus: 'NONE', businessStatus: 'PUBLISHED' })).toEqual({
+      isVip: false,
+      hasBusiness: true,
+      businessPublished: true,
+    });
   });
 
-  test('dashboard tab visibility and introduction access follow capability group', () => {
-    const memberContext = { subscriptionStatus: 'NONE' as const };
-    const vipContext = { subscriptionStatus: 'ACTIVE' as const };
-    const introContext = {
-      subscriptionStatus: 'ACTIVE' as const,
-      businessStatus: 'PUBLISHED' as const,
-    };
+  test('dashboard tabs: introductions unlocked by VIP or business; business tab by hasBusiness', () => {
+    const baseTabs = ['details', 'card', 'subscription', 'audit', 'permissions', 'settings'] as const;
+    const member = getUserContext({ subscriptionStatus: 'NONE' });
+    const vip = getUserContext({ subscriptionStatus: 'ACTIVE' });
+    const memberWithBusiness = getUserContext({ subscriptionStatus: 'NONE', businessStatus: 'APPROVED' });
+    const vipWithBusiness = getUserContext({ subscriptionStatus: 'ACTIVE', businessStatus: 'PUBLISHED' });
 
-    expect(getVisibleDashboardTabs(memberContext)).toEqual([
-      'account',
-      'catalog',
-      'subscription',
-      'settings',
-    ]);
-    expect(canAccessDashboardTab(memberContext, 'business')).toBe(false);
-    expect(canAccessDashboardTab(vipContext, 'business')).toBe(true);
-    expect(canAccessDashboardTab(vipContext, 'introductions')).toBe(false);
-    expect(canAccessDashboardTab(introContext, 'introductions')).toBe(true);
-    expect(canSubmitIntroduction(memberContext)).toBe(false);
-    expect(canSubmitIntroduction(vipContext)).toBe(false);
-    expect(canSubmitIntroduction(introContext)).toBe(true);
+    expect(getVisibleDashboardTabs(member)).toEqual(baseTabs);
+    expect(getVisibleDashboardTabs(vip)).toEqual([...baseTabs, 'introductions'] as const);
+    expect(getVisibleDashboardTabs(memberWithBusiness)).toEqual([...baseTabs, 'introductions', 'business'] as const);
+    expect(getVisibleDashboardTabs(vipWithBusiness)).toEqual([...baseTabs, 'introductions', 'business'] as const);
+
+    expect(canAccessDashboardTab(member, 'business')).toBe(false);
+    expect(canAccessDashboardTab(member, 'introductions')).toBe(false);
+    expect(canAccessDashboardTab(vip, 'introductions')).toBe(true);
+    expect(canAccessDashboardTab(memberWithBusiness, 'business')).toBe(true);
+    expect(canAccessDashboardTab(memberWithBusiness, 'introductions')).toBe(true);
+  });
+
+  test('introduction requires VIP; business submit requires no existing business', () => {
+    const member = getUserContext({ subscriptionStatus: 'NONE' });
+    const vip = getUserContext({ subscriptionStatus: 'ACTIVE' });
+    const vipWithBusiness = getUserContext({ subscriptionStatus: 'ACTIVE', businessStatus: 'PUBLISHED' });
+
+    expect(canSubmitIntroduction(member)).toBe(false);
+    expect(canSubmitIntroduction(vip)).toBe(true);
+    expect(canSubmitIntroduction(vipWithBusiness)).toBe(true);
+
+    expect(hasMemberCapability(member, 'BUSINESS_SUBMIT')).toBe(true);
+    expect(hasMemberCapability(vipWithBusiness, 'BUSINESS_SUBMIT')).toBe(false);
+    expect(hasMemberCapability(vip, 'INTRODUCTIONS_SUBMIT')).toBe(true);
+    expect(hasMemberCapability(member, 'INTRODUCTIONS_SUBMIT')).toBe(false);
   });
 
   test('all tab ids remain representable through the policy layer', () => {
     for (const tab of MEMBER_DASHBOARD_TABS) {
       expect(typeof tab).toBe('string');
     }
-
-    expect(
-      hasMemberCapability(
-        { subscriptionStatus: 'ACTIVE', businessStatus: 'PUBLISHED' },
-        'INTRODUCTIONS_SUBMIT',
-      ),
-    ).toBe(true);
-    expect(getMemberCapabilities({ subscriptionStatus: 'NONE' })).not.toContain('BUSINESS_SUBMIT');
+    expect(getMemberCapabilities(getUserContext({ subscriptionStatus: 'NONE' }))).toContain('BUSINESS_SUBMIT' as never);
+    expect(getMemberCapabilities(getUserContext({ subscriptionStatus: 'NONE', businessStatus: 'APPROVED' }))).not.toContain('BUSINESS_SUBMIT' as never);
   });
 
   test('subscription status enum assumptions remain covered', () => {

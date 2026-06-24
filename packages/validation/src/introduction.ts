@@ -4,8 +4,9 @@ import { z } from 'zod';
 import { entityIdSchema, optionalSafeTextSchema, paginationSchema } from './shared';
 
 export const introductionSubmitSchema = z.object({
-  requesterBusinessId: entityIdSchema,
   targetBusinessId: entityIdSchema,
+  clientName: z.string().trim().min(1).max(200),
+  clientContact: z.string().trim().min(1).max(255),
   message: optionalSafeTextSchema(500),
 });
 

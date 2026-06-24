@@ -1,15 +1,14 @@
 import {
-  MEMBER_CAPABILITY_GROUPS,
-  MEMBER_DASHBOARD_TAB_VISIBILITY,
+  MEMBER_CAPABILITIES,
   STAFF_ROLE_PERMISSIONS,
   STAFF_ROLE_RANK,
   type MemberCapability,
-  type MemberCapabilityGroup,
   type MemberDashboardTab,
   type StaffPermission,
   type StaffRole,
   type SubscriptionStatus,
   type BusinessStatus,
+  type UserContext,
 } from '@kclub/contracts';
 
 export type MemberCapabilityContext = {
@@ -28,48 +27,53 @@ export function isStaffRoleAtLeast(
   return STAFF_ROLE_RANK[role] >= STAFF_ROLE_RANK[minimumRole];
 }
 
-export function getMemberCapabilityGroup(context: MemberCapabilityContext): MemberCapabilityGroup {
-  if (hasActiveVipAccess(context.subscriptionStatus) && context.businessStatus === 'PUBLISHED') {
-    return 'VIP_WITH_PUBLISHED_BUSINESS';
-  }
-
-  if (hasActiveVipAccess(context.subscriptionStatus)) {
-    return 'VIP';
-  }
-
-  return 'MEMBER';
-}
-
-export function getMemberCapabilities(
-  context: MemberCapabilityContext,
-): readonly MemberCapability[] {
-  return MEMBER_CAPABILITY_GROUPS[getMemberCapabilityGroup(context)];
-}
-
-export function hasMemberCapability(
-  context: MemberCapabilityContext,
-  capability: MemberCapability,
-): boolean {
-  return getMemberCapabilities(context).includes(capability);
-}
-
-export function getVisibleDashboardTabs(
-  context: MemberCapabilityContext,
-): readonly MemberDashboardTab[] {
-  return MEMBER_DASHBOARD_TAB_VISIBILITY[getMemberCapabilityGroup(context)];
-}
-
-export function canAccessDashboardTab(
-  context: MemberCapabilityContext,
-  tab: MemberDashboardTab,
-): boolean {
-  return getVisibleDashboardTabs(context).includes(tab);
-}
-
 export function hasActiveVipAccess(status: SubscriptionStatus): boolean {
   return status === 'ACTIVE' || status === 'CANCELED' || status === 'PAST_DUE';
 }
 
-export function canSubmitIntroduction(context: MemberCapabilityContext): boolean {
-  return getMemberCapabilityGroup(context) === 'VIP_WITH_PUBLISHED_BUSINESS';
+export function getUserContext(context: MemberCapabilityContext): UserContext {
+  const hasBusiness = context.businessStatus != null && context.businessStatus !== 'REJECTED';
+  return {
+    isVip: hasActiveVipAccess(context.subscriptionStatus),
+    hasBusiness,
+    businessPublished: context.businessStatus === 'PUBLISHED',
+  };
+}
+
+export function getMemberCapabilities(ctx: UserContext): readonly MemberCapability[] {
+  const caps: MemberCapability[] = [
+    MEMBER_CAPABILITIES.DIGITAL_CARD_READ,
+    MEMBER_CAPABILITIES.DIRECTORY_READ,
+  ];
+  if (!ctx.isVip) caps.push(MEMBER_CAPABILITIES.VIP_UPGRADE);
+  if (ctx.isVip) {
+    caps.push(MEMBER_CAPABILITIES.VIP_SUBSCRIPTION_MANAGE);
+  }
+  if (ctx.isVip || ctx.hasBusiness) {
+    caps.push(MEMBER_CAPABILITIES.INTRODUCTIONS_SUBMIT);
+  }
+  if (!ctx.hasBusiness) caps.push(MEMBER_CAPABILITIES.BUSINESS_SUBMIT);
+  if (ctx.hasBusiness) caps.push(MEMBER_CAPABILITIES.BUSINESS_MANAGE_OWN);
+  return caps;
+}
+
+export function hasMemberCapability(ctx: UserContext, capability: MemberCapability): boolean {
+  return getMemberCapabilities(ctx).includes(capability);
+}
+
+export function getVisibleDashboardTabs(ctx: UserContext): readonly MemberDashboardTab[] {
+  const tabs: MemberDashboardTab[] = [
+    'details', 'card', 'subscription', 'audit', 'permissions', 'settings',
+  ];
+  if (ctx.isVip || ctx.hasBusiness) tabs.push('introductions');
+  if (ctx.hasBusiness) tabs.push('business');
+  return tabs;
+}
+
+export function canAccessDashboardTab(ctx: UserContext, tab: MemberDashboardTab): boolean {
+  return getVisibleDashboardTabs(ctx).includes(tab);
+}
+
+export function canSubmitIntroduction(ctx: UserContext): boolean {
+  return ctx.isVip;
 }

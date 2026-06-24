@@ -9,5 +9,5 @@ export default async function MyBusinessAliasPage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
-  redirect(getDashboardAliasHref(locale, 'business'));
+  redirect(getDashboardAliasHref(locale, 'details'));
 }

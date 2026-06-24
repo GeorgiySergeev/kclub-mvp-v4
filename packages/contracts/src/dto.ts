@@ -123,6 +123,10 @@ export type AdminUserDetailDto = AdminUserListItemDto & {
   onboardingComplete: boolean;
   termsAcceptedAt: IsoDateTime | null;
   updatedAt: IsoDateTime;
+  country: string | null;
+  city: string | null;
+  about: string | null;
+  avatarUrl: string | null;
   cards: MemberCardDto[];
   subscriptions: SubscriptionDto[];
   auditEntries: AuditLogDto[];
@@ -239,9 +243,11 @@ export type SubscriptionDto = {
 export type IntroductionDto = {
   id: EntityId;
   requesterUserId: EntityId;
-  requesterBusinessId: EntityId;
+  requesterBusinessId: EntityId | null;
   targetBusinessId: EntityId;
   status: IntroductionStatus;
+  clientName: string;
+  clientContact: string;
   message: string | null;
   rejectionReason: string | null;
   createdAt: IsoDateTime;
@@ -249,8 +255,12 @@ export type IntroductionDto = {
 };
 
 export type MemberIntroductionDto = IntroductionDto & {
-  requesterBusinessName: string;
-  requesterBusinessSlug: string;
+  targetBusinessName: string;
+  targetBusinessSlug: string;
+};
+
+export type BusinessIncomingIntroductionDto = IntroductionDto & {
+  requesterDisplayName: string | null;
   targetBusinessName: string;
   targetBusinessSlug: string;
 };

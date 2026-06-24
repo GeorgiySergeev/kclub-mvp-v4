@@ -78,11 +78,11 @@ test.describe('Member journey', () => {
     const dashboard = new DashboardPage(page, locale);
     const visibleTabs = await dashboard.getVisibleTabNames();
 
-    // MEMBER tier sees all cabinet tabs; business and introductions are locked
-    expect(visibleTabs).toContain('account');
+    expect(visibleTabs).toContain('details');
+    expect(visibleTabs).toContain('card');
     expect(visibleTabs).toContain('subscription');
+    expect(visibleTabs).toContain('audit');
+    expect(visibleTabs).toContain('permissions');
     expect(visibleTabs).toContain('settings');
-    expect(visibleTabs).toContain('business');
-    expect(visibleTabs).toContain('introductions');
   });
 });

@@ -16,20 +16,22 @@ export class DashboardPage {
 
   getTab(tabName: string): Locator {
     switch (tabName) {
-      case 'account':
+      case 'details':
+        return this.page.locator(SELECTORS.DASHBOARD_TAB_DETAILS).first();
       case 'card':
-      case 'profile':
-        return this.page.locator(SELECTORS.DASHBOARD_TAB_ACCOUNT).first();
-      case 'catalog':
-        return this.page.locator(SELECTORS.DASHBOARD_TAB_CATALOG).first();
+        return this.page.locator(SELECTORS.DASHBOARD_TAB_CARD).first();
       case 'subscription':
         return this.page.locator(SELECTORS.DASHBOARD_TAB_SUBSCRIPTION).first();
+      case 'audit':
+        return this.page.locator(SELECTORS.DASHBOARD_TAB_AUDIT).first();
+      case 'permissions':
+        return this.page.locator(SELECTORS.DASHBOARD_TAB_PERMISSIONS).first();
       case 'settings':
         return this.page.locator(SELECTORS.DASHBOARD_TAB_SETTINGS).first();
-      case 'business':
-        return this.page.locator(SELECTORS.DASHBOARD_TAB_BUSINESS).first();
-      case 'introductions':
-        return this.page.locator(SELECTORS.DASHBOARD_TAB_INTRODUCTIONS).first();
+      // legacy aliases
+      case 'account':
+      case 'profile':
+        return this.page.locator(SELECTORS.DASHBOARD_TAB_ACCOUNT).first();
       default:
         return this.page.locator('body').first();
     }
@@ -40,7 +42,7 @@ export class DashboardPage {
   }
 
   async getVisibleTabNames(): Promise<string[]> {
-    const tabs = ['account', 'subscription', 'introductions', 'business', 'settings'];
+    const tabs = ['details', 'card', 'subscription', 'audit', 'permissions', 'settings'];
     const visibleTabs: string[] = [];
 
     for (const tab of tabs) {

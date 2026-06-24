@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 
-import type { CurrentMemberProfileDto } from '@kclub/contracts';
+import type { CurrentMemberProfileDto, UserContext } from '@kclub/contracts';
 import { cn } from '@kclub/ui';
 
 import type { Locale } from '@/i18n/routing';
@@ -27,6 +27,7 @@ import {
 type MemberCabinetShellProps = {
   locale: Locale;
   profile: CurrentMemberProfileDto;
+  userContext: UserContext;
   activeTab: ImplementedMemberDashboardTab;
   visibleTabs: readonly ImplementedMemberDashboardTab[];
   tabLabels: Record<ImplementedMemberDashboardTab, string>;
@@ -56,18 +57,18 @@ function renderNavItem({
   tab,
   activeTab,
   tabLabels,
-  profile,
+  userContext,
   lockLabels,
   onTabChange,
 }: {
   tab: ImplementedMemberDashboardTab;
   activeTab: ImplementedMemberDashboardTab;
   tabLabels: Record<ImplementedMemberDashboardTab, string>;
-  profile: CurrentMemberProfileDto;
+  userContext: UserContext;
   lockLabels: Record<'VIP' | 'BIZ', string>;
   onTabChange: (tab: ImplementedMemberDashboardTab) => void;
 }) {
-  const locked = isDashboardTabLocked(profile, tab);
+  const locked = isDashboardTabLocked(userContext, tab);
   const lockLabel = getDashboardTabLockLabel(tab);
   const isActive = activeTab === tab;
 
@@ -94,6 +95,7 @@ function renderNavItem({
 export function MemberCabinetShell({
   locale,
   profile,
+  userContext,
   activeTab,
   visibleTabs,
   tabLabels,
@@ -110,7 +112,9 @@ export function MemberCabinetShell({
   return (
     <div className={cabinetRootClasses}>
       <nav aria-label={tabsAriaLabel} className={cabinetMobileNavClasses}>
-        {visibleTabs.map((tab) => renderNavItem({ tab, activeTab, tabLabels, profile, lockLabels, onTabChange }))}
+        {visibleTabs.map((tab) =>
+          renderNavItem({ tab, activeTab, tabLabels, userContext, lockLabels, onTabChange }),
+        )}
       </nav>
 
       <aside className={cabinetSidebarClasses}>
@@ -146,7 +150,9 @@ export function MemberCabinetShell({
         </div>
 
         <nav aria-label={tabsAriaLabel} className="flex-1 space-y-0 py-2">
-          {visibleTabs.map((tab) => renderNavItem({ tab, activeTab, tabLabels, profile, lockLabels, onTabChange }))}
+          {visibleTabs.map((tab) =>
+            renderNavItem({ tab, activeTab, tabLabels, userContext, lockLabels, onTabChange }),
+          )}
         </nav>
 
         <div className="shrink-0 border-t border-border px-6 py-5">

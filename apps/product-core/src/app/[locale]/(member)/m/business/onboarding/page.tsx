@@ -1,11 +1,13 @@
+import { redirect } from 'next/navigation';
 import { getTranslations } from 'next-intl/server';
 
 import type { Locale } from '@/i18n/routing';
 import { requireCurrentMember } from '@/server/member-page';
+import { getOwnBusinesses } from '@/server/services/business-service';
 import { getPrismaClient } from '@/server/db';
 import { Breadcrumbs } from '@/features/member/components/Breadcrumbs';
-import { BusinessOnboardingWizard } from '@/features/member/components/BusinessOnboardingWizard';
-import type { TaxonomyOption } from '@/features/member/components/BusinessPanel';
+import type { CityTaxonomyOption, TaxonomyOption } from '@/features/member/components/BusinessPanel';
+import { BusinessSubmitWizard } from '@/features/member/components/BusinessSubmitWizard';
 
 export async function generateMetadata({
   params,
@@ -26,7 +28,12 @@ export default async function BusinessOnboardingPage({
   params: Promise<{ locale: Locale }>;
 }) {
   const { locale } = await params;
-  await requireCurrentMember(locale);
+  const profile = await requireCurrentMember(locale);
+  const ownBusinesses = await getOwnBusinesses(profile.id);
+
+  if (ownBusinesses.some((business) => business.status !== 'REJECTED')) {
+    redirect(`/${locale}/m/dashboard?tab=business`);
+  }
 
   const prisma = getPrismaClient();
   const [countries, categories, cities] = await Promise.all([
@@ -49,7 +56,11 @@ export default async function BusinessOnboardingPage({
   const homeHref = `/${locale}`;
 
   const countryOptions: TaxonomyOption[] = countries.map((c) => ({ id: c.id, name: c.name }));
-  const cityOptions: TaxonomyOption[] = cities.map((c) => ({ id: c.id, name: c.name }));
+  const cityOptions: CityTaxonomyOption[] = cities.map((c) => ({
+    id: c.id,
+    name: c.name,
+    countryId: c.country_id,
+  }));
   const categoryOptions: TaxonomyOption[] = categories.map((c) => ({ id: c.id, name: c.name }));
 
   return (
@@ -64,7 +75,7 @@ export default async function BusinessOnboardingPage({
       </div>
 
       <div className="kclub-panel max-w-none rounded-none px-6 py-6 shadow-none ring-0 dark:bg-zinc-900/50">
-        <BusinessOnboardingWizard
+        <BusinessSubmitWizard
           locale={locale}
           countryOptions={countryOptions}
           cityOptions={cityOptions}

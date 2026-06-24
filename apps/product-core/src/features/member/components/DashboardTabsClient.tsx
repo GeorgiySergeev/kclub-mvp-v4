@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import type { ReactNode } from 'react';
 
-import type { CurrentMemberProfileDto } from '@kclub/contracts';
+import type { CurrentMemberProfileDto, UserContext } from '@kclub/contracts';
 
 import type { Locale } from '@/i18n/routing';
 import type { ImplementedMemberDashboardTab } from '@/features/member/dashboard-tabs';
@@ -12,6 +12,7 @@ import { MemberCabinetShell } from './cabinet/MemberCabinetShell';
 type DashboardTabsClientProps = {
   locale: Locale;
   profile: CurrentMemberProfileDto;
+  userContext: UserContext;
   initialTab: ImplementedMemberDashboardTab;
   visibleTabs: readonly ImplementedMemberDashboardTab[];
   tabLabels: Record<ImplementedMemberDashboardTab, string>;
@@ -24,6 +25,7 @@ type DashboardTabsClientProps = {
 export function DashboardTabsClient({
   locale,
   profile,
+  userContext,
   initialTab,
   visibleTabs,
   tabLabels,
@@ -42,6 +44,7 @@ export function DashboardTabsClient({
     <MemberCabinetShell
       locale={locale}
       profile={profile}
+      userContext={userContext}
       activeTab={activeTab}
       visibleTabs={visibleTabs}
       tabLabels={tabLabels}

@@ -11,7 +11,13 @@ import { StatsSection } from '@/features/marketing/components/StatsSection';
 import { TestimonialsSection } from '@/features/marketing/components/TestimonialsSection';
 import { TopPartnersSection } from '@/features/marketing/components/TopPartnersSection';
 import { Locale } from '@/i18n/routing';
-import { getPublicBusinesses } from '@/server/services/business-service';
+import { getCachedPublicBusinesses } from '@/server/cache/business-cache';
+
+export const revalidate = 60;
+
+export async function generateStaticParams() {
+  return [{ locale: 'en' }, { locale: 'ru' }, { locale: 'uk' }];
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await params;
@@ -25,7 +31,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: L
 
 export default async function Page(props: { params: Promise<{ locale: Locale }> }) {
   const { locale } = await props.params;
-  const businesses = await getPublicBusinesses();
+  const businesses = await getCachedPublicBusinesses();
 
   return (
     <>

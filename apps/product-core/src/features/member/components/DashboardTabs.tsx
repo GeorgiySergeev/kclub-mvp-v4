@@ -2,60 +2,72 @@ import type { ReactNode } from 'react';
 
 import { getTranslations } from 'next-intl/server';
 
-import type { CurrentMemberProfileDto } from '@kclub/contracts';
+import type { CurrentMemberProfileDto, PublicBusinessListItemDto, UserContext } from '@kclub/contracts';
 
 import type { Locale } from '@/i18n/routing';
 import type { ImplementedMemberDashboardTab } from '@/features/member/dashboard-tabs';
 import { isDashboardTabLocked } from '@/features/member/dashboard-tabs';
-import { getPublicBusinesses } from '@/server/services/business-service';
 import { CabinetLockedPanel } from '@/features/member/components/cabinet/CabinetLockedPanel';
 import { cabinetContentClasses } from '@/features/member/components/cabinet/styles';
 
 import { AccountPanel } from './AccountPanel';
+import { AuditPanel } from './AuditPanel';
 import { BusinessPanel } from './BusinessPanel';
+import { CardPanel } from './CardPanel';
 import { DashboardTabsClient } from './DashboardTabsClient';
 import { IntroductionsPanel } from './IntroductionsPanel';
+import { PermissionsPanel } from './PermissionsPanel';
 import { SettingsPanel } from './SettingsPanel';
 import { SubscriptionUpgradePanel } from './SubscriptionUpgradePanel';
 
 type DashboardTabsProps = {
   locale: Locale;
   profile: CurrentMemberProfileDto;
+  userContext: UserContext;
   activeTab: ImplementedMemberDashboardTab;
   visibleTabs: readonly ImplementedMemberDashboardTab[];
+  serverPublicBusinesses: PublicBusinessListItemDto[];
 };
 
 export async function DashboardTabs({
   locale,
   profile,
+  userContext,
   activeTab,
   visibleTabs,
+  serverPublicBusinesses,
 }: DashboardTabsProps) {
   const t = await getTranslations({ locale, namespace: 'member.dashboard' });
-  const publicBusinesses = await getPublicBusinesses();
 
-  const tabLabels = {
-    account: t('tabs.account'),
+  const tabLabels: Record<ImplementedMemberDashboardTab, string> = {
+    details: t('tabs.details'),
+    card: t('tabs.card'),
     subscription: t('tabs.subscription'),
-    introductions: t('tabs.introductions'),
     business: t('tabs.business'),
+    introductions: t('tabs.introductions'),
+    audit: t('tabs.audit'),
+    permissions: t('tabs.permissions'),
     settings: t('tabs.settings'),
-  } as const;
+  };
 
   const lockLabels = {
     VIP: t('locks.vip'),
     BIZ: t('locks.biz'),
   } as const;
 
+  const memberName = profile.displayName ?? profile.phone;
+
   const panels: Partial<Record<ImplementedMemberDashboardTab, ReactNode>> = {};
 
   for (const tab of visibleTabs) {
-    if (tab === 'account') {
-      panels.account = <AccountPanel locale={locale} profile={profile} />;
+    if (tab === 'details') {
+      panels.details = <AccountPanel locale={locale} profile={profile} />;
+    } else if (tab === 'card') {
+      panels.card = <CardPanel locale={locale} memberName={memberName} />;
     } else if (tab === 'subscription') {
       panels.subscription = <SubscriptionUpgradePanel locale={locale} profile={profile} />;
     } else if (tab === 'introductions') {
-      panels.introductions = isDashboardTabLocked(profile, 'introductions') ? (
+      panels.introductions = isDashboardTabLocked(userContext, 'introductions') ? (
         <div className={cabinetContentClasses}>
           <CabinetLockedPanel
             locale={locale}
@@ -69,11 +81,11 @@ export async function DashboardTabs({
         <IntroductionsPanel
           locale={locale}
           profile={profile}
-          serverPublicBusinesses={publicBusinesses}
+          serverPublicBusinesses={serverPublicBusinesses}
         />
       );
     } else if (tab === 'business') {
-      panels.business = isDashboardTabLocked(profile, 'business') ? (
+      panels.business = isDashboardTabLocked(userContext, 'business') ? (
         <div className={cabinetContentClasses}>
           <CabinetLockedPanel
             locale={locale}
@@ -86,6 +98,10 @@ export async function DashboardTabs({
       ) : (
         <BusinessPanel locale={locale} profile={profile} />
       );
+    } else if (tab === 'audit') {
+      panels.audit = <AuditPanel locale={locale} />;
+    } else if (tab === 'permissions') {
+      panels.permissions = <PermissionsPanel locale={locale} userContext={userContext} />;
     } else if (tab === 'settings') {
       panels.settings = <SettingsPanel locale={locale} profile={profile} />;
     }
@@ -95,6 +111,7 @@ export async function DashboardTabs({
     <DashboardTabsClient
       locale={locale}
       profile={profile}
+      userContext={userContext}
       initialTab={activeTab}
       visibleTabs={visibleTabs}
       tabLabels={tabLabels}
